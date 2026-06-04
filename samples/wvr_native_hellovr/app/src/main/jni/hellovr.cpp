@@ -320,7 +320,8 @@ bool MainApplication::initGL() {
 #endif
     mHandManager = new HandManager(WVR_HandTrackerType_Natural);
     mHandManager->onCreate();
-
+    mHandManager->registerPinchReleasedCallback(
+        std::bind(&MainApplication::handleHandInput, this, std::placeholders::_1));
     return true;
 }
 
@@ -535,6 +536,66 @@ bool MainApplication::handleInput() {
         switchResolution();
     }
     return false;
+}
+
+void MainApplication::handleHandInput(HandTypeEnum handType) {
+    if (mSphere != nullptr && mHandManager != nullptr) {
+        if (mPointToSphere == true) {
+            Vector3 pos;
+            if (handType == Hand_Right) {
+                if(mSphere->getCenter() == oriSpherePos){
+                    pos = Vector3(1,0,0)+mSphere->getCenter();
+                }else{
+                    pos = oriSpherePos;
+                }
+                mSphere->setSpherePos(pos);
+            } else if (handType == Hand_Left) {
+                if (mSphere->getCenter() == oriSpherePos) {
+                    pos = Vector3(-1,0,0) + mSphere->getCenter();
+                } else {
+                    pos = oriSpherePos;
+                }
+                mSphere->setSpherePos(pos);
+            }
+        }
+    }
+}
+
+void MainApplication::calculateHandInteraction(DrawModeEnum iMode, size_t iEyeID) {
+    if ((iMode == DrawMode_Multiview || (iMode == DrawMode_General && iEyeID == 0)) == false) {
+        return;
+    }
+
+    mPointToSphere = false;
+    currColor = Sphere::Color::green;
+
+    if (mSphere != nullptr && mHandManager != nullptr) {
+        for (uint32_t handType = 0; handType < Hand_MaxNumber; ++handType) {
+            if (mHandManager->isPinchPose(static_cast<HandTypeEnum>(handType)) == true && mPointToSphere == false) {
+                // Get center & radius of the sphere
+                Vector3 sCenter = mSphere->getCenter();
+                Point3D center = {sCenter.x, sCenter.y, sCenter.z};
+                Sphere3D sphere = {center, mSphere->getRadius()};
+                Matrix4 shift; shift.translate(1.0, 1.5, 2);
+                Matrix4 rayMat = shift * mHandManager->getHandRayMat(static_cast<HandTypeEnum>(handType));
+                Vector3 collision;
+                Ray3D ray(
+                    Point3D(rayMat[12], rayMat[13], rayMat[14]),
+                    Vector3D(-rayMat[8], -rayMat[9], -rayMat[10]),
+                    collision);
+                mPointToSphere = intersection(ray, sphere);
+                if (mPointToSphere == true) {
+                    if (handType == Hand_Right) {
+                        currColor = Sphere::Color::red;
+                    } else {
+                        currColor = Sphere::Color::blue;
+                    }
+                } else {
+                    currColor = Sphere::Color::green;
+                }
+            }
+        }
+    }
 }
 
 void MainApplication::switchResolution() {
@@ -1128,7 +1189,6 @@ void MainApplication::renderStereoTargets() {
 void MainApplication::renderScene(WVR_Eye nEye) {
     WVR_RenderMask(nEye);
 
-
     if (mGridPicture && mGridPicture->isEnabled()) {
         if (nEye == WVR_Eye_Left)
             mGridPicture->draw(mProjectionLeft, mEyePosLeft, mHMDPose, mLightDir);
@@ -1137,7 +1197,14 @@ void MainApplication::renderScene(WVR_Eye nEye) {
         return;
     }
 
-
+    // SkyBox
+    // minimize gpu loading by putting SkyBox in the end
+    if (mSkyBox) {
+        if (nEye == WVR_Eye_Left)
+            mSkyBox->draw(mProjectionLeft, mEyePosLeft, mHMDPose, mLightDir);
+        else if (nEye == WVR_Eye_Right)
+            mSkyBox->draw(mProjectionRight, mEyePosRight, mHMDPose, mLightDir);
+    }
 
     // Controller Axes
     bool isInputCapturedBySystem = WVR_IsInputFocusCapturedBySystem();
@@ -1192,6 +1259,7 @@ void MainApplication::renderScene(WVR_Eye nEye) {
             }
         }
     }
+    //
 
     // Controller cube
     int localControllerIdx = -1;
@@ -1260,6 +1328,10 @@ void MainApplication::renderScene(WVR_Eye nEye) {
         }
     }
 #endif
+    mHandManager->update(DrawMode_General, nEye);
+    if (mInteractionMode == WVR_InteractionMode_Hand) {
+        calculateHandInteraction(DrawMode_General, nEye);
+    }
 
     // Reticle Pointer
     if(mReticlePointer){
@@ -1298,16 +1370,7 @@ void MainApplication::renderScene(WVR_Eye nEye) {
         eyes[WVR_Eye_Left] = mEyePosLeft;
         projs[WVR_Eye_Right] = mProjectionRight;
         eyes[WVR_Eye_Right] = mEyePosRight;
-        mHandManager->updateAndRender(DrawMode_General, nEye, projs, eyes, mHMDPose);
-    }
-
-    // SkyBox
-    // minimize gpu loading by putting SkyBox in the end
-    if (mSkyBox) {
-            if (nEye == WVR_Eye_Left)
-                mSkyBox->draw(mProjectionLeft, mEyePosLeft, mHMDPose, mLightDir);
-            else if (nEye == WVR_Eye_Right)
-                mSkyBox->draw(mProjectionRight, mEyePosRight, mHMDPose, mLightDir);
+        mHandManager->render(DrawMode_General, nEye, projs, eyes, mHMDPose);
     }
 
     glUseProgram(0);

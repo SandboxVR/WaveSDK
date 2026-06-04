@@ -14,8 +14,8 @@ out vec4 oColor;
 
 void main()
 {
-    float smoothStepResult99 = smoothstep(0.7, 0.38, 1.0 - v2fCoord2.y);
-    vec4 lerpResult100 = mix(graColorA, graColorB, smoothStepResult99);
-    float tex2DNode92 = texture(alphaTex, v2fCoord1).r;
+    float clampResult114 = clamp((0.59 + (0.59 - (1.0 - v2fCoord2.y)) / 0.38), 0.0, 1.0);
+    vec4  lerpResult100  = mix(graColorA, graColorB, clampResult114);
+    float tex2DNode92    = texture(alphaTex, v2fCoord1).r;
     oColor = vec4(lerpResult100.r, lerpResult100.g, lerpResult100.b, opacity * tex2DNode92);
 }

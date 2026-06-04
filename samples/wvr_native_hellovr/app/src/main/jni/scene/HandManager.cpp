@@ -127,7 +127,11 @@ HandManager::HandManager(WVR_HandTrackerType iType)
 , mHandPoseData({})
 , mStartFlag(false)
 , mHandInitialized(false)
+, mIsPinchPoses{false, false}
+, mCurrentPinchingStates{false, false}
 , mAxes(nullptr)
+, mFocusRay(nullptr)
+, mFocusPoint(nullptr)
 {
     mShift.translate(1,1.5,2);
 }
@@ -147,6 +151,12 @@ void HandManager::onCreate()
 
     mAxes = new Axes();
     mAxes->initialize(0.05);
+
+    mFocusRay = new FocusRay();
+    mFocusRay->refresh(FocusRayAttribute());
+
+    mFocusPoint = new FocusPoint();
+    mFocusPoint->refresh(FocusPointAttribute());
 }
 
 void HandManager::onDestroy()
@@ -156,6 +166,12 @@ void HandManager::onDestroy()
     mAxes->release();
     delete mAxes;
     mAxes = nullptr;
+
+    delete mFocusRay;
+    mFocusRay = nullptr;
+
+    delete mFocusPoint;
+    mFocusPoint = nullptr;
 
     for (uint32_t hID = 0; hID < Hand_MaxNumber; ++hID) {
         mHandObjs[hID]->releaseGraphicsSystem();
@@ -167,6 +183,8 @@ void HandManager::onDestroy()
     mHandAlphaTex = nullptr;
     mHandInitialized = false;
 
+    mPinchPressedCallback = nullptr;
+    mPinchReleasedCallback = nullptr;
     //destroySharedContext();
 }
 
@@ -236,36 +254,36 @@ void HandManager::startHandTracking()
 {
     WVR_Result result;
     if (mStartFlag == true) {
-        LOGE("HandManager started!!!");
+        LOGE("T(%d): HandManager started!!!", mTrackingType);
         return;
     }
 
-    LOGI("AP:startHandTracking()++");
+    LOGI("T(%d): AP:startHandTracking()++", mTrackingType);
     uint32_t jointCount = 0u;
     result = WVR_GetHandJointCount(mTrackingType, &jointCount);
-    LOGI("AP:WVR_GetHandJointCount()");
+    LOGI("T(%d): AP:WVR_GetHandJointCount() done.", mTrackingType);
     if (result != WVR_Success) {
-        LOGE("WVR_GetHandJointCount failed(%d).", result);
+        LOGE("T(%d): WVR_GetHandJointCount failed(%d).", mTrackingType, result);
         return;
     }
     InitializeWVR_HandTrackerInfo(mHandTrackerInfo, jointCount);
     InitializeWVR_HandTrackingData(mHandTrackingData, WVR_HandModelType_WithoutController, mHandTrackerInfo);
 
-    LOGI("AP:WVR_GetHandTrackerInfo()");
+    LOGI("T(%d): AP:WVR_GetHandTrackerInfo()", mTrackingType);
     if (WVR_GetHandTrackerInfo(mTrackingType, &mHandTrackerInfo) != WVR_Success) {
-        LOGE("WVR_GetHandTrackerInfo failed(%d).", result);
+        LOGE("T(%d): WVR_GetHandTrackerInfo failed(%d).", mTrackingType, result);
         return;
     }
 
-    LOGI("AP:WVR_StartHandTracking()");
+    LOGI("T(%d): AP:WVR_StartHandTracking()", mTrackingType);
     result = WVR_StartHandTracking(mTrackingType);
     if (result == WVR_Success) {
         mStartFlag.exchange(true);
-        LOGI("WVR_StartHandTracking successful.");
+        LOGI("T(%d): WVR_StartHandTracking successful.", mTrackingType);
     } else {
-        LOGE("WVR_StartHandTracking error(%d).", result);
+        LOGE("T(%d): WVR_StartHandTracking error(%d).", mTrackingType, result);
     }
-    LOGI("AP:startHandTracking()--");
+    LOGI("T(%d): AP:startHandTracking()--", mTrackingType);
 }
 
 void HandManager::stopHandTracking()
@@ -279,27 +297,31 @@ void HandManager::stopHandTracking()
 }
 
 
-void HandManager::updateAndRender(DrawModeEnum iMode, size_t iEyeID,
+void HandManager::update(DrawModeEnum iMode, size_t iEyeID) {
+    if (iMode == DrawMode_Multiview || (iMode == DrawMode_General && iEyeID == 0)) {
+        calculateHandMatrices();
+    }
+}
+
+void HandManager::render(DrawModeEnum iMode, size_t iEyeID,
         const Matrix4 iProjs[DrawMode_MaxModeMumber],
         const Matrix4 iEyes[DrawMode_MaxModeMumber],
         const Matrix4 &iView)
 {
-    if (iMode == DrawMode_Multiview || (iMode == DrawMode_General && iEyeID == 0)) {
-        calculateHandMatrices();
-    }
-
     if (iMode == DrawMode_General) {
         for (uint32_t handID = 0; handID < Hand_MaxNumber; ++handID) {
             WVR_Vector3f_t trackingScale = (handID == Hand_Left) ? mHandTrackingData.left.scale : mHandTrackingData.right.scale;
-            if (handID == Hand_Right) {
-                trackingScale.v[0] = 1.0f;
-                trackingScale.v[1] = 1.0f;
-                trackingScale.v[2] = 1.0f;
-            }
-
             if (mHandObjs[handID] != nullptr && mIsHandPoseValids[handID] == true) {
                 mAxes->renderInner(iProjs[iEyeID], iEyes[iEyeID],
                      iView * mShift, mHandPoseMats[handID]);
+                if (mIsPinchPoses[handID] == true) {
+                    mFocusRay->render(iProjs[iEyeID], iEyes[iEyeID],
+                        iView, mHandRayMats[handID], mHandPinchRatios[handID]);
+
+                    mFocusPoint->render(iProjs[iEyeID], iEyes[iEyeID],
+                        iView, mHandRayMats[handID], false, Matrix4(),
+                        mFocusPoint->getFarDistance(), mHandPinchRatios[handID]);
+                }
 
                 mHandObjs[handID]->updateSkeleton(mJointMats[handID],
                     Vector3(trackingScale.v[0], trackingScale.v[1], trackingScale.v[2]));
@@ -309,7 +331,6 @@ void HandManager::updateAndRender(DrawModeEnum iMode, size_t iEyeID,
                      iView, mHandPoseMats[handID]);
             }
         }
-        
     } else {
 
     }
@@ -365,6 +386,32 @@ void HandManager::calculateHandMatrices()
             Vector3 rayOri(handPose->pinch.origin.v);
             Vector3 negRayF = (Vector3(handPose->pinch.direction.v) * -1.0f);
             mHandRayMats[handType] = Matrix_LookAtFrom(Vector3(handPose->pinch.origin.v), negRayF, rayUp);
+            mHandPinchRatios[handType] = handPose->pinch.strength / 0.75f;
+            if (mHandPinchRatios[handType] > 1.0f) {
+                mHandPinchRatios[handType] = 1.0f;
+            } else if (mHandPinchRatios[handType]  < 0.0f){
+                mHandPinchRatios[handType] = 0.0f;
+            }
+            mIsPinchPoses[handType] = true;
+        } else {
+            mIsPinchPoses[handType] = false;
+        }
+
+        //3. Pinch State
+        bool oldPinchingStates = mCurrentPinchingStates[handType];
+        mCurrentPinchingStates[handType] = handPose->pinch.isPinching;
+        if (oldPinchingStates == true && mCurrentPinchingStates[handType] == false) { //release
+            LOGI("T(%d):Hand[%d] : trigger released callback.", mTrackingType, handType);
+            if (mPinchReleasedCallback != nullptr) {
+                mPinchReleasedCallback(static_cast<HandTypeEnum>(handType));
+            }
+        } else if (oldPinchingStates == false && mCurrentPinchingStates[handType] == true) { //press
+            LOGI("T(%d):Hand[%d] : trigger pressed callback.", mTrackingType, handType);
+            if (mPinchPressedCallback != nullptr) {
+                mPinchPressedCallback(static_cast<HandTypeEnum>(handType));
+            }
+        } else {
+            //still pressd or released.
         }
     }
 }

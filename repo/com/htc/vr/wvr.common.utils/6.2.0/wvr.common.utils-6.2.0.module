@@ -1,0 +1,58 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.htc.vr",
+    "module": "wvr.common.utils",
+    "version": "6.2.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.2.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "wvr.common.utils-6.2.0.aar",
+          "url": "wvr.common.utils-6.2.0.aar",
+          "size": 150031,
+          "sha512": "633803ae879f5e2ea53884cb72035aa5ca5b31dff31c263a8d6093720a47511f05a87a7673cf66b2fff035286095dd903a3694275fbf6c143a2d0ae7481fdda2",
+          "sha256": "3941f15ce4f069ed238a90ee79069b6cc4e5c99f0514d3aed04465e07e33b0d6",
+          "sha1": "b7c83440be0e198ab1eb77d28f1d5c760a81c8c9",
+          "md5": "28868091546aed1d4e1aef4cb64d1ef8"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "wvr.common.utils-6.2.0.aar",
+          "url": "wvr.common.utils-6.2.0.aar",
+          "size": 150031,
+          "sha512": "633803ae879f5e2ea53884cb72035aa5ca5b31dff31c263a8d6093720a47511f05a87a7673cf66b2fff035286095dd903a3694275fbf6c143a2d0ae7481fdda2",
+          "sha256": "3941f15ce4f069ed238a90ee79069b6cc4e5c99f0514d3aed04465e07e33b0d6",
+          "sha1": "b7c83440be0e198ab1eb77d28f1d5c760a81c8c9",
+          "md5": "28868091546aed1d4e1aef4cb64d1ef8"
+        }
+      ]
+    }
+  ]
+}

@@ -63,7 +63,9 @@ COMMON_FILES := \
     scene/HandManager.cpp \
     scene/HandModel.cpp \
     scene/HandObj.cpp \
-    scene/Axes.cpp
+    scene/Axes.cpp \
+    scene/FocusRay.cpp \
+    scene/FocusPoint.cpp
 
 #USE_CONTROLLER use device controller.
 #USE_CUSTOM_CONTROLLER use device emitter.

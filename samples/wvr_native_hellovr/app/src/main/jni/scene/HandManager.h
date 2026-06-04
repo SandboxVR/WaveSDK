@@ -22,7 +22,11 @@
 
 #include "HandConstant.h"
 #include "HandObj.h"
+#include "FocusRay.h"
+#include "FocusPoint.h"
 
+typedef std::function<void (HandTypeEnum)> PinchPressedCallback;
+typedef std::function<void (HandTypeEnum)> PinchReleasedCallback;
 class HandManager
 {
 public:
@@ -32,11 +36,44 @@ public:
     void onCreate();
     void onDestroy();
 public:
-    void updateAndRender(
-        DrawModeEnum iMode, size_t iEyeID,
+    void registerPinchPressedCallback(const PinchPressedCallback &iFunc) {
+        mPinchPressedCallback = iFunc;
+    }
+
+    void registerPinchReleasedCallback(const PinchReleasedCallback &iFunc) {
+        mPinchReleasedCallback = iFunc;
+    }
+
+    Matrix4 getHandRayMat(HandTypeEnum iType) const {
+        if (iType != Hand_MaxNumber) {
+            return mHandRayMats[(uint32_t)iType];
+        } else {
+            return Matrix4();
+        }
+    }
+
+    bool isPinchPose(HandTypeEnum iType) const {
+        if (iType != Hand_MaxNumber) {
+            return mIsPinchPoses[(uint32_t)iType];
+        } else {
+            return false;
+        }
+    }
+
+    bool isHandPoseValids(HandTypeEnum iType) const {
+        if (iType != Hand_MaxNumber) {
+            return mIsHandPoseValids[(uint32_t)iType];
+        } else {
+            return false;
+        }
+    }
+
+    void update(DrawModeEnum iMode, size_t iEyeID);
+    void render(DrawModeEnum iMode, size_t iEyeID,
         const Matrix4 iProjs[DrawMode_MaxModeMumber],
         const Matrix4 iEyes[DrawMode_MaxModeMumber],
         const Matrix4 &iView);
+
 public:
     void handleHandTrackingMechanism();
 protected:
@@ -62,10 +99,18 @@ protected:
     bool mIsHandPoseValids[Hand_MaxNumber];
 protected:
     Matrix4 mHandRayMats[Hand_MaxNumber];
+    float mHandPinchRatios[Hand_MaxNumber];
+    bool mCurrentPinchState[Hand_MaxNumber];
+    bool mIsPinchPoses[Hand_MaxNumber];
+    bool mCurrentPinchingStates[Hand_MaxNumber];
+    PinchPressedCallback mPinchPressedCallback;
+    PinchReleasedCallback mPinchReleasedCallback;
 protected:
     HandObj *mHandObjs[Hand_MaxNumber];
     Texture *mHandAlphaTex;
     Axes *mAxes;
+    FocusRay *mFocusRay;
+    FocusPoint *mFocusPoint;
     Matrix4 mShift;
     bool mHandInitialized;
 protected:

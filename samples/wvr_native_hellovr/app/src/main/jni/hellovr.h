@@ -21,6 +21,9 @@
 #include <wvr/wvr_types.h>
 #include <Sphere.h>
 #include <Floor.h>
+
+#include "scene/DrawEnum.h"
+#include "scene/HandConstant.h"
 class Context;
 class HandManager;
 class Texture;
@@ -63,6 +66,9 @@ public:
     bool handleInput();
     void processVREvent(const WVR_Event_t & event);
     bool renderFrame();
+
+    void handleHandInput(HandTypeEnum handType);
+    void calculateHandInteraction(DrawModeEnum iMode, size_t iEyeID);
 
     void renderStereoTargets();
     void drawControllers();

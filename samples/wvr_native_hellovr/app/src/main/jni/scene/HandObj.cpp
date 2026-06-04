@@ -17,8 +17,8 @@ HandObj::HandObj(HandManager *iMgr, HandTypeEnum iHandType)
 , mHandScale(1.0f, 1.0f, 1.0f)
 , mContouringOpacity(0.5f)
 , mFillingOpacity(0.5f)
-, mGraColorA{( 29.0f/255.0f), (189.0f/255.0f), (247.0f/255.0f), 0.0f}
-, mGraColorB{(191.0f/255.0f), (182.0f/255.0f), (182.0f/255.0f), 0.0f}
+, mGraColorA{(255.0f/255.0f), (255.0f/255.0f), (255.0f/255.0f), 0.0f}
+, mGraColorB{(255.0f/255.0f), (255.0f/255.0f), (255.0f/255.0f), 0.0f}
 , mAxes(nullptr)
 {
     mShift.translate(1,1.5,2);
@@ -271,6 +271,7 @@ void HandObj::render(
 
     glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
+    glDepthFunc(GL_LEQUAL);
 
     glBlendFuncSeparate(
         GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
@@ -332,6 +333,9 @@ void HandObj::render(
     glBlendFuncSeparate(
         GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
         GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
 
 #if defined(DRAW_AXIS)
     for (uint32_t jointID = 0; jointID < sMaxSupportJointNumbers; ++jointID) {

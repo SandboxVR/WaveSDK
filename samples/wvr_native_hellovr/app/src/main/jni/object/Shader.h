@@ -38,6 +38,10 @@ public:
         glUseProgram(0);
     }
 
+    inline GLuint getProgramID() const {
+        return mProgramId;
+    }
+
     static void putShader(const std::shared_ptr<Shader>& shader);
     static std::shared_ptr<Shader> findShader(const char * vname, const char * fname);
 
