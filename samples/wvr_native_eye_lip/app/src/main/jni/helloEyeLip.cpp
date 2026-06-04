@@ -69,6 +69,8 @@ float gScale = 1;
 
 static bool eyeInit = false;
 WVR_EyeTracking_t eyeTrackingData;
+static bool eyeExpInit = false;
+WVR_EyeExp_t eyeExpData;
 static bool lipInit = false;
 
 static void dumpMatrix(const char * name, const Matrix4& mat) {
@@ -185,6 +187,12 @@ bool MainApplication::initVR() {
     LOGI("WVR_StartEyeTracking result = %d", (int)resultEye);
     if(resultEye == WVR_Result::WVR_Success){
         eyeInit = true;
+    }
+
+    WVR_Result resultEyeExp = WVR_StartEyeExp();
+    LOGI("WVR_StartEyeExp result = %d", (int)resultEyeExp);
+    if(resultEyeExp == WVR_Result::WVR_Success){
+        eyeExpInit = true;
     }
 
     WVR_Result resultLip = WVR_StartLipExp();
@@ -411,6 +419,10 @@ void MainApplication::shutdownVR() {
         WVR_StopEyeTracking();
         eyeInit = false;
     }
+    if(eyeExpInit) {
+        WVR_StopEyeExp();
+        eyeExpInit = false;
+    }
     if(lipInit) {
         WVR_StopLipExp();
         lipInit = false;
@@ -531,6 +543,31 @@ bool MainApplication::handleInput() {
                 if((eyeTrackingData.right.eyeTrackingValidBitMask & WVR_PupilPositionInSensorAreaValid) == WVR_PupilPositionInSensorAreaValid)
                     LOGI("GetEyeTracking right pupilPositionInSensorArea = (%f,%f)", eyeTrackingData.right.pupilPositionInSensorArea.v[0],eyeTrackingData.right.pupilPositionInSensorArea.v[1]);
                 LOGI("GetEyeTracking timestamp = %lld", eyeTrackingData.timestamp);
+            }
+        }
+    }
+
+    if(eyeExpInit) {
+        if(WVR_IsDeviceConnected(WVR_DeviceType::WVR_DeviceType_EyeExpression)) {
+            LOGI("WVR_IsDeviceConnected EyeExp result = true");
+            WVR_Result resultEyeExp = WVR_GetEyeExpData(&eyeExpData);
+            LOGI("WVR_GetEyeExpData result = %d", (int)resultEyeExp);
+            if(resultEyeExp == WVR_Result::WVR_Success) {
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_LEFT_BLINK = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_LEFT_BLINK]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_LEFT_WIDE = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_LEFT_WIDE]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_RIGHT_BLINK = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_RIGHT_BLINK]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_RIGHT_WIDE = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_RIGHT_WIDE]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_LEFT_SQUEEZE = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_LEFT_SQUEEZE]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_RIGHT_SQUEEZE = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_RIGHT_SQUEEZE]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_LEFT_DOWN = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_LEFT_DOWN]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_RIGHT_DOWN = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_RIGHT_DOWN]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_LEFT_OUT = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_LEFT_OUT]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_RIGHT_IN = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_RIGHT_IN]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_LEFT_IN = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_LEFT_IN]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_RIGHT_OUT = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_RIGHT_OUT]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_LEFT_UP = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_LEFT_UP]);
+                LOGI("WVR_GetEyeExpData WVR_EYEEXPRESSION_RIGHT_UP = %f", eyeExpData.weights[WVR_EyeExpression::WVR_EYEEXPRESSION_RIGHT_UP]);
+                LOGI("WVR_GetEyeExpData timestamp = %lld", eyeExpData.timestamp);
             }
         }
     }

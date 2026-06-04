@@ -20,6 +20,7 @@
 #include <wvr/wvr_events.h>
 #include <wvr/wvr_types.h>
 #include <wvr/wvr_eyetracking.h>
+#include <wvr/wvr_eyeexp.h>
 #include <wvr/wvr_lip.h>
 #include <Sphere.h>
 #include <Floor.h>
