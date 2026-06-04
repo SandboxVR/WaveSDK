@@ -36,13 +36,6 @@
   },
   {
     "level": "INFO",
-    "message": "removing stale contents from \u0027/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_tracker_notifyds/.cxx/ndkBuild/release/arm64-v8a\u0027",
-    "file": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_tracker_notifyds/src/main/jni/Android.mk",
-    "tag": "release|arm64-v8a",
-    "diagnosticCode": "UNKNOWN"
-  },
-  {
-    "level": "INFO",
     "message": "created folder \u0027/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_tracker_notifyds/.cxx/ndkBuild/release/arm64-v8a\u0027",
     "file": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_tracker_notifyds/src/main/jni/Android.mk",
     "tag": "release|arm64-v8a",

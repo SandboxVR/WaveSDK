@@ -1,0 +1,28 @@
+make[2]: Entering directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_marker'
+[arm64-v8a] Compile++      : nativeMarker_common <= hellovr.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= Context.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= Matrices.cpp
+[arm64-v8a] Compile        : nativeMarker_common <= quat.c
+[arm64-v8a] Compile        : nativeMarker_common <= matrix.c
+[arm64-v8a] Compile        : nativeMarker_common <= vector.c
+[arm64-v8a] Compile++      : nativeMarker_common <= Texture.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= VertexArrayObject.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= FrameBufferObject.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= Shader.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= Object.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= Mesh.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= Controller.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= HandManager.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= HandModel.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= HandObj.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= Cube.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= Plane.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= Axes.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= Text.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= ScanLine.cpp
+[arm64-v8a] Compile++      : nativeMarker_common <= markerManager.cpp
+[arm64-v8a] Prebuilt       : libwvr_api.so <= /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/build/install/lib/arm64-v8a/
+[arm64-v8a] SharedLibrary  : libnativeMarker_common.so
+[arm64-v8a] Compile++      : nativeMarker_jni <= jni.cpp
+[arm64-v8a] SharedLibrary  : libnativeMarker_jni.so
+make[2]: Leaving directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_marker'

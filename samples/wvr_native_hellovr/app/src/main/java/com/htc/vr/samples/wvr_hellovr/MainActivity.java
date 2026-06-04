@@ -120,14 +120,14 @@ public class MainActivity extends VRActivity {
     private void setNotification() {
     Log.i(TAG,"setNotification:start");
         PendingIntent pIntent = PendingIntent.getBroadcast(this, FLAG_DEBUG,
-            new Intent(ACTION_SWITCH_DEBUG), PendingIntent.FLAG_UPDATE_CURRENT);
+            new Intent(ACTION_SWITCH_DEBUG), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         int iconid = mDebug ? android.R.drawable.star_on : android.R.drawable.star_off;
         Notification.Action actionDebug = new Notification.Action.Builder(
                     iconid, mDebug ? "Debug On" : "Debug Off", pIntent).build();
 
         pIntent = PendingIntent.getBroadcast(this, FLAG_MSAA,
-            new Intent(ACTION_SWITCH_MSAA), PendingIntent.FLAG_UPDATE_CURRENT);
+            new Intent(ACTION_SWITCH_MSAA), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         boolean msaa = (mFlag & FLAG_MSAA) != 0;
         iconid = msaa ? android.R.drawable.ic_media_next : android.R.drawable.ic_media_ff;
@@ -135,7 +135,7 @@ public class MainActivity extends VRActivity {
                         iconid, msaa ? "MSAA On" : "MSAA Off", pIntent).build();
 
         pIntent = PendingIntent.getBroadcast(this, FLAG_SCENE,
-            new Intent(ACTION_SWITCH_SCENE), PendingIntent.FLAG_UPDATE_CURRENT);
+            new Intent(ACTION_SWITCH_SCENE), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         boolean scene = (mFlag & FLAG_SCENE) != 0;
         iconid = android.R.drawable.ic_popup_sync;

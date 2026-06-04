@@ -3,14 +3,13 @@ def jniDir = "src/main/jni"
 def aarFilename = "wvr_client"
 
 android {
-    ndkVersion "16.1.4479499"
     defaultConfig {
         externalNativeBuild { ndkBuild {
             def VR_SDK_ROOT = "${buildDir}/${aarFilename}"
             arguments "VR_SDK_ROOT=$VR_SDK_ROOT"
         }}
         ndk {
-            abiFilters 'armeabi-v7a'
+            abiFilters 'arm64-v8a'
         }
     }
 

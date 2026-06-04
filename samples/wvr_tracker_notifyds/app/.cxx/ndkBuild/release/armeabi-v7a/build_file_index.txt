@@ -1,2 +1,0 @@
-/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_tracker_notifyds/src/main/jni/Android.mk
-/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_tracker_notifyds/src/main/jni/Application.mk

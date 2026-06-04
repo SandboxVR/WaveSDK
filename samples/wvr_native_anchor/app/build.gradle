@@ -21,23 +21,6 @@ android {
         }
     }
 
-    flavorDimensions "version"
-    productFlavors {
-        bit32 {
-            dimension "version"
-            applicationId "com.htc.vr.samples.wvr_native_anchor.armv7a"
-            ndk {
-                abiFilter 'armeabi-v7a'
-            }
-        }
-        bit64 {
-            dimension "version"
-            applicationId "com.htc.vr.samples.wvr_native_anchor"
-            ndk {
-                abiFilter 'arm64-v8a'
-            }
-        }
-    }
     namespace 'com.htc.vr.samples.wvr_native_anchor'
 
     lintOptions {

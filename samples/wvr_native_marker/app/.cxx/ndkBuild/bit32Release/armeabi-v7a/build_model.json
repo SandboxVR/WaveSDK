@@ -21,7 +21,8 @@
     "soFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/misc/build/wvr_native_marker/intermediates/ndkBuild/bit32Release/lib",
     "isDebuggableEnabled": false,
     "validAbiList": [
-      "ARMEABI_V7A"
+      "ARMEABI_V7A",
+      "ARM64_V8A"
     ],
     "buildTargetSet": [],
     "implicitBuildTargetSet": [],
