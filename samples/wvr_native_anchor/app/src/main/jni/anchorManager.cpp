@@ -141,7 +141,8 @@ bool BGWork::checkStatus()
     return false;
 }
 
-anchorManager::anchorManager() : allSpatialAnchor(nullptr), mPlane(nullptr)
+anchorManager::anchorManager() : allSpatialAnchor(nullptr), mPlane(nullptr), mObject(nullptr),
+    shouldUpdatePlaneVertex(false), shouldUpdateObjectVertex(false), mPlaneCount(0), mObjectCount(0)
 {
     // create back ground thread to handle persisted anchor import/export
     backGroundThread = new BGWork();
@@ -609,7 +610,7 @@ bool anchorManager::updateExistedAnchor(CubeManager *cm)
     return allAnchorCanTrack;
 }
 
-bool anchorManager::init(CubeManager *cm, PlaneManager *pm)
+bool anchorManager::init(CubeManager *cm, PlaneManager *pm, SceneObjectManager *om)
 {
     // Loading the WVR scene
     WVR_Result result = WVR_StartScene();
@@ -626,6 +627,7 @@ bool anchorManager::init(CubeManager *cm, PlaneManager *pm)
     getExistedSpatialAnchor(cm);
 
     getExistedPlanes(pm);
+    getExistedObjects(om);
 
     return true;
 }
@@ -635,10 +637,11 @@ void anchorManager::startScenePerception()
     // start perception before get scene plane/mesh (need permission)
     // can call WVR_StopScenePerception when you won't need to update data
     // WVR_StopScenePerception will be automatic called when app is closed
-    WVR_Result startPerceptionResult_2d = WVR_StartScenePerception(WVR_ScenePerceptionTarget_2dPlane);
-    WVR_Result startPerceptionResult_3d = WVR_StartScenePerception(WVR_ScenePerceptionTarget_SceneMesh);
+    WVR_Result startPerceptionResult_plane = WVR_StartScenePerception(WVR_ScenePerceptionTarget_2dPlane);
+    WVR_Result startPerceptionResult_sceneMesh = WVR_StartScenePerception(WVR_ScenePerceptionTarget_SceneMesh);
+    WVR_Result startPerceptionResult_object = WVR_StartScenePerception(WVR_ScenePerceptionTarget_3dObject);
 
-    if (WVR_Success != startPerceptionResult_2d || WVR_Success != startPerceptionResult_3d)
+    if (WVR_Success != startPerceptionResult_plane || WVR_Success != startPerceptionResult_sceneMesh || WVR_Success != startPerceptionResult_object)
         LOGE("WVR_StartScenePerception init fail");
 }
 
@@ -651,34 +654,135 @@ void anchorManager::deinit()
     WVR_StopScene();
 }
 
+bool anchorManager::planeChanged(uint32_t newCount, WVR_ScenePlane* newScenePlane){
+    if(newCount!=mPlaneCount)
+    {
+        LOGI("plane size changed");
+        return true;
+    }
+    else
+    {
+        for(int a=0; a<newCount; a++){
+            for(int b=0 ;b<WVR_UUID_SIZE; b++){
+                if(newScenePlane[a].uuid.data[b] != mPlane[a].uuid.data[b]){
+                    LOGI("plane UUID changed");
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 bool anchorManager::getExistedPlanes(PlaneManager *pm)
 {
+    // WVR API get scene num and allocate memory to get data
+    WVR_ScenePlane *mTempPlane;
+    uint32_t mTempPlaneCount;
+    WVR_GetScenePlanes(nullptr, 0, &mTempPlaneCount, WVR_PoseOriginModel_OriginOnHead, nullptr);
+    mTempPlane = (WVR_ScenePlane *)malloc(sizeof(WVR_ScenePlane) * mTempPlaneCount);
+    WVR_GetScenePlanes(nullptr, mTempPlaneCount, &mTempPlaneCount, WVR_PoseOriginModel_OriginOnHead, mTempPlane);
+    LOGI("get planes =%u", mTempPlaneCount);
+
+    // compare if new plane appear
+    if(planeChanged(mTempPlaneCount, mTempPlane)){
+        shouldUpdatePlaneVertex=true;
+    }
+
     // clear previous data
     pm->clearPlanes();
     if (mPlane != nullptr)
     {
         free(mPlane);
+        mPlane = nullptr;
     }
 
-    // WVR API get scene num and allocate memory to get data
-    WVR_GetScenePlanes(nullptr, 0, &planeCount, WVR_PoseOriginModel_OriginOnHead, nullptr);
-    mPlane = (WVR_ScenePlane *)malloc(sizeof(WVR_ScenePlane) * planeCount);
-    WVR_GetScenePlanes(nullptr, planeCount, &planeCount, WVR_PoseOriginModel_OriginOnHead, mPlane);
-    LOGI("get planes =%u", planeCount);
-
-    // copy to vector
-    for (int a = 0; a < planeCount; a++)
+    // replace new data
+    mPlane = mTempPlane;
+    mPlaneCount=mTempPlaneCount;
+    for (int a = 0; a < mPlaneCount; a++)
     {
+        // print name
+        LOGI("plane[%d] name=%s", a, mPlane[a].semanticName.name);
         pm->addPlane(a, convertToMatrix4(mPlane[a].pose), Vector3(mPlane[a].extent.width, mPlane[a].extent.height, 1));
     }
 
     return true;
 }
 
-void anchorManager::getMesh_2D(PlaneManager *pm, sceneMeshData2D *sceneMesh2D)
+bool anchorManager::objectChanged(uint32_t newCount, WVR_SceneObject* newSceneObject){
+    if(newCount!=mObjectCount)
+    {
+        LOGI("object size changed");
+        return true;
+    }
+    else
+    {
+        for(int a=0; a<newCount; a++){
+            for(int b=0 ;b<WVR_UUID_SIZE; b++){
+                if(newSceneObject[a].uuid.data[b] != mObject[a].uuid.data[b])
+                {
+                    LOGI("object UUID changed");
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+bool anchorManager::getExistedObjects(SceneObjectManager *om)
+{
+    // WVR API get scene num and allocate memory to get data
+    WVR_SceneObject *mTempObject;
+    uint32_t mTempObjectCount;
+    WVR_GetSceneObjects(0, &mTempObjectCount, WVR_PoseOriginModel_OriginOnHead, nullptr);
+    mTempObject = (WVR_SceneObject *)malloc(sizeof(WVR_SceneObject) * mTempObjectCount);
+    WVR_GetSceneObjects(mTempObjectCount, &mTempObjectCount, WVR_PoseOriginModel_OriginOnHead, mTempObject);
+    LOGI("get objects =%u", mTempObjectCount);
+
+    if(objectChanged(mTempObjectCount, mTempObject)){
+        shouldUpdateObjectVertex=true;
+    }
+
+    // clear previous data
+    om->clearSceneObjects();
+    if (mObject != nullptr)
+    {
+        free(mObject);
+        mObject = nullptr;
+    }
+
+    // copy to vector
+    mObject = mTempObject;
+    mObjectCount=mTempObjectCount;
+    for (int a = 0; a < mObjectCount; a++)
+    {
+        // print name
+        LOGI("object[%d] name=%s", a, mObject[a].semanticName.name);
+        om->addSceneObject(a, convertToMatrix4(mObject[a].pose), Vector3(mObject[a].extent.width, mObject[a].extent.height, mObject[a].extent.depth));
+    }
+
+    return true;
+}
+
+void anchorManager::getMesh_plane(PlaneManager *pm, sceneMeshData2D *sceneMesh2D)
 {
     std::vector<Plane> planes;
     planes = pm->getPlanes();
+
+    // update vertex pose
+    sceneMesh2D->mVertexPose.clear();
+    for (int b = 0; b < planes.size(); b++)
+    {
+        sceneMesh2D->mVertexPose.push_back(planes[b].mPose);
+    }
+
+    if(shouldUpdatePlaneVertex==false)
+        return;
+    shouldUpdatePlaneVertex=false;
 
     // check if is necessary to update 2D mesh
     // Strongly recommend not to call WVR_GetSceneMeshBuffer every frame, due to performance concern
@@ -687,11 +791,10 @@ void anchorManager::getMesh_2D(PlaneManager *pm, sceneMeshData2D *sceneMesh2D)
         sceneMesh2D->clearAllData();
         return;
     }
-    else if (sceneMesh2D->mLastMeshID != mPlane[0].meshBufferId)
+    else
     {
         LOGI("plane sceneMesh data should be updated");
         sceneMesh2D->clearAllData();
-        sceneMesh2D->mLastMeshID = mPlane[0].meshBufferId;
         sceneMesh2D->shouldPush2GPU = true;
 
         for (int b = 0; b < planes.size(); b++)
@@ -724,13 +827,9 @@ void anchorManager::getMesh_2D(PlaneManager *pm, sceneMeshData2D *sceneMesh2D)
         }
         sceneMesh2D->getOrderMesh();
     }
-    else // No need to update
-    {
-        return;
-    }
 }
 
-void anchorManager::getMesh_3D(sceneMeshData3D *sceneMesh3D)
+void anchorManager::getMesh_scene(sceneMeshData3D *sceneMesh3D)
 {
     sceneMesh3D->shouldPush2GPU = false;
     WVR_ScenePerceptionState spstate;
@@ -799,6 +898,7 @@ void anchorManager::getMesh_3D(sceneMeshData3D *sceneMesh3D)
                 }
                 sceneMesh3D->mMeshIndex.push_back(indexBuffer);
                 sceneMesh3D->mMeshVertex.push_back(vertexBuffer);
+                sceneMesh3D->mVertexPose.push_back(Matrix4());
             }
             sceneMesh3D->getOrderMesh();
         }
@@ -811,5 +911,66 @@ void anchorManager::getMesh_3D(sceneMeshData3D *sceneMesh3D)
     {
         LOGI("Scene perception not complete");
         sceneMesh3D->clearAllData();
+    }
+}
+
+void anchorManager::getMesh_object(SceneObjectManager *om, sceneMeshData3D *sceneMesh3D){
+    std::vector<SceneObject> objects;
+    objects = om->getSceneObjects();
+
+    // update vertex pose
+    sceneMesh3D->mVertexPose.clear();
+    for (int b = 0; b < objects.size(); b++)
+    {
+        sceneMesh3D->mVertexPose.push_back(objects[b].mPose);
+    }
+
+    if (shouldUpdateObjectVertex==false)
+        return;
+    shouldUpdateObjectVertex=false;
+
+    // check if is necessary to update object mesh
+    // Strongly recommend not to call WVR_GetSceneMeshBuffer every frame, due to performance concern
+    if (objects.size() == 0)
+    {
+        sceneMesh3D->clearAllData();
+        return;
+    }
+    else
+    {
+        LOGI("all sceneObject mesh data should be updated");
+        sceneMesh3D->clearAllData();
+        sceneMesh3D->mLastMeshID = mObject[0].meshBufferId;
+        sceneMesh3D->shouldPush2GPU = true;
+
+        for (int b = 0; b < objects.size(); b++)
+        {
+            WVR_SceneMeshBuffer buffer0 = {0, 0, nullptr, 0, 0, nullptr};
+
+            // get sceneMesh size
+            if (WVR_GetSceneMeshBuffer(mObject[objects[b].index].meshBufferId, WVR_PoseOriginModel_OriginOnHead, &buffer0) != WVR_Success)
+            {
+                LOGE("Fail to get object mesh size. Clear all");
+                sceneMesh3D->clearAllData();
+            }
+            else
+                LOGI("Get mesh index size=%d", buffer0.indexCountOutput);
+
+            std::vector<WVR_Vector3f> vertexBuffer(buffer0.vertexCountOutput);
+            std::vector<uint32_t> indexBuffer(buffer0.indexCountOutput);
+            WVR_SceneMeshBuffer buffer1 = {buffer0.vertexCountOutput, buffer0.vertexCountOutput, vertexBuffer.data(),
+                                           buffer0.indexCountOutput, buffer0.indexCountOutput, indexBuffer.data()};
+
+            // get sceneMesh data
+            if (WVR_GetSceneMeshBuffer(mObject[objects[b].index].meshBufferId, WVR_PoseOriginModel_OriginOnHead, &buffer1) != WVR_Success)
+            {
+                LOGE("Fail to get object mesh data. Clear all");
+                sceneMesh3D->clearAllData();
+                return;
+            }
+            sceneMesh3D->mMeshIndex.push_back(indexBuffer);
+            sceneMesh3D->mMeshVertex.push_back(vertexBuffer);
+        }
+        sceneMesh3D->getOrderMesh();
     }
 }

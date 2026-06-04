@@ -248,14 +248,9 @@ void MarkerManager::getTrackingData()
 bool MarkerManager::deleteAllTrackableMarker()
 {
     LOGI("try destroy all");
-    for (int a = 0; a < detectingArucoData.size(); a++)
-    {
-        if (detectingArucoData[a].state == WVR_MarkerTrackingState_Stopped)
-        {
-            LOGI("destroy all trackable marker at [%d]", a);
-            WVR_DestroyTrackableMarker(detectingArucoData[a].uuid);
-        }
-    }
+    if(WVR_ClearTrackableMarkers()!=WVR_Success)
+        LOGI("try destroy fail");
+
     // refresh data
     getDetectingData();
     return true;

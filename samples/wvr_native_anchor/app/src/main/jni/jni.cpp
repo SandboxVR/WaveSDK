@@ -90,12 +90,12 @@ int main(int argc, char *argv[])
 
         app->updateAnchors();
         app->updateScenePlanes();
-
+        app->updateSceneObjects();
         if (sceneMeshPermissionGranted == false)
         {
             LOGI("Perceptoion permission is denied, can not get mesh data.");
         }
-        app->updateMesh();
+        app->updateSceneMeshes();
         app->updateHMDMatrixPose();
         app->updateInteractStatus();
     }

@@ -21,7 +21,7 @@
 PlaneManager::PlaneManager() : Object()
 {
 
-    const char *shaderNames = "Cubes";
+    const char *shaderNames = "Planes";
     const char *vpaths = "shader/vertex/plane_vertex.glsl";
     const char *fpaths = "shader/fragment/plane_fragment.glsl";
 

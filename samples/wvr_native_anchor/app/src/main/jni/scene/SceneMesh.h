@@ -19,6 +19,7 @@ public:
     std::vector<std::vector<WVR_Vector3f>> mMeshVertex;
     std::vector<std::vector<float>> mMeshOrder;
     std::vector<int> mVertexSize;
+    std::vector<Matrix4> mVertexPose;
     void clearAllData();
     void getOrderMesh();
     Vector3 selectColor(int num);
@@ -31,6 +32,7 @@ class sceneMeshData3D : public sceneMeshData
 public:
     WVR_SceneMeshType mMeshType;
     sceneMeshData3D(WVR_SceneMeshType meshType);
+    sceneMeshData3D();
     ~sceneMeshData3D();
 };
 
@@ -50,6 +52,7 @@ public:
     sceneMeshData3D *mVisualMeshData;
     sceneMeshData3D *mColliderMeshData;
     sceneMeshData2D *mPlaneMeshData;
+    sceneMeshData3D *mObjectMeshData;
     SceneMesh();
     ~SceneMesh();
     void render(sceneMeshData *meshData, Matrix4 projection, Matrix4 eye, Matrix4 view);

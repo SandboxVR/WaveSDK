@@ -9,6 +9,7 @@ sceneMeshData::~sceneMeshData()
     mMeshIndex.clear();
     mMeshVertex.clear();
     mMeshOrder.clear();
+    mVertexPose.clear();
 }
 
 void sceneMeshData::clearAllData()
@@ -16,6 +17,7 @@ void sceneMeshData::clearAllData()
     mMeshIndex.clear();
     mMeshVertex.clear();
     mMeshOrder.clear();
+    mVertexPose.clear();
     mLastMeshID = -1;
 }
 
@@ -133,6 +135,10 @@ sceneMeshData3D::sceneMeshData3D(WVR_SceneMeshType meshType)
     mMeshType = meshType;
 }
 
+sceneMeshData3D::sceneMeshData3D()
+{
+}
+
 sceneMeshData3D::~sceneMeshData3D()
 {
 }
@@ -143,6 +149,7 @@ SceneMesh::SceneMesh()
     mVisualMeshData = new sceneMeshData3D(WVR_SceneMeshType_VisualMesh);
     mColliderMeshData = new sceneMeshData3D(WVR_SceneMeshType_ColliderMesh);
     mPlaneMeshData = new sceneMeshData2D();
+    mObjectMeshData = new sceneMeshData3D();
 
     // init opengl stuff
     const char *shaderNames = "Scene";
@@ -196,6 +203,7 @@ SceneMesh::~SceneMesh()
     delete mVisualMeshData;
     delete mColliderMeshData;
     delete mPlaneMeshData;
+    delete mObjectMeshData;
 }
 
 void SceneMesh::changeRenderTarget()
@@ -203,13 +211,12 @@ void SceneMesh::changeRenderTarget()
     mVisualMeshData->shouldPush2GPU = true;
     mColliderMeshData->shouldPush2GPU = true;
     mPlaneMeshData->shouldPush2GPU = true;
+    mObjectMeshData->shouldPush2GPU = true;
 }
 
 void SceneMesh::render(sceneMeshData *meshData, Matrix4 projection, Matrix4 eye, Matrix4 view)
 {
     mShader->useProgram();
-
-    Matrix4 matrix = projection * eye * view;
 
     GLboolean oldCullingFace = glIsEnabled(GL_CULL_FACE);
     GLboolean oldBlend = glIsEnabled(GL_BLEND);
@@ -239,8 +246,9 @@ void SceneMesh::render(sceneMeshData *meshData, Matrix4 projection, Matrix4 eye,
 
             mVAO->unbindVAO();
             mVAO->unbindArrayBuffer();
-            meshData->mVertexSize.push_back(meshData->mMeshOrder[a].size() / 6); // record vertex number
-            LOGI("render %d vertex", meshData->mVertexSize[a]);
+            meshData->mVertexSize.push_back(meshData->mMeshOrder[a].size() / 6);
+            LOGI("render %d vertex (upload vertex to gpu)", meshData->mVertexSize[a]);
+            Matrix4 matrix = projection * eye * view * meshData->mVertexPose[a];
             glUniformMatrix4fv(mMatrixLocation, 1, false, matrix.get());
             mVAO->bindVAO();
             glDrawArrays(GL_TRIANGLES, 0, meshData->mVertexSize[a]);
@@ -248,8 +256,10 @@ void SceneMesh::render(sceneMeshData *meshData, Matrix4 projection, Matrix4 eye,
         }
         meshData->shouldPush2GPU = false;
     }
-    else if (meshData->mVertexSize.size() > 0 && meshData->mLastMeshID!=-1)
+    else if (meshData->mVertexSize.size() > 0)
     {
+        LOGI("render %d vertex", meshData->mVertexSize[0]);
+        Matrix4 matrix = projection * eye * view * meshData->mVertexPose[0];
         glUniformMatrix4fv(mMatrixLocation, 1, false, matrix.get());
         mVAO->bindVAO();
         glDrawArrays(GL_TRIANGLES, 0, meshData->mVertexSize[0]);

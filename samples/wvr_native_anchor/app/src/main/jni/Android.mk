@@ -60,7 +60,8 @@ COMMON_FILES := \
     scene/Plane.cpp \
     scene/Axes.cpp \
     scene/Text.cpp \
-    scene/SceneMesh.cpp
+    scene/SceneMesh.cpp \
+    scene/SceneObject.cpp
 
 #USE_CONTROLLER use device controller.
 #USE_CUSTOM_CONTROLLER use device emitter.

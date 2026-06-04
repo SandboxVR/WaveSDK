@@ -1,1 +1,0 @@
-/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/misc/build/wvr_native_marker/intermediates/ndkBuild/bit32Release/obj/local/arm64-v8a

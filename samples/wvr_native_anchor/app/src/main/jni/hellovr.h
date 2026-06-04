@@ -77,7 +77,8 @@ public:
     void updateEyeToHeadMatrix(bool is6DoF);
     void updateAnchors();
     void updateScenePlanes();
-    void updateMesh();
+    void updateSceneObjects();
+    void updateSceneMeshes();
     void updateInteractStatus();
 
     inline Matrix4 wvrmatrixConverter(const WVR_Matrix4f_t &mat) const
@@ -152,6 +153,7 @@ protected:
     PlaneManager *mPlanes;
     int meshSelect; // visual(1); collider(2); plane(3)
     SceneMesh *mSceneMesh;
+    SceneObjectManager *mSceneObjects;
 
     std::vector<float> mLUV{0, 0};
     std::vector<float> mUUV{0, 0};

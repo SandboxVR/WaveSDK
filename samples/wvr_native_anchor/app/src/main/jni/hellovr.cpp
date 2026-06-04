@@ -81,7 +81,7 @@ static void dumpMatrix(const char *name, const Matrix4 &mat)
 }
 
 MainApplication::MainApplication()
-    : mAnchorType(spatial), deviceSupport(false), mAnchorManager(nullptr), mPlanes(nullptr), meshSelect(1),
+    : mAnchorType(spatial), deviceSupport(false), mAnchorManager(nullptr), mPlanes(nullptr), mSceneObjects(nullptr), meshSelect(1),
       mControllerCount(0), mControllerCount_Last(-1), mValidPoseCount(0), mValidPoseCount_Last(-1),
       mPoseClasses(""), m3DOF(true), mMove(true), mTimeDiff(0.0f), mDriveSpeed(0.0f), mDriveAngle(0.0f),
       mIndexLeft(0), mIndexRight(0), mLeftEyeQ(NULL), mRightEyeQ(NULL), canChangeAnchorStatus(true)
@@ -115,6 +115,7 @@ void MainApplication::onResume()
         mAnchorManager->getExistedPersistedAnchor();
         mAnchorManager->getExistedSpatialAnchor(mCubes);
         mAnchorManager->getExistedPlanes(mPlanes);
+        mAnchorManager->getExistedObjects(mSceneObjects);
     }
 }
 
@@ -128,21 +129,30 @@ void MainApplication::updateScenePlanes()
     mAnchorManager->getExistedPlanes(mPlanes);
 }
 
-void MainApplication::updateMesh()
+void MainApplication::updateSceneObjects()
+{
+    mAnchorManager->getExistedObjects(mSceneObjects);
+}
+
+void MainApplication::updateSceneMeshes()
 {
     switch (meshSelect)
     {
     case 1:
         // render collider mesh
-        mAnchorManager->getMesh_3D(mSceneMesh->mColliderMeshData);
+        mAnchorManager->getMesh_scene(mSceneMesh->mColliderMeshData);
         break;
     case 2:
         // render visual mesh
-        mAnchorManager->getMesh_3D(mSceneMesh->mVisualMeshData);
+        mAnchorManager->getMesh_scene(mSceneMesh->mVisualMeshData);
         break;
     case 3:
         // render 2d plane
-        mAnchorManager->getMesh_2D(mPlanes, mSceneMesh->mPlaneMeshData);
+        mAnchorManager->getMesh_plane(mPlanes, mSceneMesh->mPlaneMeshData);
+        break;
+    case 4:
+        // render 3D scene object
+        mAnchorManager->getMesh_object(mSceneObjects, mSceneMesh->mObjectMeshData);
         break;
     default:
         break;
@@ -230,6 +240,7 @@ bool MainApplication::initGL()
     mText->setEnable(true);
     mCubes = new CubeManager();
     mPlanes = new PlaneManager();
+    mSceneObjects = new SceneObjectManager();
     mSceneMesh = new SceneMesh();
 
     mControllerObjs[0] = new Controller(WVR_DeviceType_Controller_Right);
@@ -596,8 +607,8 @@ bool MainApplication::handleInput()
             }
             if (event.input.inputId == WVR_InputId_Alias1_B)
             {
-                LOGI("BTCheck WVR_InputId_Alias1_B (Collider/Visual/Plane mesh)");
-                meshSelect = meshSelect % 3 + 1;
+                LOGI("BTCheck WVR_InputId_Alias1_B (Collider/Visual/Plane/Object mesh)");
+                meshSelect = meshSelect % 4 + 1;
                 mSceneMesh->changeRenderTarget();
             }
         }
@@ -817,7 +828,7 @@ WVR_Result MainApplication::settingPassThrough()
 
 void MainApplication::initAnchor()
 {
-    mAnchorManager->init(mCubes, mPlanes);
+    mAnchorManager->init(mCubes, mPlanes, mSceneObjects);
 }
 
 void MainApplication::deinitAnchor()
@@ -1153,12 +1164,17 @@ void MainApplication::renderScene(WVR_Eye nEye)
                     // render 2d plane
                     mSceneMesh->render(mSceneMesh->mPlaneMeshData, mProjectionLeft, mEyePosLeft, mHMDPose);
                     break;
+                case 4:
+                    // render object mesh
+                    mSceneMesh->render(mSceneMesh->mObjectMeshData, mProjectionLeft, mEyePosLeft, mHMDPose);
+                    break;
                 default:
                     break;
                 }
             }
             mCubes->renderCubes(mProjectionLeft, mEyePosLeft, mHMDPose);
             mPlanes->render(mProjectionLeft, mEyePosLeft, mHMDPose);
+            mSceneObjects->render(mProjectionLeft, mEyePosLeft, mHMDPose);
         }
         mText->drawSequence(mProjectionLeft, mEyePosLeft, mHMDPose, Vector4(0, 0, 1.0f, 0.4f));
     }
@@ -1172,15 +1188,23 @@ void MainApplication::renderScene(WVR_Eye nEye)
                 {
                 case 1:
                     // render collider mesh
+                    LOGI("render Collider mesh");
                     mSceneMesh->render(mSceneMesh->mColliderMeshData, mProjectionRight, mEyePosRight, mHMDPose);
                     break;
                 case 2:
                     // render visual mesh
+                    LOGI("render visual mesh");
                     mSceneMesh->render(mSceneMesh->mVisualMeshData, mProjectionRight, mEyePosRight, mHMDPose);
                     break;
                 case 3:
                     // render 2d plane
+                    LOGI("render plane mesh");
                     mSceneMesh->render(mSceneMesh->mPlaneMeshData, mProjectionRight, mEyePosRight, mHMDPose);
+                    break;
+                case 4:
+                    // render object mesh
+                    LOGI("render object mesh");
+                    mSceneMesh->render(mSceneMesh->mObjectMeshData, mProjectionRight, mEyePosRight, mHMDPose);
                     break;
                 default:
                     break;
@@ -1188,6 +1212,7 @@ void MainApplication::renderScene(WVR_Eye nEye)
             }
             mCubes->renderCubes(mProjectionRight, mEyePosRight, mHMDPose);
             mPlanes->render(mProjectionRight, mEyePosRight, mHMDPose);
+            mSceneObjects->render(mProjectionRight, mEyePosRight, mHMDPose);
         }
         mText->drawSequence(mProjectionRight, mEyePosRight, mHMDPose, Vector4(0, 0, 1.0f, 0.4f));
     }

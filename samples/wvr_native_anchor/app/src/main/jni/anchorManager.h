@@ -3,6 +3,7 @@
 #include <Plane.h>
 #include "Cube.h"
 #include "SceneMesh.h"
+#include "SceneObject.h"
 #include <wvr/wvr_anchor.h>
 #include <wvr/wvr_scene.h>
 #include <wvr/wvr_device.h>
@@ -48,7 +49,12 @@ class anchorManager
     uint32_t persistedAnchorCount;
 
     WVR_ScenePlane *mPlane;
-    uint32_t planeCount;
+    uint32_t mPlaneCount;
+    bool shouldUpdatePlaneVertex;
+
+    WVR_SceneObject *mObject;
+    uint32_t mObjectCount;
+    bool shouldUpdateObjectVertex;
 
 public:
     // export and import persisted anchor on back ground thread
@@ -56,14 +62,17 @@ public:
 
     anchorManager();
     ~anchorManager();
-    bool init(CubeManager *cm, PlaneManager *pm);
+    bool init(CubeManager *cm, PlaneManager *pm, SceneObjectManager *om);
     void startScenePerception();
     void deinit();
     bool getExistedPlanes(PlaneManager *pm);
+    bool planeChanged(uint32_t newCount, WVR_ScenePlane* newScenePlane);
     bool createCubeAnchor(anchorType type, Matrix4 pose, Vector3 scale);
     bool getExistedSpatialAnchor(CubeManager *cm);
     bool getExistedCachedAnchor();
     bool getExistedPersistedAnchor();
+    bool getExistedObjects(SceneObjectManager *om);
+    bool objectChanged(uint32_t newCount, WVR_SceneObject* newScenePlane);
     bool updateExistedAnchor(CubeManager *cm);
     bool addCubeAnchor(anchorType type, PlaneManager *pm, Matrix4 controllerPose, Vector3 scale = Vector3(0.05, 0.05, 0.05));
     bool addUndefineCubeAnchor(anchorType type, CubeManager *cm);
@@ -77,8 +86,9 @@ public:
     Matrix4 convertToMatrix4(WVR_Pose_t pose);
     WVR_Pose_t convertToWVRPose(Matrix4 pose);
     // mesh
-    void getMesh_2D(PlaneManager *pm, sceneMeshData2D *sceneMesh2D);
-    void getMesh_3D(sceneMeshData3D *sceneMesh3D); // visual mesh and collider mesh
+    void getMesh_plane(PlaneManager *pm, sceneMeshData2D *sceneMesh2D);
+    void getMesh_scene(sceneMeshData3D *sceneMesh3D); // visual mesh and collider mesh
+    void getMesh_object(SceneObjectManager *om, sceneMeshData3D *sceneMesh3D);
 };
 
 #endif // WVR_NATIVE_ANCHOR_ANCHORMANAGER_H

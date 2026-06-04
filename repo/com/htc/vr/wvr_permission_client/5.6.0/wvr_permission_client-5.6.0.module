@@ -1,0 +1,67 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.htc.vr",
+    "module": "wvr_permission_client",
+    "version": "5.6.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.2.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "wvr_permission_client-5.6.0.aar",
+          "url": "wvr_permission_client-5.6.0.aar",
+          "size": 122533,
+          "sha512": "01bcd139d817eb2aec35a01a8d9464e2723b9189c3a9bc2920d5cb96c987574ac8d7528cc6eeb5f8a48d16172b5b3600c83e6fe36a0e227849e665ec6f7cc99b",
+          "sha256": "e70da9dc79fa474c7269df3061c3583e9bd52911f31019528121bca6f6893c3c",
+          "sha1": "6b9cbd1797989c9d6732299f06ad09f5abe039fe",
+          "md5": "e588b281bb137044b020ad17b5e11dfe"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.htc.vr",
+          "module": "wvr.common.utils",
+          "version": {
+            "requires": "5.6.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "wvr_permission_client-5.6.0.aar",
+          "url": "wvr_permission_client-5.6.0.aar",
+          "size": 122533,
+          "sha512": "01bcd139d817eb2aec35a01a8d9464e2723b9189c3a9bc2920d5cb96c987574ac8d7528cc6eeb5f8a48d16172b5b3600c83e6fe36a0e227849e665ec6f7cc99b",
+          "sha256": "e70da9dc79fa474c7269df3061c3583e9bd52911f31019528121bca6f6893c3c",
+          "sha1": "6b9cbd1797989c9d6732299f06ad09f5abe039fe",
+          "md5": "e588b281bb137044b020ad17b5e11dfe"
+        }
+      ]
+    }
+  ]
+}
