@@ -1,0 +1,67 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.htc.vr",
+    "module": "wvr_client",
+    "version": "5.2.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "wvr_client-5.2.1.aar",
+          "url": "wvr_client-5.2.1.aar",
+          "size": 19261442,
+          "sha512": "f17327dce372f4fd539ab73508a5adcf7d6e7ff08689279e94c5f12f972f65bca860eb8d41879c5b103628c8113b4417e65d0e8c72eea775fac3810e19d5640d",
+          "sha256": "5838d38d714a3b4e2f75c46763fa3d2589e9f6cce4798372d4df449eb60f591b",
+          "sha1": "31d052e3f019ac634a09f2a30a1a57bc456a52ff",
+          "md5": "17a581690a7df2cacd5018aa33ce6875"
+        }
+      ]
+    },
+    {
+      "name": "releaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.htc.vr",
+          "module": "vr.client.abi",
+          "version": {
+            "requires": "5.2.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "wvr_client-5.2.1.aar",
+          "url": "wvr_client-5.2.1.aar",
+          "size": 19261442,
+          "sha512": "f17327dce372f4fd539ab73508a5adcf7d6e7ff08689279e94c5f12f972f65bca860eb8d41879c5b103628c8113b4417e65d0e8c72eea775fac3810e19d5640d",
+          "sha256": "5838d38d714a3b4e2f75c46763fa3d2589e9f6cce4798372d4df449eb60f591b",
+          "sha1": "31d052e3f019ac634a09f2a30a1a57bc456a52ff",
+          "md5": "17a581690a7df2cacd5018aa33ce6875"
+        }
+      ]
+    }
+  ]
+}
