@@ -1,7 +1,150 @@
 #include "anchorManager.h"
+#include <unistd.h>
+#include <fstream>
 
-anchorManager::anchorManager() : mAnchor(nullptr), mPlane(nullptr)
+BGWork::BGWork()
 {
+    task.persistDataSize = 0;
+    task.persistData = nullptr;
+    task.workType = IDEAL;
+
+    taskPtr = &task;
+
+    pthread_mutex_init(&m_mutex, NULL);
+    pthread_cond_init(&m_condv, NULL);
+
+    std::function<void()> importExportFunc = [this]()
+    {
+        while (true)
+        {
+            // wait work
+            pthread_mutex_lock(&m_mutex);
+            while (taskPtr->workType == IDEAL)
+            {
+                LOGI("BGThread wait job...");
+                pthread_cond_wait(&m_condv, &m_mutex);
+            }
+
+            if (taskPtr->workType == IMPORT_ANCHOR)
+            {
+                LOGI("BGThread IMPORT_ANCHOR...");
+                // open persisted anchor in device. This file is pushed by other device
+                std::ifstream importFile("/data/user/0/com.htc.vr.samples.wvr_native_anchor/files/import.bin", std::ios::in);
+                if (importFile.is_open())
+                {
+                    LOGI("import anchor file exist, replace import data");
+                    if (taskPtr->persistData != nullptr)
+                    {
+                        free(taskPtr->persistData);
+                        taskPtr->persistDataSize = 0;
+                    }
+
+                    importFile.seekg(0, std::ifstream::end);
+                    taskPtr->persistDataSize = importFile.tellg();
+                    LOGI("import persisted anchor Size=%d", taskPtr->persistDataSize);
+                    importFile.seekg(0, std::ifstream::beg);
+                    taskPtr->persistData = (char *)malloc(sizeof(char) * taskPtr->persistDataSize);
+                    importFile.read(taskPtr->persistData, taskPtr->persistDataSize);
+                    importFile.close();
+                }
+
+                if (taskPtr->persistDataSize > 0)
+                {
+                    WVR_ImportPersistedSpatialAnchor(taskPtr->persistDataSize, taskPtr->persistData);
+                }
+                else
+                {
+                    LOGW("no persisted data can be import");
+                }
+                LOGI("BGThread IMPORT_ANCHOR done");
+            }
+            else if (taskPtr->workType == EXPORT_ANCHOR)
+            {
+                LOGI("BGThread EXPORT_ANCHOR...");
+                if (taskPtr->persistData != nullptr)
+                {
+                    free(taskPtr->persistData);
+                    taskPtr->persistDataSize = 0;
+                }
+
+                if (WVR_ExportPersistedSpatialAnchor(&taskPtr->persistedName, 0, &taskPtr->persistDataSize, nullptr) == WVR_Success)
+                {
+                    LOGI("export persisted anchor persistDataSize=%d", taskPtr->persistDataSize);
+                    taskPtr->persistData = (char *)malloc(sizeof(char) * taskPtr->persistDataSize);
+                }
+
+                if (WVR_ExportPersistedSpatialAnchor(&taskPtr->persistedName, taskPtr->persistDataSize, &taskPtr->persistDataSize, taskPtr->persistData) != WVR_Success)
+                {
+                    LOGE("export persisted anchor fail");
+                    free(taskPtr->persistData);
+                    taskPtr->persistDataSize = 0;
+                }
+                else
+                {
+                    // store persisted anchor in device. can push this file to other device
+                    std::ofstream binFile("/data/user/0/com.htc.vr.samples.wvr_native_anchor/files/export.bin", std::ios::out | std::ios::binary);
+                    binFile.write(taskPtr->persistData, taskPtr->persistDataSize);
+                    binFile.close();
+                }
+                LOGI("BGThread EXPORT_ANCHOR done");
+            }
+
+            taskPtr->workType = IDEAL;
+            pthread_mutex_unlock(&m_mutex);
+        }
+        return NULL;
+    };
+
+    bgThread = std::thread(importExportFunc);
+}
+
+BGWork::~BGWork()
+{
+    pthread_mutex_destroy(&m_mutex);
+    pthread_cond_destroy(&m_condv);
+}
+
+bool BGWork::exportPersisted(WVR_SpatialAnchorName anchorName)
+{
+    if (pthread_mutex_trylock(&m_mutex) == 0)
+    {
+        taskPtr->workType = EXPORT_ANCHOR;
+        taskPtr->persistedName = anchorName;
+        pthread_cond_signal(&m_condv);
+        pthread_mutex_unlock(&m_mutex);
+        return true;
+    }
+    LOGI("exportPersisted fail; thread busy");
+    return false;
+}
+
+bool BGWork::importPersisted()
+{
+    if (pthread_mutex_trylock(&m_mutex) == 0)
+    {
+        taskPtr->workType = IMPORT_ANCHOR;
+        pthread_cond_signal(&m_condv);
+        pthread_mutex_unlock(&m_mutex);
+        return true;
+    }
+    LOGI("importPersisted fail; thread busy");
+    return false;
+}
+
+bool BGWork::checkStatus()
+{
+    if (pthread_mutex_trylock(&m_mutex) == 0)
+    {
+        pthread_mutex_unlock(&m_mutex);
+        return true;
+    }
+    return false;
+}
+
+anchorManager::anchorManager() : allSpatialAnchor(nullptr), mPlane(nullptr)
+{
+    // create back ground thread to handle persisted anchor import/export
+    backGroundThread = new BGWork();
 }
 
 anchorManager::~anchorManager()
@@ -39,35 +182,121 @@ Matrix4 anchorManager::convertToMatrix4(WVR_Pose_t pose)
     return output;
 }
 
-bool anchorManager::createCubeAnchor(Matrix4 pose, Vector3 scale)
+bool anchorManager::createCubeAnchor(anchorType type, Matrix4 pose, Vector3 scale)
 {
-    // this example anchor name should be "c=scale.x=scale.y=scale.z"
-    std::string planeName("c");
-    std::string dash("=");
-
-    WVR_SpatialAnchor anchor;
+    // this example anchor name should be "s/c/p=time=scale.x=scale.y=scale.z="
     WVR_SpatialAnchorCreateInfo info;
-
     info.originModel = WVR_PoseOriginModel_OriginOnHead;
     info.pose = convertToWVRPose(pose);
-    planeName += dash;
-    planeName += std::to_string(round(scale.x * 10000) / 10000);
-    planeName += dash;
-    planeName += std::to_string(round(scale.y * 10000) / 10000);
-    planeName += dash;
-    planeName += std::to_string(round(scale.z * 10000) / 10000);
-    planeName += dash;
-    std::copy(planeName.begin(), planeName.end(), info.anchorName.name);
-    LOGI("addAnchor cube scale %f, %f, %f", round(scale.x * 10000) / 10000, round(scale.y * 10000) / 10000, round(scale.z * 10000) / 10000);
 
-    WVR_Result res = WVR_CreateSpatialAnchor(&info, &anchor);
-    if (res != WVR_Success)
+    // anchor name()
+    std::string dash("=");
+    // type tag
+    std::string spatialName;
+    switch (type)
     {
-        LOGE("add anchor fail (%d)", res);
+    case spatial:
+        // represent spatial anchor
+        spatialName = {"s"};
+        break;
+    case cached:
+        // represent cached anchor
+        spatialName = {"c"};
+        break;
+    case persisted:
+        // represent persisted anchor
+        spatialName = {"p"};
+        break;
+    default:
+        LOGE("createCubeAnchor type get error");
+        break;
     }
-    else
+    spatialName += dash;
+
+    // time tag
+    static int preventSameName = 0;
+    preventSameName = (preventSameName + 1) % 10; // this allow create 10 times in one second
+    uint64_t sec = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    std::string tempString = std::to_string(sec);
+    tempString = std::to_string(preventSameName) + tempString;
+    spatialName += tempString;
+    spatialName += dash;
+
+    // scale tag
+    spatialName += std::to_string(round(scale.x * 10000) / 10000);
+    spatialName += dash;
+    spatialName += std::to_string(round(scale.y * 10000) / 10000);
+    spatialName += dash;
+    spatialName += std::to_string(round(scale.z * 10000) / 10000);
+    spatialName += dash;
+
+    // add ending char
+    spatialName.push_back('\0');
+
+    std::copy(spatialName.begin(), spatialName.end(), info.anchorName.name);
+    LOGI("addAnchor , scale:(%f, %f, %f)", round(scale.x * 10000) / 10000, round(scale.y * 10000) / 10000, round(scale.z * 10000) / 10000);
+
+    // create anchor
+    WVR_SpatialAnchor anchor;
+    LOGI("create spatial anchor name(%d)=%s", spatialName.size(), spatialName.c_str());
+    switch (type)
     {
-        LOGI("add anchor success (%d)", res);
+    case spatial:
+        // create spatical anchor
+        if (WVR_CreateSpatialAnchor(&info, &anchor) != WVR_Success)
+        {
+            LOGE("create spatial anchor fail");
+        }
+        break;
+    case cached:
+        if (WVR_CreateSpatialAnchor(&info, &anchor) != WVR_Success)
+        {
+            LOGE("create spatial anchor fail");
+            return false;
+        }
+        // create cached anchor
+        WVR_SpatialAnchorCacheInfo cacheInfo;
+        cacheInfo.spatialAnchor = anchor;
+        cacheInfo.cachedSpatialAnchorName = info.anchorName;
+        LOGI("create cached anchor");
+        if (WVR_CacheSpatialAnchor(&cacheInfo) != WVR_Success)
+            LOGE("create cached anchor fail");
+
+        // destroy spatial anchor. In this sample, we will refrsh all spatial anchor by
+        // using WVR_EnumerateCachedSpatialAnchorNames and WVR_CreateSpatialAnchorFromCacheName
+        WVR_DestroySpatialAnchor(anchor);
+        break;
+    case persisted:
+        // check if persisted anchor is full
+        WVR_PersistedSpatialAnchorCountGetInfo countInfo;
+        WVR_GetPersistedSpatialAnchorCount(&countInfo);
+        if (countInfo.currentTrackingCount < countInfo.maximumTrackingCount)
+        {
+            if (WVR_CreateSpatialAnchor(&info, &anchor) != WVR_Success)
+            {
+                LOGE("create spatial anchor fail");
+                return false;
+            }
+            // create persisted anchor
+            WVR_SpatialAnchorPersistInfo persistInfo;
+            persistInfo.spatialAnchor = anchor;
+            persistInfo.persistedSpatialAnchorName = info.anchorName;
+            LOGI("create persisted anchor");
+            if (WVR_PersistSpatialAnchor(&persistInfo) != WVR_Success)
+                LOGE("create persisted anchor fail");
+
+            // destroy spatial anchor. In this sample, we will refrsh all spatial anchor by
+            // using WVR_EnumerateCachedSpatialAnchorNames and WVR_CreateSpatialAnchorFromCacheName
+            WVR_DestroySpatialAnchor(anchor);
+        }
+        else
+        {
+            LOGE("persist anchor is full");
+        }
+        break;
+    default:
+        LOGE("type get error");
+        break;
     }
 
     return true;
@@ -79,6 +308,10 @@ Vector3 anchorManager::getScaleFromName(std::string str)
     std::string ss;
     float out[3];
     std::string dash = "=";
+
+    pos = str.find("=");
+    ss = str.substr(0, pos);
+    str.erase(0, pos + dash.length());
 
     pos = str.find("=");
     ss = str.substr(0, pos);
@@ -101,60 +334,279 @@ Vector3 anchorManager::getScaleFromName(std::string str)
     return Vector3(out[0], out[1], out[2]);
 }
 
-bool anchorManager::addUndefineCubeAnchor(CubeManager *cm)
+bool anchorManager::addUndefineCubeAnchor(anchorType type, CubeManager *cm)
 {
     for (int a = 0; a < cm->undefineCubes.size(); a++)
     {
-        createCubeAnchor(cm->undefineCubes[a].mPose, cm->undefineCubes[a].mScale);
+        createCubeAnchor(type, cm->undefineCubes[a].mPose, cm->undefineCubes[a].mScale);
         LOGI("add cube scale[%d] %f %f %f", a, cm->undefineCubes[a].mScale.x, cm->undefineCubes[a].mScale.y, cm->undefineCubes[a].mScale.z);
     }
     return true;
 }
 
-bool anchorManager::addCubeAnchor(PlaneManager *pm, Matrix4 controllerPose, Vector3 scale)
+bool anchorManager::addCubeAnchor(anchorType type, PlaneManager *pm, Matrix4 controllerPose, Vector3 scale)
 {
-    // need to rotate to align with plane coordinate
-    Matrix4 r90;
-    Matrix4 finalPose;
-    r90.rotateX(90);
-    for (int a = 0; a < pm->intersectionPose_world.size(); a++)
+    if (pm->intersectionPose_world.size() > 0)
     {
-        finalPose = pm->intersectionPose_world[a] * pm->mappingPoseOnPlane(controllerPose, pm->intersectionPose_world[a]);
-        finalPose = finalPose * r90;
-        createCubeAnchor(finalPose, scale);
+        // need to rotate to align with plane coordinate
+        Matrix4 r90;
+        Matrix4 finalPose;
+        r90.rotateX(90);
+        for (int a = 0; a < pm->intersectionPose_world.size(); a++)
+        {
+            finalPose = pm->intersectionPose_world[a] * pm->mappingPoseOnPlane(controllerPose, pm->intersectionPose_world[a]);
+            finalPose = finalPose * r90;
+            createCubeAnchor(type, finalPose, scale);
+        }
     }
+    else
+    {
+        createCubeAnchor(type, controllerPose, scale);
+    }
+
     return true;
 }
 
-bool anchorManager::clearAnchor()
+bool anchorManager::clearTypeAnchor(anchorType type, CubeManager *cm)
 {
-    LOGI("clean anchor %d", anchorCount);
-    for (int a = 0; a < anchorCount; a++)
+    bool result = true;
+
+    LOGI("clear all anchors %d", (*cm->targetCubeVector).size());
+    for (int a = 0; a < (*cm->targetCubeVector).size(); a++)
     {
-        WVR_DestroySpatialAnchor(*(mAnchor + a));
+        // clear all spatial anchors
+        if (!WVR_DestroySpatialAnchor(*(allSpatialAnchor + (*cm->targetCubeVector)[a]->anchorIndex)))
+        {
+            result = false;
+            LOGE("delete spatial anchor %d fail", a);
+        }
     }
-    return true;
+
+    switch (type)
+    {
+    case cached:
+        // clear cached anchors
+        LOGI("clear all cached anchors");
+        if (!WVR_ClearCachedSpatialAnchors())
+        {
+            result = false;
+            LOGE("clear cached anchor fail");
+        }
+        break;
+    case persisted:
+        // clear persisted anchors
+        LOGI("clear all persisted anchors");
+        if (!WVR_ClearPersistedSpatialAnchors())
+        {
+            result = false;
+            LOGE("clear persist anchor fail");
+        }
+        break;
+    default:
+        LOGE("clear anchor get wrong type");
+        break;
+    }
+    return result;
 }
 
-bool anchorManager::deleteChosenAnchor(CubeManager *cm)
+bool anchorManager::deleteChosenAnchor(anchorType type, CubeManager *cm)
 {
     for (int a = 0; a < cm->leftTouchVector.size(); a++)
     {
-        // delete anchor
-        WVR_DestroySpatialAnchor(*(mAnchor + cm->leftTouchVector[a].anchorIndex));
+        WVR_SpatialAnchorState anchorState;
+        WVR_GetSpatialAnchorState(allSpatialAnchor[cm->leftTouchVector[a].anchorIndex], WVR_PoseOriginModel_OriginOnHead, &anchorState);
+        // delete cached/persist data
+        if (type == cached)
+        {
+            // in this sample, cachedSpatialAnchorName equal to spatialAnchorName
+            // Therefore, we can uncache anchor via spatialAnchorName
+            LOGI("delete cache anchor");
+            WVR_UncacheSpatialAnchor(&anchorState.anchorName);
+        }
+        else if (type == persisted)
+        {
+            // in this sample, persistedSpatialAnchorName equal to spatialAnchorName
+            // Therefore, we can unpersist anchor via spatialAnchorName
+            LOGI("delete persist anchor");
+            WVR_UnpersistSpatialAnchor(&anchorState.anchorName);
+        }
+
+        // delete spatial anchor
+        LOGI("delete spatial anchor");
+        WVR_DestroySpatialAnchor(*(allSpatialAnchor + cm->leftTouchVector[a].anchorIndex));
+    }
+
+    return true;
+}
+
+// only used in persist anchor
+bool anchorManager::exportPersistCubeAnchor(anchorType type, CubeManager *cm)
+{
+    if (cm->leftTouchVector.size() > 0)
+    {
+        WVR_SpatialAnchorState mAnchorState;
+        WVR_GetSpatialAnchorState(allSpatialAnchor[cm->leftTouchVector[0].anchorIndex], WVR_PoseOriginModel_OriginOnHead, &mAnchorState);
+        return backGroundThread->exportPersisted(mAnchorState.anchorName);
+    }
+    // do nothing
+    LOGI("no persisted anchor can be operated");
+    return false;
+}
+
+// only used in persist anchor
+bool anchorManager::importPersistCubeAnchor(anchorType type, CubeManager *cm)
+{
+    return backGroundThread->importPersisted();
+}
+
+bool anchorManager::deleteChosenAnchor2changing(anchorType type, CubeManager *cm)
+{
+    for (int a = 0; a < cm->rightTouchVector.size(); a++)
+    {
+        WVR_SpatialAnchorState anchorState;
+        WVR_GetSpatialAnchorState(allSpatialAnchor[cm->rightTouchVector[a].anchorIndex], WVR_PoseOriginModel_OriginOnHead, &anchorState);
+        // delete cached/persist data
+        if (type == cached)
+        {
+            // in this sample, cachedSpatialAnchorName equal to spatialAnchorName
+            // Therefore, we can uncache anchor via spatialAnchorName
+            WVR_UncacheSpatialAnchor(&anchorState.anchorName);
+        }
+        else if (type == persisted)
+        {
+            // in this sample, persistedSpatialAnchorName equal to spatialAnchorName
+            // Therefore, we can unpersist anchor via spatialAnchorName
+            WVR_UnpersistSpatialAnchor(&anchorState.anchorName);
+        }
+
+        // delete spatial anchor
+        WVR_DestroySpatialAnchor(*(allSpatialAnchor + cm->rightTouchVector[a].anchorIndex));
+    }
+    cm->addUndefineCube();
+    return true;
+}
+
+bool anchorManager::getExistedSpatialAnchor(CubeManager *cm)
+{
+    // WVR API get all spatial anchor num and allocate memory to get data
+    allSpatialAnchorCount = 0;
+    WVR_EnumerateSpatialAnchors(0, &allSpatialAnchorCount, nullptr);
+    LOGI("get all spatial anchor anchorCount=%u", allSpatialAnchorCount);
+
+    // clear memory
+    if (allSpatialAnchor != nullptr)
+        free(allSpatialAnchor);
+    cm->clearAllTargetCubes();
+
+    // assign memory space for anchor
+    allSpatialAnchor = (WVR_SpatialAnchor *)malloc(sizeof(WVR_SpatialAnchor) * allSpatialAnchorCount);
+    WVR_EnumerateSpatialAnchors(allSpatialAnchorCount, &allSpatialAnchorCount, allSpatialAnchor);
+
+    // classified different spatial anchors
+    for (int a = 0; a < allSpatialAnchorCount; a++)
+    {
+        Matrix4 pose;
+        Vector3 scale;
+        WVR_SpatialAnchorState anchorState;
+        WVR_GetSpatialAnchorState(allSpatialAnchor[a], WVR_PoseOriginModel_OriginOnHead, &anchorState);
+        std::string mName(anchorState.anchorName.name);
+
+        switch (mName[0])
+        {
+        case 's':
+            pose = convertToMatrix4(anchorState.pose);
+            scale = getScaleFromName(mName);
+            cm->addCubeFromAnchor(spatial, a, pose, scale, anchorState.trackingState == WVR_SpatialAnchorTrackingState_Tracking ? false : true);
+            break;
+        case 'c':
+            pose = convertToMatrix4(anchorState.pose);
+            scale = getScaleFromName(mName);
+            cm->addCubeFromAnchor(cached, a, pose, scale, anchorState.trackingState == WVR_SpatialAnchorTrackingState_Tracking ? false : true);
+            break;
+        case 'p':
+            pose = convertToMatrix4(anchorState.pose);
+            scale = getScaleFromName(mName);
+            cm->addCubeFromAnchor(persisted, a, pose, scale, anchorState.trackingState == WVR_SpatialAnchorTrackingState_Tracking ? false : true);
+            break;
+        default:
+            LOGE("Wrong anchor name exist: %s", mName.c_str());
+            break;
+        }
     }
     return true;
 }
 
-bool anchorManager::deleteChosenAnchor2changing(CubeManager *cm)
+bool anchorManager::getExistedCachedAnchor()
 {
-    for (int a = 0; a < cm->rightTouchVector.size(); a++)
+    // get cache anchor name
+    cachedAnchorCount = 0;
+    WVR_EnumerateCachedSpatialAnchorNames(0, &cachedAnchorCount, nullptr);
+    LOGI("Enumerate cached count=%d", cachedAnchorCount);
+    WVR_SpatialAnchorName *allCachedName;
+    allCachedName = (WVR_SpatialAnchorName *)malloc(sizeof(WVR_SpatialAnchorName) * cachedAnchorCount);
+    WVR_EnumerateCachedSpatialAnchorNames(cachedAnchorCount, &cachedAnchorCount, allCachedName);
+    // Let all cached anchor as spatial anchor
+    WVR_SpatialAnchorFromCacheNameCreateInfo cacheInfo;
+    for (int a = 0; a < cachedAnchorCount; a++)
     {
-        // delete anchor
-        WVR_DestroySpatialAnchor(*(mAnchor + cm->rightTouchVector[a].anchorIndex));
+        cacheInfo.cachedSpatialAnchorName = allCachedName[a];
+        cacheInfo.spatialAnchorName = allCachedName[a];
+        WVR_SpatialAnchor *ptr; // will get this anchor address later(via WVR_EnumerateSpatialAnchors)
+        LOGI("create spatial anchor from cached anchor");
+        if (WVR_CreateSpatialAnchorFromCacheName(&cacheInfo, ptr) != WVR_Success)
+            LOGI("already have same cached anchor as spatial anchor");
     }
-    cm->addUndefineCube();
+    free(allCachedName);
     return true;
+}
+
+bool anchorManager::getExistedPersistedAnchor()
+{
+    // get persisted anchor name
+    persistedAnchorCount = 0;
+    WVR_EnumeratePersistedSpatialAnchorNames(0, &persistedAnchorCount, nullptr);
+    LOGI("Enumerate persisted count=%d", persistedAnchorCount);
+    WVR_SpatialAnchorName *allPersistedName;
+    allPersistedName = (WVR_SpatialAnchorName *)malloc(sizeof(WVR_SpatialAnchorName) * persistedAnchorCount);
+    WVR_EnumeratePersistedSpatialAnchorNames(persistedAnchorCount, &persistedAnchorCount, allPersistedName);
+    // Let all persisted anchor as spatial anchor
+    WVR_SpatialAnchorFromPersistenceNameCreateInfo persistInfo;
+    for (int a = 0; a < persistedAnchorCount; a++)
+    {
+        persistInfo.persistedSpatialAnchorName = allPersistedName[a];
+        persistInfo.spatialAnchorName = allPersistedName[a];
+        WVR_SpatialAnchor *ptr; // will get this anchor address later(via WVR_EnumerateSpatialAnchors)
+        LOGI("create spatial anchor from persisted anchor");
+        if (WVR_CreateSpatialAnchorFromPersistenceName(&persistInfo, ptr) != WVR_Success)
+            LOGI("already have same persisted anchor as spatial anchor");
+    }
+    free(allPersistedName);
+    return true;
+}
+
+bool anchorManager::updateExistedAnchor(CubeManager *cm)
+{
+    LOGI("update anchor size= %d", (*cm->targetCubeVector).size());
+    bool allAnchorCanTrack = true;
+    for (int a = 0; a < (*cm->targetCubeVector).size(); a++)
+    {
+        Matrix4 pose;
+        WVR_SpatialAnchorState anchorState;
+        WVR_GetSpatialAnchorState(allSpatialAnchor[(*cm->targetCubeVector)[a]->anchorIndex], WVR_PoseOriginModel_OriginOnHead, &anchorState);
+        if (anchorState.trackingState == WVR_SpatialAnchorTrackingState_Tracking)
+        {
+            pose = convertToMatrix4(anchorState.pose);
+            (*cm->targetCubeVector)[a]->mPose = pose;
+            (*cm->targetCubeVector)[a]->anchorLost = false;
+        }
+        else
+        {
+            allAnchorCanTrack = false;
+            (*cm->targetCubeVector)[a]->anchorLost = true;
+            LOGI("Anchor cubeVector(%d) lost tracking", a);
+        }
+    }
+    return allAnchorCanTrack;
 }
 
 bool anchorManager::init(CubeManager *cm, PlaneManager *pm)
@@ -169,13 +621,17 @@ bool anchorManager::init(CubeManager *cm, PlaneManager *pm)
 
     startScenePerception();
 
-    getExistedAnchor(cm);
+    getExistedCachedAnchor();
+    getExistedPersistedAnchor();
+    getExistedSpatialAnchor(cm);
+
     getExistedPlanes(pm);
 
     return true;
 }
 
-void anchorManager::startScenePerception(){
+void anchorManager::startScenePerception()
+{
     // start perception before get scene plane/mesh (need permission)
     // can call WVR_StopScenePerception when you won't need to update data
     // WVR_StopScenePerception will be automatic called when app is closed
@@ -186,8 +642,7 @@ void anchorManager::startScenePerception(){
         LOGE("WVR_StartScenePerception init fail");
 }
 
-    void
-    anchorManager::deinit()
+void anchorManager::deinit()
 {
     if (WVR_Success != WVR_StopScenePerception(WVR_ScenePerceptionTarget_2dPlane))
     {
@@ -206,10 +661,10 @@ bool anchorManager::getExistedPlanes(PlaneManager *pm)
     }
 
     // WVR API get scene num and allocate memory to get data
-    WVR_GetScenePlanes(nullptr, 0, &planeCount, WVR_PoseOriginModel_OriginOnHead, nullptr); // dead API on SUE
+    WVR_GetScenePlanes(nullptr, 0, &planeCount, WVR_PoseOriginModel_OriginOnHead, nullptr);
     mPlane = (WVR_ScenePlane *)malloc(sizeof(WVR_ScenePlane) * planeCount);
-    WVR_GetScenePlanes(nullptr, planeCount, &planeCount, WVR_PoseOriginModel_OriginOnHead, mPlane); // dead API on SUE
-    LOGI("get scene =%u", planeCount);
+    WVR_GetScenePlanes(nullptr, planeCount, &planeCount, WVR_PoseOriginModel_OriginOnHead, mPlane);
+    LOGI("get planes =%u", planeCount);
 
     // copy to vector
     for (int a = 0; a < planeCount; a++)
@@ -218,65 +673,6 @@ bool anchorManager::getExistedPlanes(PlaneManager *pm)
     }
 
     return true;
-}
-
-bool anchorManager::getExistedAnchor(CubeManager *cm)
-{
-    // WVR API get anchor num and allocate memory to get data
-    WVR_EnumerateSpatialAnchors(0, &anchorCount, nullptr);
-    // clear memory
-    if (mAnchor != nullptr)
-        free(mAnchor);
-    cm->clearCubes();
-    // assign memory space for anchor
-    mAnchor = (WVR_SpatialAnchor *)malloc(sizeof(WVR_SpatialAnchor) * anchorCount);
-    LOGI("get anchor anchorCount=%u", anchorCount);
-    WVR_EnumerateSpatialAnchors(anchorCount, &anchorCount, mAnchor);
-    bool alreadyHaveAnchor = false;
-
-    // check anchor name
-    for (int a = 0; a < anchorCount; a++)
-    {
-        Matrix4 pose;
-        Vector3 scale;
-        WVR_SpatialAnchorState anchorState;
-        WVR_GetSpatialAnchorState(mAnchor[a], WVR_PoseOriginModel_OriginOnHead, &anchorState);
-        std::string mName(anchorState.anchorName.name);
-        if (mName[0] == 'c')
-        {
-            pose = convertToMatrix4(anchorState.pose);
-            scale = getScaleFromName(mName);
-            cm->addCubeFromAnchor(a, pose, scale, anchorState.trackingState == WVR_SpatialAnchorTrackingState_Tracking ? false : true);
-            alreadyHaveAnchor = true;
-        }
-    }
-
-    return alreadyHaveAnchor;
-}
-
-bool anchorManager::updateExistedAnchor(CubeManager *cm)
-{
-    bool allAnchorCanTrack = false;
-    LOGI("Anchor cubeVector size= %d", cm->cubeVector.size());
-    for (int a = 0; a < cm->cubeVector.size(); a++)
-    {
-        Matrix4 pose;
-        WVR_SpatialAnchorState anchorState;
-        WVR_GetSpatialAnchorState(mAnchor[cm->cubeVector[a]->anchorIndex], WVR_PoseOriginModel_OriginOnHead, &anchorState);
-        if (anchorState.trackingState == WVR_SpatialAnchorTrackingState_Tracking)
-        {
-            allAnchorCanTrack = true;
-            pose = convertToMatrix4(anchorState.pose);
-            cm->cubeVector[a]->mPose = pose;
-            cm->cubeVector[a]->anchorLost = false;
-        }
-        else
-        {
-            cm->cubeVector[a]->anchorLost = true;
-            LOGI("Anchor cubeVector(%d) lost tracking", a);
-        }
-    }
-    return allAnchorCanTrack;
 }
 
 void anchorManager::getMesh_2D(PlaneManager *pm, sceneMeshData2D *sceneMesh2D)

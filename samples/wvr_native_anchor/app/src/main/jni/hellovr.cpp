@@ -81,10 +81,10 @@ static void dumpMatrix(const char *name, const Matrix4 &mat)
 }
 
 MainApplication::MainApplication()
-    : deviceSupport(false), mAnchorManager(nullptr), mPlanes(nullptr), meshSelect(1),
+    : mAnchorType(spatial), deviceSupport(false), mAnchorManager(nullptr), mPlanes(nullptr), meshSelect(1),
       mControllerCount(0), mControllerCount_Last(-1), mValidPoseCount(0), mValidPoseCount_Last(-1),
       mPoseClasses(""), m3DOF(true), mMove(true), mTimeDiff(0.0f), mDriveSpeed(0.0f), mDriveAngle(0.0f),
-      mIndexLeft(0), mIndexRight(0), mLeftEyeQ(NULL), mRightEyeQ(NULL)
+      mIndexLeft(0), mIndexRight(0), mLeftEyeQ(NULL), mRightEyeQ(NULL), canChangeAnchorStatus(true)
 {
     // other initialization tasks are done in init
     memset(mDevClassChar, 0, sizeof(mDevClassChar));
@@ -111,7 +111,9 @@ void MainApplication::onResume()
     if (mAnchorManager != nullptr)
     {
         passThroughOn = WVR_Error_SystemInvalid;
-        mAnchorManager->getExistedAnchor(mCubes);
+        mAnchorManager->getExistedCachedAnchor();
+        mAnchorManager->getExistedPersistedAnchor();
+        mAnchorManager->getExistedSpatialAnchor(mCubes);
         mAnchorManager->getExistedPlanes(mPlanes);
     }
 }
@@ -147,8 +149,9 @@ void MainApplication::updateMesh()
     }
 }
 
-void MainApplication::startScenePerception(){
-    if (mAnchorManager!=nullptr)
+void MainApplication::startScenePerception()
+{
+    if (mAnchorManager != nullptr)
         mAnchorManager->startScenePerception();
 }
 
@@ -223,9 +226,8 @@ bool MainApplication::initGL()
     if (obj->hasError() || obj->hasGLError()) \
     return false
 
-    mText = new Text(0.05f);
+    mText = new Text(0.01f);
     mText->setEnable(true);
-
     mCubes = new CubeManager();
     mPlanes = new PlaneManager();
     mSceneMesh = new SceneMesh();
@@ -338,6 +340,7 @@ void MainApplication::shutdownGL()
 {
     LOGENTRY();
 
+    delete mText;
     mHandManager->onDestroy();
     delete mHandManager;
     mHandManager = nullptr;
@@ -451,6 +454,27 @@ bool MainApplication::handleInput()
     bool isCtrlerStatusChange = false;
     WVR_Event_t event;
 
+    // check if anchor type should change
+    if (mControllerObjs[0]->stickStatusIsRL == true)
+    {
+        int type = mAnchorType;
+        if (mControllerObjs[0]->stickStatus > mControllerObjs[0]->stickStatusThreshold)
+        {
+            mAnchorType = anchorType((type + 1) % 3);
+            LOGI("++anchorType++ change type to %d", (int)mAnchorType);
+        }
+        else if (mControllerObjs[0]->stickStatus < -mControllerObjs[0]->stickStatusThreshold)
+        {
+            type = (type - 1) % 3;
+            if (type < 0)
+                type = 2;
+            mAnchorType = anchorType(type);
+            LOGI("--anchorType-- change type to %d", (int)mAnchorType);
+        }
+        mControllerObjs[0]->stickStatusIsRL = false;
+        mCubes->changeTargetType(mAnchorType);
+    }
+
     while (WVR_PollEventQueue(&event))
     {
         if (event.common.type == WVR_EventType_Quit)
@@ -476,6 +500,24 @@ bool MainApplication::handleInput()
         handleControllerConnectEvent(isCtrlerStatusChange);
         mHandManager->handleHandTrackingMechanism();
 
+        // anchor event
+        if (event.common.type == WVR_EventType_SpatialAnchor_Changed)
+        {
+            LOGI("receive WVR_EventType_SpatialAnchor_Changed event");
+            mAnchorManager->getExistedSpatialAnchor(mCubes);
+        }
+        else if (event.common.type == WVR_EventType_CachedAnchor_Changed)
+        {
+            LOGI("receive WVR_EventType_CachedAnchor_Changed event");
+            mAnchorManager->getExistedCachedAnchor();
+        }
+        else if (event.common.type == WVR_EventType_PersistedAnchor_Changed)
+        {
+            LOGI("receive WVR_EventType_PersistedAnchor_Changed event");
+            mAnchorManager->getExistedPersistedAnchor();
+        }
+
+        // controller event
         if (event.common.type == WVR_EventType_ButtonPressed)
         {
             if (event.device.deviceType == WVR_DeviceType_Controller_Right && event.input.inputId == WVR_InputId_Alias1_Trigger)
@@ -483,23 +525,20 @@ bool MainApplication::handleInput()
                 LOGI("BTCheck right WVR_InputId_Alias1_Trigger (create anchor or scale cube)");
                 if (!mCubes->cubesCanChange() && mCubes->actionStatue == noProcess)
                 {
-                    mAnchorManager->addCubeAnchor(mPlanes, mControllerObjs[0]->mCursorPose);
-                    mAnchorManager->getExistedAnchor(mCubes);
+                    mAnchorManager->addCubeAnchor(mAnchorType, mPlanes, mControllerObjs[0]->mCursorPose);
                 }
                 else
                 {
                     if (mCubes->actionStatue == scaling)
                     {
                         mCubes->actionStatue = noProcess;
-                        mAnchorManager->addUndefineCubeAnchor(mCubes);
+                        mAnchorManager->addUndefineCubeAnchor(mAnchorType, mCubes);
                         mCubes->clearUndefineCubes();
-                        mAnchorManager->getExistedAnchor(mCubes);
                     }
                     else if (mCubes->actionStatue == noProcess && mCubes->cubesCanChange())
                     {
                         mCubes->actionStatue = scaling;
-                        mAnchorManager->deleteChosenAnchor2changing(mCubes);
-                        mAnchorManager->getExistedAnchor(mCubes);
+                        mAnchorManager->deleteChosenAnchor2changing(mAnchorType, mCubes);
                     }
                 }
             }
@@ -509,18 +548,15 @@ bool MainApplication::handleInput()
                 if (mCubes->cubesCanChange() && mCubes->actionStatue == noProcess)
                 {
                     mCubes->actionStatue = moving;
-                    mAnchorManager->deleteChosenAnchor2changing(mCubes);
-                    mAnchorManager->getExistedAnchor(mCubes);
+                    mAnchorManager->deleteChosenAnchor2changing(mAnchorType, mCubes);
                 }
                 else if (mCubes->actionStatue == moving)
                 {
                     mCubes->actionStatue = noProcess;
-                    mAnchorManager->addUndefineCubeAnchor(mCubes);
+                    mAnchorManager->addUndefineCubeAnchor(mAnchorType, mCubes);
                     mCubes->clearUndefineCubes();
-                    mAnchorManager->getExistedAnchor(mCubes);
                 }
             }
-
             if (event.device.deviceType == WVR_DeviceType_Controller_Left && event.input.inputId == WVR_InputId_Alias1_Trigger)
             {
                 LOGI("BTCheck left WVR_InputId_Alias1_Trigger (delete anchor)");
@@ -528,23 +564,30 @@ bool MainApplication::handleInput()
                 {
                     if (mCubes->cubesCanDelete())
                     {
-                        mAnchorManager->deleteChosenAnchor(mCubes);
-                        mAnchorManager->getExistedAnchor(mCubes);
+                        mAnchorManager->deleteChosenAnchor(mAnchorType, mCubes);
                     }
+                }
+            }
+            if (event.device.deviceType == WVR_DeviceType_Controller_Left && event.input.inputId == WVR_InputId_Alias1_Grip)
+            {
+                LOGI("BTCheck left WVR_InputId_Alias1_Grip (export persisted anchor)");
+                if (mAnchorType == persisted)
+                {
+                    mAnchorManager->exportPersistCubeAnchor(mAnchorType, mCubes);
                 }
             }
             if (event.input.inputId == WVR_InputId_Alias1_X)
             {
                 LOGI("BTCheck WVR_InputId_Alias1_X (clear all anchor)");
-                mAnchorManager->clearAnchor();
-                mAnchorManager->getExistedAnchor(mCubes);
+                mAnchorManager->clearTypeAnchor(mAnchorType, mCubes);
             }
             if (event.input.inputId == WVR_InputId_Alias1_Y)
             {
-                LOGI("BTCheck WVR_InputId_Alias1_Y (passThrough on/off)");
-                static bool showUnderlay = true;
-                WVR_ShowPassthroughUnderlay(showUnderlay);
-                showUnderlay = !showUnderlay;
+                LOGI("BTCheck WVR_InputId_Alias1_Y (import persisted anchor)");
+                if (mAnchorType == persisted)
+                {
+                    mAnchorManager->importPersistCubeAnchor(mAnchorType, mCubes);
+                }
             }
             if (event.input.inputId == WVR_InputId_Alias1_A)
             {
@@ -774,7 +817,6 @@ WVR_Result MainApplication::settingPassThrough()
 
 void MainApplication::initAnchor()
 {
-    delete mText;
     mAnchorManager->init(mCubes, mPlanes);
 }
 
@@ -1027,6 +1069,8 @@ void MainApplication::renderStereoTargets()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     renderScene(WVR_Eye_Right);
     fbo->unbindFrameBuffer();
+
+    mText->clearTexts();
 }
 
 void MainApplication::renderScene(WVR_Eye nEye)
@@ -1116,11 +1160,7 @@ void MainApplication::renderScene(WVR_Eye nEye)
             mCubes->renderCubes(mProjectionLeft, mEyePosLeft, mHMDPose);
             mPlanes->render(mProjectionLeft, mEyePosLeft, mHMDPose);
         }
-        else
-        {
-            mText->addOneLineText("Device not support", true, false, -0.35f, -0.4f, -1.0f);
-            mText->draw(mProjectionLeft, mEyePosLeft, mHMDPose, Vector4(0, 0, 1.0f, 0.4f));
-        }
+        mText->drawSequence(mProjectionLeft, mEyePosLeft, mHMDPose, Vector4(0, 0, 1.0f, 0.4f));
     }
     if (nEye == WVR_Eye_Right)
     {
@@ -1149,12 +1189,9 @@ void MainApplication::renderScene(WVR_Eye nEye)
             mCubes->renderCubes(mProjectionRight, mEyePosRight, mHMDPose);
             mPlanes->render(mProjectionRight, mEyePosRight, mHMDPose);
         }
-        else
-        {
-            mText->addOneLineText("Device not support", true, false, -0.35f, -0.4f, -1.0f);
-            mText->draw(mProjectionRight, mEyePosRight, mHMDPose, Vector4(0, 0, 1.0f, 0.4f));
-        }
+        mText->drawSequence(mProjectionRight, mEyePosRight, mHMDPose, Vector4(0, 0, 1.0f, 0.4f));
     }
+
     glUseProgram(0);
 
     GLenum glerr = glGetError();
@@ -1232,12 +1269,80 @@ void MainApplication::updateHMDMatrixPose()
             switch (mVRDevicePairs[nDevice].type)
             {
             case WVR_DeviceType_HMD: // nDevice=0
+                if (!deviceSupport)
+                {
+                    mText->addSequenceText(textObject{
+                        true,
+                        std::vector<std::string>{"Not support"},
+                        Vector3{-0.0f, -0.0f, -0.2f},
+                        Vector3{0.0, 0.0, 0.0},
+                    });
+                }
                 break;
             case WVR_DeviceType_Controller_Right: // nDevice=1
                 mControllerObjs[0]->saveCursorPose(mDevicePoseArray[nDevice]);
+                if (deviceSupport)
+                {
+                    std::string anchorText;
+                    switch (mAnchorType)
+                    {
+                    case spatial:
+                        anchorText = "Trigger: add spatial anchor";
+                        break;
+                    case cached:
+                        anchorText = "Trigger: add cached anchor";
+                        break;
+                    case persisted:
+                        anchorText = "Trigger: add persisted anchor";
+                        break;
+                    default:
+                        anchorText = "Get Error!!!!";
+                        break;
+                    }
+                    mText->addSequenceText(textObject{false,
+                                                      std::vector<std::string>{"B: change mesh type",
+                                                                               "<-Stick->: change anchor type",
+                                                                               anchorText,
+                                                                               "Touch and click Trigger/Grip: scale/move cube"},
+                                                      Vector3{0.0, 0.02, 0.0},
+                                                      Vector3{-40.0, 0.0, 0.0},
+                                                      mControllerObjs[0]->mCursorPose});
+                }
                 break;
             case WVR_DeviceType_Controller_Left: // nDevice=2
                 mControllerObjs[1]->saveCursorPose(mDevicePoseArray[nDevice]);
+                if (deviceSupport)
+                {
+                    std::vector<std::string> anchorText;
+                    anchorText.push_back("X: delete all anchors");
+                    switch (mAnchorType)
+                    {
+                    case spatial:
+                        anchorText.push_back("Touch and click Trigger: delete spatial anchor");
+                        break;
+                    case cached:
+                        anchorText.push_back("Touch and click Trigger: delete cached anchor");
+                        break;
+                    case persisted:
+                        anchorText.push_back("Touch and click Trigger: delete persisted anchor");
+                        if (mAnchorManager->backGroundThread->checkStatus())
+                        {
+                            anchorText.push_back("Touch and click Grip: export persisted anchor");
+                            anchorText.push_back("Y: import persisted anchor");
+                        }
+                        else
+                            anchorText.push_back("Back ground thread busy");
+                        break;
+                    default:
+                        anchorText.push_back("Get Error!!!!");
+                        break;
+                    }
+                    mText->addSequenceText(textObject{false,
+                                                      anchorText,
+                                                      Vector3{0.0, 0.02, 0.0},
+                                                      Vector3{-40.0, 0.0, 0.0},
+                                                      mControllerObjs[1]->mCursorPose});
+                }
                 break;
             default:
                 break;
@@ -1261,6 +1366,18 @@ void MainApplication::updateHMDMatrixPose()
                 }
             }
             mPoseClasses += mDevClassChar[nDevice];
+        }
+        else
+        {
+            switch (mVRDevicePairs[nDevice].type)
+            {
+            case WVR_DeviceType_Controller_Right:
+                mControllerObjs[0]->stickStatusIsRL = false;
+                break;
+            case WVR_DeviceType_Controller_Left:
+                mControllerObjs[0]->stickStatusIsRL = false;
+                break;
+            }
         }
     }
 

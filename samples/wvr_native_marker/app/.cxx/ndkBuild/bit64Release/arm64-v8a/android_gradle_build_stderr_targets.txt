@@ -61,7 +61,7 @@ typedef struct mTrackableArucoData;
 /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_marker/src/main/jni/markerManager.cpp:153:17: warning: enumeration value 'WVR_MarkerObserverState_Max' not handled in switch [-Wswitch]
         switch (state)
                 ^
-/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_marker/src/main/jni/markerManager.cpp:223:90: warning: format specifies type 'int' but the argument has type 'std::__ndk1::vector<mTrackableArucoData, std::__ndk1::allocator<mTrackableArucoData> >::size_type' (aka 'unsigned long') [-Wformat]
+/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_marker/src/main/jni/markerManager.cpp:237:90: warning: format specifies type 'int' but the argument has type 'std::__ndk1::vector<mTrackableArucoData, std::__ndk1::allocator<mTrackableArucoData> >::size_type' (aka 'unsigned long') [-Wformat]
         __android_log_print(ANDROID_LOG_INFO, "vrsample", "trackableMarkerData size=%d", trackableMarkerData.size());
                                                                                     ~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~
                                                                                     %lu

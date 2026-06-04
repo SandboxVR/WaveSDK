@@ -28,7 +28,10 @@ HandObj::HandObj(HandManager *iMgr, HandTypeEnum iHandType)
 HandObj::~HandObj()
 {
     releaseGraphicsSystem();
-    delete mAxes;
+    if(mAxes != nullptr) {
+        delete mAxes;
+        mAxes = nullptr;
+    }
 }
 
 void HandObj::initializeGraphicsSystem()
@@ -132,7 +135,7 @@ void HandObj::initializeGraphicsSystem()
                 mGraColorBLocations[mode][pID]);
             }
     }
-    mAxes->initialize();
+    if(mAxes != nullptr) mAxes->initialize();
 }
 
 void HandObj::setTexture(Texture *iTexture)
@@ -344,10 +347,10 @@ void HandObj::render(
             modelSkeletonPose[14] = wp.z;
             Matrix4 worldJointMat = mWristPose * modelSkeletonPose;
             float color1[4] = {1.0, 0.0, 0.0, 1.0};
-            mAxes->renderInner(iProj, iEye, iView, worldJointMat, true, color1);
+            if(mAxes != nullptr) mAxes->renderInner(iProj, iEye, iView, worldJointMat, true, color1);
             float color2[4] = {1.0, 1.0, 0.0, 1.0};
             Matrix4 realPoseWorldJointMat = mWristPose * mFinalSkeletonPoses[jointID];
-            mAxes->renderInner(iProj, iEye, iView, realPoseWorldJointMat, true, color2);
+            if(mAxes != nullptr) mAxes->renderInner(iProj, iEye, iView, realPoseWorldJointMat, true, color2);
         }
     }
 #endif
@@ -395,7 +398,7 @@ void HandObj::releaseHandGraphicsResource()
 {
     mHandModel.releaseGraphicsResource();
     mHandAlpha = nullptr;
-    mAxes->release();
+    if(mAxes != nullptr) mAxes->release();
 }
 
 void HandObj::releaseGraphicsSystem()

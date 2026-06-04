@@ -78,7 +78,6 @@ public class MainActivity extends VRActivity {
                 boolean scene = (mFlag & FLAG_SCENE) == 0;  // invert flag value here
                 mFlag = (mFlag & ~FLAG_SCENE) | (scene ? FLAG_SCENE : 0);
             } else {
-                Log.i(TAG,"onReceive: end1");
                 return;
             }
 
@@ -86,7 +85,7 @@ public class MainActivity extends VRActivity {
 
             clearNotification();
             setNotification();
-            Log.i(TAG,"onReceive: end2");
+            Log.i(TAG,"onReceive: end");
         }
     };
 

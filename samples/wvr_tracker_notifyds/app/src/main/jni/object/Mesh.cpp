@@ -154,7 +154,7 @@ void Mesh::draw()
 void Mesh::releaseGLComp()
 {
     
-    for (uint32_t vaID; vaID < VertexAttrib_MaxDefineValue; ++vaID) {
+    for (uint32_t vaID = 0; vaID < VertexAttrib_MaxDefineValue; ++vaID) {
         if (glIsBuffer(mVAttribBuffers[vaID]) == GL_TRUE) {
             glDeleteBuffers(1, &mVAttribBuffers[vaID]);
         }

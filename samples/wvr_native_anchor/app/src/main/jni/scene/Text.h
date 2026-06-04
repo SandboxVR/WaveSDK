@@ -7,8 +7,18 @@
 // You shall fully comply with all of HTC’s SDK license agreement terms and
 // conditions signed by you and all SDK and API requirements,
 // specifications, and documentation provided by HTC to You."
-
+#ifndef WVR_NATIVE_MARKER_TEXT_H
+#define WVR_NATIVE_MARKER_TEXT_H
 #include <Object.h>
+
+struct textObject
+{
+    bool mIsHeadlock;
+    std::vector<std::string> text;
+    Vector3 extraShift;
+    Vector3 extraRotate;
+    Matrix4 pose;
+};
 
 class Text : public Object
 {
@@ -29,23 +39,24 @@ private:
     float mCharacterSizeX = 0.1f;
     float mCharacterSizeY;
 
-    bool mIsHeadlock;
+    float mTextCentertX = -1.0;
 
 public:
     Text(float characterSize, bool headlock = true);
     ~Text();
-    void genCharCoord(GLfloat * texCoord, char character, int stride);
-    void genCharVertices(GLfloat * vertices, float textStartX,
-                                float textStartY, float textStartZ,
-                                int charIndex, int stride);
-    void addOneLineText(const char* text, bool overwrite, bool append,
+    void genCharCoord(GLfloat *texCoord, char character, int stride);
+    void genCharVertices(GLfloat *vertices, float textStartX,
+                         float textStartY, float textStartZ,
+                         int charIndex, int stride);
+    void addOneLineText(const char *text, bool overwrite, bool append,
                         float x, float y, float z);
-
+    void addSequenceText(textObject textData);
     void dumpVertices();
-
-    virtual void draw(const Matrix4& projection, const Matrix4& eye, const Matrix4& view, const Vector4& lightDir);
-    virtual void drawMultiview(const Matrix4 projection[2], const Matrix4 eye[2], const Matrix4& view, const Vector4& lightDir);
+    void clearTexts();
+    virtual void drawSequence(const Matrix4 &projection, const Matrix4 &eye, const Matrix4 &view, const Vector4 &lightDir);
 
 private:
+    std::vector<textObject> texts;
     void setCharacterSize(float x, float y = 0.0f);
 };
+#endif // WVR_NATIVE_MARKER_TEXT_H

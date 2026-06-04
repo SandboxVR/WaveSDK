@@ -170,17 +170,24 @@ void MarkerManager::getDetectingData()
 {
     //  get plane size
     static uint32_t lastDetectSize = -99;
-    uint32_t size = 0;
+    uint32_t firstCallSize = 0;
     detectingArucoData.clear();
-    WVR_GetArucoMarkers(size, &size, WVR_PoseOriginModel_OriginOnHead, nullptr);
-    if (size != lastDetectSize)
-    {
-        LOGI("WVR_GetArucoMarkers size=%d", size);
-        lastDetectSize = size;
-    }
-    detectingArucoData.resize(size);
+    WVR_GetArucoMarkers(firstCallSize, &firstCallSize, WVR_PoseOriginModel_OriginOnHead, nullptr);
+    detectingArucoData.resize(firstCallSize);
+
     //  get data to render plane ( WVR_MarkerTrackingState_Detected->white ; WVR_MarkerTrackingState_Stopped->green )
-    WVR_GetArucoMarkers(size, &size, WVR_PoseOriginModel_OriginOnHead, detectingArucoData.data());
+    uint32_t secondCallSize = 0;
+    WVR_GetArucoMarkers(firstCallSize, &secondCallSize, WVR_PoseOriginModel_OriginOnHead, detectingArucoData.data());
+
+    // prevent something change between first call to second call
+    if (firstCallSize > secondCallSize)
+        detectingArucoData.resize(secondCallSize);
+
+    if (secondCallSize != lastDetectSize)
+    {
+        LOGI("WVR_GetArucoMarkers firstCallSize=%d, secondCallSize=%d", firstCallSize, secondCallSize);
+        lastDetectSize = secondCallSize;
+    }
 }
 
 void MarkerManager::filterTrackableAruco()
@@ -206,12 +213,19 @@ void MarkerManager::filterTrackableAruco()
 
 void MarkerManager::refreshTrackableMarker()
 {
-    uint32_t size = 0;
+    uint32_t firstCallSize = 0;
     trackableIds.clear();
-    WVR_EnumerateTrackableMarkers(WVR_MarkerObserverTarget_Aruco, size, &size, nullptr);
-    trackableIds.resize(size);
-    WVR_EnumerateTrackableMarkers(WVR_MarkerObserverTarget_Aruco, size, &size, trackableIds.data());
-    LOGI("WVR_EnumerateTrackableMarkers get size=%d", size);
+    WVR_EnumerateTrackableMarkers(WVR_MarkerObserverTarget_Aruco, firstCallSize, &firstCallSize, nullptr);
+    trackableIds.resize(firstCallSize);
+
+    uint32_t secondCallSize = 0;
+    WVR_EnumerateTrackableMarkers(WVR_MarkerObserverTarget_Aruco, firstCallSize, &secondCallSize, trackableIds.data());
+    LOGI("WVR_EnumerateTrackableMarkers get firstCallSize()=%d, secondCallSize()=%d", firstCallSize, secondCallSize);
+
+    // prevent something change between first call to second call
+    if (firstCallSize > secondCallSize)
+        trackableIds.resize(secondCallSize);
+
     filterTrackableAruco();
 }
 

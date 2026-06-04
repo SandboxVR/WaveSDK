@@ -11,11 +11,20 @@
 #include <Texture.h>
 static const float cubeMinWH = 0.01;
 static const Vector3 cubeDefaultScale(0.05, 0.05, 0.05); // cube: 5cm^3
+
+typedef enum
+{
+    spatial = 0,
+    cached = 1,
+    persisted = 2,
+} anchorType;
+
 typedef enum
 {
     noProcess = 0,
     moving = 1,
     scaling = 2,
+    deleted = 3,
 } processingState;
 
 typedef enum
@@ -48,13 +57,18 @@ class CubeManager : public Object
     int mScale;
     int mCubeColor;
     int mUseInput;
+    std::vector<Cube *> cubeVectorSpatial;   // spatial anchor
+    std::vector<Cube *> cubeVectorCached;    // spatial anchor from cached anchor
+    std::vector<Cube *> cubeVectorPersisted; // spatial anchor from persisted anchor
 
 public:
+    processingState actionStatue;
+
+    std::vector<Cube *> *targetCubeVector;
     std::vector<Cube> undefineCubes;
     std::vector<MyIndex> rightTouchVector;
     std::vector<MyIndex> leftTouchVector;
-    std::vector<Cube *> cubeVector;
-    processingState actionStatue;
+
     CubeManager();
     ~CubeManager();
     bool cubesCanDelete();
@@ -67,14 +81,17 @@ public:
     void renderCubes(Matrix4 projection, Matrix4 eye, Matrix4 view);
     void renderFinishCubes(Matrix4 projection, Matrix4 eye, Matrix4 view);
     void renderUndefineCubes(Matrix4 projection, Matrix4 eye, Matrix4 view);
-    void addCubeFromAnchor(int anchorIndex, Matrix4 mPose, Vector3 scale, bool isLost);
+    void addCubeFromAnchor(anchorType type, int anchorIndex, Matrix4 mPose, Vector3 scale, bool isLost);
     void updateUndefineCubeScale(Matrix4 rightHandPose);
     void updateUndefineCubePosition(Matrix4 rightHandPose);
     void updateUndefineCubePose(Matrix4 rightHandPose);
     bool updateCubesStatus(Matrix4 rightHandPosition, Matrix4 leftHandPosition);
     bool checkInteract(Matrix4 rightHandPosition, Matrix4 leftHandPosition);
-    void clearCubes();
+    void clearTargetCubes();
+    void clearAllTargetCubes();
     void clearUndefineCubes();
+    void clearInteractCubes();
+    void changeTargetType(anchorType type);
 };
 
 #endif // WVR_NATIVE_ANCHOR_CUBE_H

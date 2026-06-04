@@ -35,8 +35,11 @@ class Object;
 class MainApplication
 {
 public:
+    bool deviceSupport;
+    bool canChangeAnchorStatus;
     WVR_Result passThroughOn = WVR_Error_SystemInvalid;
     anchorManager *mAnchorManager;
+    anchorType mAnchorType; // 0:spatial, 1:catch, 2:persist
 
     MainApplication();
     virtual ~MainApplication();
@@ -144,11 +147,10 @@ protected:
 
     bool mIs6DoFPose = true;
 
-    bool deviceSupport;
     Text *mText;
     CubeManager *mCubes;
     PlaneManager *mPlanes;
-    int meshSelect;//visual(1); collider(2); plane(3)
+    int meshSelect; // visual(1); collider(2); plane(3)
     SceneMesh *mSceneMesh;
 
     std::vector<float> mLUV{0, 0};

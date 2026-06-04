@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
     if (!app)
         return 1;
     LOGI("NativeAnchor main, start call app->initVR()");
+
     if (!app->initVR())
     {
         LOGW("NativeAnchor main, initVR fail,start call app->shutdownVR()");
@@ -40,6 +41,7 @@ int main(int argc, char *argv[])
         delete app;
         return 1;
     }
+
     if (!app->initGL())
     {
         LOGW("NativeAnchor main, initGL failed, start call app->shutdownVR()");
@@ -49,13 +51,15 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    if (!app->supportCheck())
+    app->supportCheck();
+    if (!app->deviceSupport)
     {
         LOGW("NativeAnchor main, example not support on this device");
         while (1)
         {
             if (app->handleInput())
                 break;
+
             if (app->renderFrame())
             {
                 LOGE("Unknown render error. Quit.");
@@ -92,7 +96,6 @@ int main(int argc, char *argv[])
             LOGI("Perceptoion permission is denied, can not get mesh data.");
         }
         app->updateMesh();
-
         app->updateHMDMatrixPose();
         app->updateInteractStatus();
     }
@@ -136,7 +139,7 @@ JNIEXPORT void JNICALL Java_com_htc_vr_samples_wvr_1native_1anchor_MainActivity_
 {
     // set permission valuse
     sceneMeshPermissionGranted = permission;
-    if (sceneMeshPermissionGranted==true)
+    if (sceneMeshPermissionGranted == true)
     {
         app->startScenePerception();
     }

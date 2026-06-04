@@ -198,6 +198,9 @@ Controller::Controller(WVR_DeviceType iCtrlerType)
 , mTouchpadSacleFactor(0.15f)
 , mFloatingDistance(0.0f)
 , mRadius(1.0f)
+, stickStatusThreshold(0.85)
+, stickStatusIsRL(false)
+, lastTimeMs(-1)
 {
     LOGI("(%d[%p]): ctor!!", mCtrlerType, this);
     for (uint32_t compID = 0; compID < CtrlerComp_MaxCompNumber; ++compID) {
@@ -363,7 +366,6 @@ void Controller::render(DrawModeEnum iMode, const Matrix4 iProjs[DrawMode_MaxMod
     drawCtrlerBattery(iMode, mvps);
     drawCtrlerButtonEffect(iMode, mvps);
     drawCtrlerTouchPad(iMode, mvps);
-    //setRightCtrlerCurcor(iView * iCtrlerPose);
     drawCtrlerRay(iMode, mvps);
     drawCtrlerExtraMeshes(iMode, mvps);
     //draw end.
@@ -915,6 +917,31 @@ void Controller::drawCtrlerButtonEffect(DrawModeEnum iMode, const Matrix4 iMVPs[
             } else {
                 if (mAnimationNodes[ctrlerCompID].isValid() == true) {
                     WVR_Axis_t axis = WVR_GetInputAnalogAxis(mCtrlerType, sControllerCompIDTable[ctrlerCompID]);
+                    if(sControllerCompIDTable[ctrlerCompID]==WVR_InputId_Alias1_Thumbstick&&mCtrlerType==WVR_DeviceType_Controller_Right)
+                    {
+                        if(stickStatusIsRL==true)
+                        {
+                            //skip data
+                        }
+                        else{
+                            timespec now;
+                            clock_gettime(CLOCK_MONOTONIC, &now);
+                            int64_t now_ms = 1000 * now.tv_sec + now.tv_nsec /1000000;
+
+                            if(lastTimeMs==-1 || now_ms-lastTimeMs>=400){
+                                if(axis.x<-stickStatusThreshold || axis.x>stickStatusThreshold)
+                                {
+                                    lastTimeMs=now_ms;
+                                    stickStatusIsRL=true;
+                                    stickStatus=axis.x;
+                                }
+                                else{
+                                    stickStatusIsRL=false;
+                                    stickStatus=axis.x;
+                                }
+                            }
+                        }
+                    }
                     finalCompMat = mAnimationNodes[ctrlerCompID].getAnimationMatrix(axis.x, axis.y, isBtnPressed);
                 } else {
                     finalCompMat = mCompLocalMats[ctrlerCompID];

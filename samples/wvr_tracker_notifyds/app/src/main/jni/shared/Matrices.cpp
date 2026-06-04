@@ -694,5 +694,13 @@ void Matrix4::Horiztonal()
     euler[2] = 0.0;
     q_type quat;
     q_from_euler(quat, euler[0], euler[1], euler[2]);
-    *this = Matrix4(quat);
+    q_type quat_set;
+    q_from_euler(quat_set, quat[Q_Z], quat[Q_Y], quat[Q_X]);
+    Matrix4 result;
+    qogl_matrix_type rstMat;
+    q_to_ogl_matrix(rstMat, quat_set);
+    set(rstMat[ 0],rstMat[ 1],rstMat[ 2],rstMat[ 3],
+            rstMat[ 4],rstMat[ 5],rstMat[ 6],rstMat[ 7],
+            rstMat[ 8],rstMat[ 9],rstMat[10],rstMat[11],
+            rstMat[12],rstMat[13],rstMat[14],rstMat[15]);
 }

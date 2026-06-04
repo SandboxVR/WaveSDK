@@ -32,9 +32,8 @@ public:
 
 private:
     void setTexture(int texture);
-    void clear();
-
 public:
+    void clear();
     static Texture * genTexture();
     static Texture * loadTextureFromBitmapWithoutCached(WVR_CtrlerTexBitmap_t &wvrBitmap);
     static Texture * loadTexture(const char * assetFile);

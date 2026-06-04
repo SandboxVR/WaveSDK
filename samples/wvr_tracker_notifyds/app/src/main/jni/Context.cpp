@@ -117,8 +117,10 @@ Context::~Context() {
 
     if (mAssetManagerInstance)
         env->DeleteGlobalRef(mAssetManagerInstance);
-    mBitmapFactory->clean(env);
-    if (mBitmapFactory) delete mBitmapFactory;
+    if (mBitmapFactory) {
+        mBitmapFactory->clean(env);
+        delete mBitmapFactory;
+    }
     mBitmapFactory = NULL;
 }
 

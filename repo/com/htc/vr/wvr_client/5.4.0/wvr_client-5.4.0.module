@@ -1,0 +1,67 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.htc.vr",
+    "module": "wvr_client",
+    "version": "5.4.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "wvr_client-5.4.0.aar",
+          "url": "wvr_client-5.4.0.aar",
+          "size": 19330240,
+          "sha512": "5a3a5ca7fa7c6a02c57eb2d8578eec91f8f951944637fe37a49eaadaf5a3a7325eab8b626d949d66e780f34cda9184e0b01d68db37c1988230ec2324414c4426",
+          "sha256": "c60b3e98320c13564b74029df875b550889129c40ccf7efe7b64d9a369f44f81",
+          "sha1": "af4ea5dae32b396fae439fe918f4c5460b26decd",
+          "md5": "afbc8cb695e9facbc3fe70e53d373924"
+        }
+      ]
+    },
+    {
+      "name": "releaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.htc.vr",
+          "module": "vr.client.abi",
+          "version": {
+            "requires": "5.4.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "wvr_client-5.4.0.aar",
+          "url": "wvr_client-5.4.0.aar",
+          "size": 19330240,
+          "sha512": "5a3a5ca7fa7c6a02c57eb2d8578eec91f8f951944637fe37a49eaadaf5a3a7325eab8b626d949d66e780f34cda9184e0b01d68db37c1988230ec2324414c4426",
+          "sha256": "c60b3e98320c13564b74029df875b550889129c40ccf7efe7b64d9a369f44f81",
+          "sha1": "af4ea5dae32b396fae439fe918f4c5460b26decd",
+          "md5": "afbc8cb695e9facbc3fe70e53d373924"
+        }
+      ]
+    }
+  ]
+}

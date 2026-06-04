@@ -1,6 +1,6 @@
 #include <Cube.h>
 
-CubeManager::CubeManager() : Object(), actionStatue(noProcess)
+CubeManager::CubeManager() : Object(), actionStatue(noProcess), targetCubeVector(&cubeVectorSpatial)
 {
     const char *shaderNames = "Cubes";
     const char *vpaths = "shader/vertex/cube_vertex.glsl";
@@ -188,7 +188,7 @@ void CubeManager::addSingleCubeVertex(const Vector3 &v, float t0, float t1, std:
     vertdata.push_back(t1);
 }
 
-void CubeManager::addCubeFromAnchor(int anchorIndex, Matrix4 pose, Vector3 scale, bool isLost)
+void CubeManager::addCubeFromAnchor(anchorType type, int anchorIndex, Matrix4 pose, Vector3 scale, bool isLost)
 {
     Cube *cube = new Cube();
     cube->mPose = pose;
@@ -196,14 +196,27 @@ void CubeManager::addCubeFromAnchor(int anchorIndex, Matrix4 pose, Vector3 scale
     cube->status = stand;
     cube->anchorIndex = anchorIndex;
     cube->anchorLost = isLost;
-    cubeVector.push_back(cube);
+    switch (type)
+    {
+    case spatial:
+        cubeVectorSpatial.push_back(cube);
+        break;
+    case cached:
+        cubeVectorCached.push_back(cube);
+        break;
+    case persisted:
+        cubeVectorPersisted.push_back(cube);
+        break;
+    default:
+        break;
+    }
 }
 
 void CubeManager::addUndefineCube()
 {
     for (int a = 0; a < rightTouchVector.size(); a++)
     {
-        undefineCubes.push_back(*cubeVector[rightTouchVector[a].vectorIndex]);
+        undefineCubes.push_back(*((*targetCubeVector)[rightTouchVector[a].vectorIndex]));
     }
 }
 
@@ -282,7 +295,7 @@ bool CubeManager::updateCubesStatus(Matrix4 rightHandPosition, Matrix4 leftHandP
     }
     else if (actionStatue == moving)
     {
-        //updateUndefineCubePosition(rightHandPosition);
+        // updateUndefineCubePosition(rightHandPosition);
         updateUndefineCubePose(rightHandPosition);
     }
     else if (actionStatue == scaling)
@@ -296,18 +309,43 @@ bool CubeManager::updateCubesStatus(Matrix4 rightHandPosition, Matrix4 leftHandP
         return false;
 }
 
+void CubeManager::clearAllTargetCubes()
+{
+    for (int a = 0; a < cubeVectorSpatial.size(); a++)
+    {
+        delete cubeVectorSpatial[a];
+    }
+    cubeVectorSpatial.clear();
+    for (int a = 0; a < cubeVectorCached.size(); a++)
+    {
+        delete cubeVectorCached[a];
+    }
+    cubeVectorCached.clear();
+    for (int a = 0; a < cubeVectorPersisted.size(); a++)
+    {
+        delete cubeVectorPersisted[a];
+    }
+    cubeVectorPersisted.clear();
+}
+
+void CubeManager::clearInteractCubes()
+{
+    undefineCubes.clear();
+    rightTouchVector.clear();
+    leftTouchVector.clear();
+}
 void CubeManager::clearUndefineCubes()
 {
     undefineCubes.clear();
 }
 
-void CubeManager::clearCubes()
+void CubeManager::clearTargetCubes()
 {
-    for (int a = 0; a < cubeVector.size(); a++)
+    for (int a = 0; a < (*targetCubeVector).size(); a++)
     {
-        delete cubeVector[a];
+        delete (*targetCubeVector)[a];
     }
-    cubeVector.clear();
+    (*targetCubeVector).clear();
 }
 
 bool CubeManager::checkInteract(Matrix4 rightCursorPose, Matrix4 leftCursorPose)
@@ -319,10 +357,11 @@ bool CubeManager::checkInteract(Matrix4 rightCursorPose, Matrix4 leftCursorPose)
     float y;
     float z;
 
-    for (int a = 0; a < cubeVector.size(); a++)
+    for (int a = 0; a < (*targetCubeVector).size(); a++)
     {
-        if(cubeVector[a]->anchorLost==false){
-            inv = cubeVector[a]->mPose;
+        if ((*targetCubeVector)[a]->anchorLost == false)
+        {
+            inv = (*targetCubeVector)[a]->mPose;
             inv = inv.invert();
             leftCursorPose_cube = inv * leftCursorPose;
             rightCursorPose_cube = inv * rightCursorPose;
@@ -332,16 +371,16 @@ bool CubeManager::checkInteract(Matrix4 rightCursorPose, Matrix4 leftCursorPose)
             y = rightCursorPose_cube[13];
             z = rightCursorPose_cube[14];
 
-            if (abs(x) <= abs(cubeVector[a]->mScale.x * 0.5) &&
-                y * (cubeVector[a]->mScale.y) > 0 && abs(y) <= abs(cubeVector[a]->mScale.y) &&
-                abs(z) <= abs(cubeVector[a]->mScale.z * 0.5))
+            if (abs(x) <= abs((*targetCubeVector)[a]->mScale.x * 0.5) &&
+                y * ((*targetCubeVector)[a]->mScale.y) > 0 && abs(y) <= abs((*targetCubeVector)[a]->mScale.y) &&
+                abs(z) <= abs((*targetCubeVector)[a]->mScale.z * 0.5))
             {
-                rightTouchVector.push_back(MyIndex{a, cubeVector[a]->anchorIndex});
-                cubeVector[a]->status = canChange;
+                rightTouchVector.push_back(MyIndex{a, (*targetCubeVector)[a]->anchorIndex});
+                (*targetCubeVector)[a]->status = canChange;
             }
             else
             {
-                cubeVector[a]->status = stand;
+                (*targetCubeVector)[a]->status = stand;
             }
 
             // check left hand
@@ -349,12 +388,12 @@ bool CubeManager::checkInteract(Matrix4 rightCursorPose, Matrix4 leftCursorPose)
             y = leftCursorPose_cube[13];
             z = leftCursorPose_cube[14];
 
-            if (abs(x) <= abs(cubeVector[a]->mScale.x * 0.5) &&
-                y * (cubeVector[a]->mScale.y) > 0 && abs(y) <= abs(cubeVector[a]->mScale.y) &&
-                abs(z) <= abs(cubeVector[a]->mScale.z * 0.5))
+            if (abs(x) <= abs((*targetCubeVector)[a]->mScale.x * 0.5) &&
+                y * ((*targetCubeVector)[a]->mScale.y) > 0 && abs(y) <= abs((*targetCubeVector)[a]->mScale.y) &&
+                abs(z) <= abs((*targetCubeVector)[a]->mScale.z * 0.5))
             {
-                leftTouchVector.push_back(MyIndex{a, cubeVector[a]->anchorIndex}); // delete candidate
-                cubeVector[a]->status = canDelete;
+                leftTouchVector.push_back(MyIndex{a, (*targetCubeVector)[a]->anchorIndex}); // delete candidate
+                (*targetCubeVector)[a]->status = canDelete;
             }
         }
     }
@@ -376,16 +415,16 @@ void CubeManager::renderFinishCubes(Matrix4 projection, Matrix4 eye, Matrix4 vie
     glDisable(GL_CULL_FACE);
     glEnable(GL_POLYGON_OFFSET_FILL);
     glPolygonOffset(1.0f, 0.8f);
-    for (int a = 0; a < cubeVector.size(); a++)
+    for (int a = 0; a < (*targetCubeVector).size(); a++)
     {
         // skip lost tracking anchor
-        if (cubeVector[a]->anchorLost == true)
+        if ((*targetCubeVector)[a]->anchorLost == true)
             continue;
 
-        Matrix4 matrix = projection * eye * view * cubeVector[a]->mPose;
+        Matrix4 matrix = projection * eye * view * (*targetCubeVector)[a]->mPose;
 
         glUniformMatrix4fv(mMatrixLocation, 1, false, matrix.get());
-        switch (cubeVector[a]->status)
+        switch ((*targetCubeVector)[a]->status)
         {
         case stand: // normal
             glUniform1i(mUseInput, 0);
@@ -401,7 +440,7 @@ void CubeManager::renderFinishCubes(Matrix4 projection, Matrix4 eye, Matrix4 vie
         default:
             break;
         }
-        glUniform3f(mScale, cubeVector[a]->mScale.x, cubeVector[a]->mScale.y, cubeVector[a]->mScale.z);
+        glUniform3f(mScale, (*targetCubeVector)[a]->mScale.x, (*targetCubeVector)[a]->mScale.y, (*targetCubeVector)[a]->mScale.z);
 
         mVAO->bindVAO();
         glActiveTexture(GL_TEXTURE0);
@@ -457,4 +496,52 @@ void CubeManager::renderUndefineCubes(Matrix4 projection, Matrix4 eye, Matrix4 v
     {
         glDisable(GL_CULL_FACE);
     }
+}
+
+void CubeManager::changeTargetType(anchorType type)
+{
+    // clear previous interaction result
+    clearInteractCubes();
+    actionStatue = noProcess;
+
+    std::string texturePath;
+    switch (type)
+    {
+    case spatial:
+        texturePath = "textures/cube_texture.jpg";
+        targetCubeVector = &cubeVectorSpatial;
+        break;
+    case cached:
+        texturePath = "textures/cube_texture1.jpg";
+        targetCubeVector = &cubeVectorCached;
+        break;
+    case persisted:
+        texturePath = "textures/cube_texture2.jpg";
+        targetCubeVector = &cubeVectorPersisted;
+        break;
+    default:
+        break;
+    }
+
+    mTexture->clear();
+    mTexture = Texture::loadTexture(texturePath.c_str());
+    if (mTexture == NULL)
+    {
+        LOGI("texture lost!!!");
+        mHasError = true;
+        return;
+    }
+
+    mTexture->bindTexture();
+    mTexture->bindBitmap(GL_RGB5_A1);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    mTexture->unbindTexture();
+    mTexture->cleanBitmap();
+    LOGI("push new texture and change target anchor type success");
 }

@@ -118,6 +118,10 @@ public:
         Matrix4 mLocalMat;
     };
 public:
+    int64_t lastTimeMs;
+    bool stickStatusIsRL;
+    float stickStatusThreshold;
+    float stickStatus;
     static const std::string sControllerCompNames[CtrlerComp_MaxCompNumber];
     static const WVR_InputId sControllerCompIDTable[CtrlerComp_MaxCompNumber];
 public:
@@ -134,10 +138,6 @@ public:
 public:
     void setButtonEffectColor(float r, float g, float b, float a);
     void resetButtonEffects();
-
-    //Matrix4 rightCtrlerCurcor;//world coordinate
-    //Matrix4 getRightCtrlerCurcor();
-    //bool setRightCtrlerCurcor(Matrix4 mv);
 protected:
     void initializeGLComp();
     void releaseGLComp();

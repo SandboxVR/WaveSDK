@@ -1,0 +1,14 @@
+/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor/src/main/jni/hellovr.cpp:1372:21: warning: 13 enumeration values not handled in switch: 'WVR_DeviceType_Invalid', 'WVR_DeviceType_HMD', 'WVR_DeviceType_Camera'... [-Wswitch]
+            switch (mVRDevicePairs[nDevice].type)
+                    ^
+1 warning generated.
+/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor/src/main/jni/anchorManager.cpp:200:23: warning: braces around scalar initializer [-Wbraced-scalar-init]
+        spatialName = {"s"};
+                      ^~~~~
+/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor/src/main/jni/anchorManager.cpp:204:23: warning: braces around scalar initializer [-Wbraced-scalar-init]
+        spatialName = {"c"};
+                      ^~~~~
+/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor/src/main/jni/anchorManager.cpp:208:23: warning: braces around scalar initializer [-Wbraced-scalar-init]
+        spatialName = {"p"};
+                      ^~~~~
+3 warnings generated.
