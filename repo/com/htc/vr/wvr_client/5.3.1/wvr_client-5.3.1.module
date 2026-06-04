@@ -1,0 +1,67 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.htc.vr",
+    "module": "wvr_client",
+    "version": "5.3.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "wvr_client-5.3.1.aar",
+          "url": "wvr_client-5.3.1.aar",
+          "size": 19318259,
+          "sha512": "915d5795da74c7ffd48066b968549176931811dd0cc72cde1655998a5efd428490ae475426e60145e1d5e072bbc6bfb83cf319cd3a8188c4e7e715c371cabd81",
+          "sha256": "a1dad3f948b6f77611a93a81eb017d20d2541fa11c8e28377505797764034440",
+          "sha1": "a93521d4587c5f81579902ccd4e017deeb38abe6",
+          "md5": "7f8ebc04777850e46b44459b0be9e96d"
+        }
+      ]
+    },
+    {
+      "name": "releaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.htc.vr",
+          "module": "vr.client.abi",
+          "version": {
+            "requires": "5.3.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "wvr_client-5.3.1.aar",
+          "url": "wvr_client-5.3.1.aar",
+          "size": 19318259,
+          "sha512": "915d5795da74c7ffd48066b968549176931811dd0cc72cde1655998a5efd428490ae475426e60145e1d5e072bbc6bfb83cf319cd3a8188c4e7e715c371cabd81",
+          "sha256": "a1dad3f948b6f77611a93a81eb017d20d2541fa11c8e28377505797764034440",
+          "sha1": "a93521d4587c5f81579902ccd4e017deeb38abe6",
+          "md5": "7f8ebc04777850e46b44459b0be9e96d"
+        }
+      ]
+    }
+  ]
+}
