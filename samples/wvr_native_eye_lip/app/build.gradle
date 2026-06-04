@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
-apply from: "$rootDir/gradle/build_base.gradle"
-apply from: "$rootDir/gradle/build_sdk.gradle"
+apply from: "$rootDir/gradle_common/build_base.gradle"
+apply from: "$rootDir/gradle_common/build_sdk.gradle"
 
 android {
     defaultConfig {
@@ -21,6 +21,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    namespace 'com.htc.vr.samples.eye_lip'
 }
 
 

@@ -1,12 +1,15 @@
 apply plugin: 'com.android.application'
-apply from: "$rootDir/gradle/build_base.gradle"
-apply from: "$rootDir/gradle/build_sdk.gradle"
+apply from: "$rootDir/gradle_common/build_base.gradle"
+apply from: "$rootDir/gradle_common/build_sdk.gradle"
 
 android {
     defaultConfig {
         applicationId "com.htc.vr.samples.wvr_tracker_notifyds"
         versionCode 1
         versionName "1.0"
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
     }
 
     signingConfigs {
@@ -21,24 +24,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-
-    flavorDimensions "version"
-    productFlavors {
-        bit32 {
-            dimension "version"
-            applicationId "com.htc.vr.samples.wvr_tracker_notifyds.armv7a"
-            ndk {
-                abiFilter 'armeabi-v7a'
-            }
-        }
-        bit64 {
-            dimension "version"
-            applicationId "com.htc.vr.samples.wvr_tracker_notifyds"
-            ndk {
-                abiFilter 'arm64-v8a'
-            }
-        }
-    }
+    namespace 'com.htc.vr.samples.wvr_tracker_notifyds'
 }
 
 

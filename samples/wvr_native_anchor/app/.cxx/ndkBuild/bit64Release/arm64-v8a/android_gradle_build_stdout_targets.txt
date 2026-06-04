@@ -1,0 +1,27 @@
+make[2]: Entering directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor'
+[arm64-v8a] Compile++      : nativeAnchor_common <= hellovr.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= Context.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= anchorManager.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= Matrices.cpp
+[arm64-v8a] Compile        : nativeAnchor_common <= quat.c
+[arm64-v8a] Compile        : nativeAnchor_common <= matrix.c
+[arm64-v8a] Compile        : nativeAnchor_common <= vector.c
+[arm64-v8a] Compile++      : nativeAnchor_common <= Texture.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= VertexArrayObject.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= FrameBufferObject.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= Shader.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= Object.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= Mesh.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= Controller.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= HandManager.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= HandModel.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= HandObj.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= Cube.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= Plane.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= Axes.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= Text.cpp
+[arm64-v8a] Prebuilt       : libwvr_api.so <= /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/build/install/lib/arm64-v8a/
+[arm64-v8a] SharedLibrary  : libnativeAnchor_common.so
+[arm64-v8a] Compile++      : nativeAnchor_jni <= jni.cpp
+[arm64-v8a] SharedLibrary  : libnativeAnchor_jni.so
+make[2]: Leaving directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor'

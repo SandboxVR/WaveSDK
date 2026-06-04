@@ -1,0 +1,27 @@
+make[2]: Entering directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor'
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= hellovr.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= Context.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= anchorManager.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= Matrices.cpp
+[armeabi-v7a] Compile thumb  : nativeAnchor_common <= quat.c
+[armeabi-v7a] Compile thumb  : nativeAnchor_common <= matrix.c
+[armeabi-v7a] Compile thumb  : nativeAnchor_common <= vector.c
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= Texture.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= VertexArrayObject.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= FrameBufferObject.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= Shader.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= Object.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= Mesh.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= Controller.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= HandManager.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= HandModel.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= HandObj.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= Cube.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= Plane.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= Axes.cpp
+[armeabi-v7a] Compile++ thumb: nativeAnchor_common <= Text.cpp
+[armeabi-v7a] Prebuilt       : libwvr_api.so <= /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/build/install/lib/armeabi-v7a/
+[armeabi-v7a] SharedLibrary  : libnativeAnchor_common.so
+[armeabi-v7a] Compile++ thumb: nativeAnchor_jni <= jni.cpp
+[armeabi-v7a] SharedLibrary  : libnativeAnchor_jni.so
+make[2]: Leaving directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor'

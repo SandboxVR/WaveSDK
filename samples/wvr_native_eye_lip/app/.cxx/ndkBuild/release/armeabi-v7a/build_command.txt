@@ -1,4 +1,4 @@
-Executable : /buildenv/android-ndk-r16b/ndk-build
+                    Executable : /buildenv/ndk/16.1.4479499/ndk-build
 arguments : 
 NDK_PROJECT_PATH=null
 APP_BUILD_SCRIPT=/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_eye_lip/src/main/jni/Android.mk
@@ -17,3 +17,6 @@ LOCAL_SHORT_COMMANDS=false
 -n
 jvmArgs : 
 
+
+                    Build command args: []
+                    Version: 1

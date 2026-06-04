@@ -1,0 +1,76 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.htc.vr",
+    "module": "wvr_ime_client",
+    "version": "5.1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "com.htc.vr",
+          "module": "wvr.common.utils",
+          "version": {
+            "requires": "5.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "wvr_ime_client-5.1.0.aar",
+          "url": "wvr_ime_client-5.1.0.aar",
+          "size": 52853,
+          "sha512": "98db8bc47f072359d74bb2d897d5d44b76ac6f0bb03a944b34428a73ca66139f5c3dc30f93d8eabadbc792c057bad4e7e02bc1f0c229803e32aab2315d95a024",
+          "sha256": "b30f1011fa9da340c8ee694921f48dcee229b3398e9e093b3148f1b9a3ec466f",
+          "sha1": "ff90f3a04f35aca05b273fddd1783a5cc1a47dc4",
+          "md5": "8193096297f23bd0bdf929122576d07a"
+        }
+      ]
+    },
+    {
+      "name": "releaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.htc.vr",
+          "module": "wvr.common.utils",
+          "version": {
+            "requires": "5.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "wvr_ime_client-5.1.0.aar",
+          "url": "wvr_ime_client-5.1.0.aar",
+          "size": 52853,
+          "sha512": "98db8bc47f072359d74bb2d897d5d44b76ac6f0bb03a944b34428a73ca66139f5c3dc30f93d8eabadbc792c057bad4e7e02bc1f0c229803e32aab2315d95a024",
+          "sha256": "b30f1011fa9da340c8ee694921f48dcee229b3398e9e093b3148f1b9a3ec466f",
+          "sha1": "ff90f3a04f35aca05b273fddd1783a5cc1a47dc4",
+          "md5": "8193096297f23bd0bdf929122576d07a"
+        }
+      ]
+    }
+  ]
+}

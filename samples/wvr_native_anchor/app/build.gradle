@@ -1,0 +1,51 @@
+apply plugin: 'com.android.application'
+apply from: "$rootDir/gradle_common/build_base.gradle"
+apply from: "$rootDir/gradle_common/build_sdk.gradle"
+android {
+    defaultConfig {
+        applicationId "com.htc.vr.samples.wvr_native_anchor"
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        debug {}
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    flavorDimensions "version"
+    productFlavors {
+        bit32 {
+            dimension "version"
+            applicationId "com.htc.vr.samples.wvr_native_anchor.armv7a"
+            ndk {
+                abiFilter 'armeabi-v7a'
+            }
+        }
+        bit64 {
+            dimension "version"
+            applicationId "com.htc.vr.samples.wvr_native_anchor"
+            ndk {
+                abiFilter 'arm64-v8a'
+            }
+        }
+    }
+    namespace 'com.htc.vr.samples.wvr_native_anchor'
+
+    lintOptions {
+        disable "Instantiatable"
+    }
+}
+
+
+dependencies {
+    api 'com.htc.vr:wvr_client:+'
+}

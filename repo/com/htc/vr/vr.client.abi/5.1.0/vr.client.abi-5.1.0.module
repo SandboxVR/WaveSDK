@@ -1,0 +1,58 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.htc.vr",
+    "module": "vr.client.abi",
+    "version": "5.1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "vr.client.abi-5.1.0.aar",
+          "url": "vr.client.abi-5.1.0.aar",
+          "size": 3824,
+          "sha512": "560b0b3123a0ec87aed7457bceebf2060b2efab155fd1566f69449c26f2bf3db41fd2b957579f7d854a06b3574a3b8292aeeccc22f37d284ca3a0c9661a91a99",
+          "sha256": "45e3bb92d3981ad17c5ca6ef06bb765f3d73a862923b4a0d4323a7fcb43fde91",
+          "sha1": "63b7187585d2e427bd08c73339966d39e882d332",
+          "md5": "aebfc807707864d2f24810797230cec3"
+        }
+      ]
+    },
+    {
+      "name": "releaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "vr.client.abi-5.1.0.aar",
+          "url": "vr.client.abi-5.1.0.aar",
+          "size": 3824,
+          "sha512": "560b0b3123a0ec87aed7457bceebf2060b2efab155fd1566f69449c26f2bf3db41fd2b957579f7d854a06b3574a3b8292aeeccc22f37d284ca3a0c9661a91a99",
+          "sha256": "45e3bb92d3981ad17c5ca6ef06bb765f3d73a862923b4a0d4323a7fcb43fde91",
+          "sha1": "63b7187585d2e427bd08c73339966d39e882d332",
+          "md5": "aebfc807707864d2f24810797230cec3"
+        }
+      ]
+    }
+  ]
+}
