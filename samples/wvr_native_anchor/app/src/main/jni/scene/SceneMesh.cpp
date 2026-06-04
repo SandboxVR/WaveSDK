@@ -256,7 +256,7 @@ void SceneMesh::render(sceneMeshData *meshData, Matrix4 projection, Matrix4 eye,
         }
         meshData->shouldPush2GPU = false;
     }
-    else if (meshData->mVertexSize.size() > 0)
+    else if (meshData->mVertexSize.size() > 0 && meshData->mLastMeshID!=-1)
     {
         LOGI("render %d vertex", meshData->mVertexSize[0]);
         Matrix4 matrix = projection * eye * view * meshData->mVertexPose[0];

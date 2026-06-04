@@ -822,6 +822,7 @@ WVR_Result MainApplication::settingPassThrough()
     if (passThroughOn != WVR_Success)
     {
         passThroughOn = WVR_ShowPassthroughUnderlay(true);
+        WVR_SetPassthroughImageFocus(WVR_PassthroughImageFocus_Scale);
     }
     return passThroughOn;
 }

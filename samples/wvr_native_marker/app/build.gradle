@@ -24,16 +24,6 @@ android {
 
     flavorDimensions "version"
     productFlavors {
-        bit32 {
-            dimension "version"
-            applicationId "com.htc.vr.samples.wvr_native_marker.armv7a"
-            ndk {
-                abiFilter 'armeabi-v7a'
-            }
-            externalNativeBuild.ndkBuild {
-                cppFlags "-DTHIS_IS_WORKAROUND_FOR_GRADLE_1"
-            }
-        }
         bit64 {
             dimension "version"
             applicationId "com.htc.vr.samples.wvr_native_marker"

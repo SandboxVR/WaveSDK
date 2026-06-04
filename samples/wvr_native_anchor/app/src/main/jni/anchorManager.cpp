@@ -552,9 +552,9 @@ bool anchorManager::getExistedCachedAnchor()
     {
         cacheInfo.cachedSpatialAnchorName = allCachedName[a];
         cacheInfo.spatialAnchorName = allCachedName[a];
-        WVR_SpatialAnchor *ptr; // will get this anchor address later(via WVR_EnumerateSpatialAnchors)
+        WVR_SpatialAnchor tempAnchor; // will also get this anchor later(via WVR_EnumerateSpatialAnchors)
         LOGI("create spatial anchor from cached anchor");
-        if (WVR_CreateSpatialAnchorFromCacheName(&cacheInfo, ptr) != WVR_Success)
+        if (WVR_CreateSpatialAnchorFromCacheName(&cacheInfo, &tempAnchor) != WVR_Success)
             LOGI("already have same cached anchor as spatial anchor");
     }
     free(allCachedName);
@@ -576,9 +576,9 @@ bool anchorManager::getExistedPersistedAnchor()
     {
         persistInfo.persistedSpatialAnchorName = allPersistedName[a];
         persistInfo.spatialAnchorName = allPersistedName[a];
-        WVR_SpatialAnchor *ptr; // will get this anchor address later(via WVR_EnumerateSpatialAnchors)
+        WVR_SpatialAnchor tempAnchor; // will also get this anchor later(via WVR_EnumerateSpatialAnchors)
         LOGI("create spatial anchor from persisted anchor");
-        if (WVR_CreateSpatialAnchorFromPersistenceName(&persistInfo, ptr) != WVR_Success)
+        if (WVR_CreateSpatialAnchorFromPersistenceName(&persistInfo, &tempAnchor) != WVR_Success)
             LOGI("already have same persisted anchor as spatial anchor");
     }
     free(allPersistedName);
