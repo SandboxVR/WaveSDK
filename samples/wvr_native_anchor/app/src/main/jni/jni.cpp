@@ -82,11 +82,7 @@ int main(int argc, char *argv[])
             break;
         }
 
-        if (app->settingPassThrough() != WVR_Success)
-        {
-            LOGE("Unknown pass through error. Quit.");
-            break;
-        }
+        app->settingPassThrough();
 
         app->updateAnchors();
         app->updateScenePlanes();

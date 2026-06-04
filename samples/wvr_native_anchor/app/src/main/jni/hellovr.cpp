@@ -486,6 +486,10 @@ bool MainApplication::handleInput()
         mCubes->changeTargetType(mAnchorType);
     }
 
+    // due to create persist anchor may cost more time. Use this flag to prevent create multiple persist anchor in one time.
+    // Create persist anchor on the other thread would be better.
+    bool preventCreatePersistAnchorStuck = false;
+
     while (WVR_PollEventQueue(&event))
     {
         if (event.common.type == WVR_EventType_Quit)
@@ -533,24 +537,32 @@ bool MainApplication::handleInput()
         {
             if (event.device.deviceType == WVR_DeviceType_Controller_Right && event.input.inputId == WVR_InputId_Alias1_Trigger)
             {
-                LOGI("BTCheck right WVR_InputId_Alias1_Trigger (create anchor or scale cube)");
-                if (!mCubes->cubesCanChange() && mCubes->actionStatue == noProcess)
+                if (!preventCreatePersistAnchorStuck)
                 {
-                    mAnchorManager->addCubeAnchor(mAnchorType, mPlanes, mControllerObjs[0]->mCursorPose);
+                    preventCreatePersistAnchorStuck = true;
+                    LOGI("BTCheck right WVR_InputId_Alias1_Trigger (create anchor or scale cube)");
+                    if (!mCubes->cubesCanChange() && mCubes->actionStatue == noProcess)
+                    {
+                        mAnchorManager->addCubeAnchor(mAnchorType, mPlanes, mControllerObjs[0]->mCursorPose);
+                    }
+                    else
+                    {
+                        if (mCubes->actionStatue == scaling)
+                        {
+                            mCubes->actionStatue = noProcess;
+                            mAnchorManager->addUndefineCubeAnchor(mAnchorType, mCubes);
+                            mCubes->clearUndefineCubes();
+                        }
+                        else if (mCubes->actionStatue == noProcess && mCubes->cubesCanChange())
+                        {
+                            mCubes->actionStatue = scaling;
+                            mAnchorManager->deleteChosenAnchor2changing(mAnchorType, mCubes);
+                        }
+                    }
                 }
                 else
                 {
-                    if (mCubes->actionStatue == scaling)
-                    {
-                        mCubes->actionStatue = noProcess;
-                        mAnchorManager->addUndefineCubeAnchor(mAnchorType, mCubes);
-                        mCubes->clearUndefineCubes();
-                    }
-                    else if (mCubes->actionStatue == noProcess && mCubes->cubesCanChange())
-                    {
-                        mCubes->actionStatue = scaling;
-                        mAnchorManager->deleteChosenAnchor2changing(mAnchorType, mCubes);
-                    }
+                    LOGI("BTCheck right WVR_InputId_Alias1_Trigger (neglect)");
                 }
             }
             if (event.device.deviceType == WVR_DeviceType_Controller_Right && event.input.inputId == WVR_InputId_Alias1_Grip)

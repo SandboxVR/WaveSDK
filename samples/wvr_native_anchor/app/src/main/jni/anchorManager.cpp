@@ -376,7 +376,7 @@ bool anchorManager::clearTypeAnchor(anchorType type, CubeManager *cm)
     for (int a = 0; a < (*cm->targetCubeVector).size(); a++)
     {
         // clear all spatial anchors
-        if (!WVR_DestroySpatialAnchor(*(allSpatialAnchor + (*cm->targetCubeVector)[a]->anchorIndex)))
+        if (WVR_DestroySpatialAnchor(*(allSpatialAnchor + (*cm->targetCubeVector)[a]->anchorIndex)) != WVR_Success)
         {
             result = false;
             LOGE("delete spatial anchor %d fail", a);
@@ -388,7 +388,7 @@ bool anchorManager::clearTypeAnchor(anchorType type, CubeManager *cm)
     case cached:
         // clear cached anchors
         LOGI("clear all cached anchors");
-        if (!WVR_ClearCachedSpatialAnchors())
+        if (WVR_ClearCachedSpatialAnchors() != WVR_Success)
         {
             result = false;
             LOGE("clear cached anchor fail");
@@ -397,7 +397,7 @@ bool anchorManager::clearTypeAnchor(anchorType type, CubeManager *cm)
     case persisted:
         // clear persisted anchors
         LOGI("clear all persisted anchors");
-        if (!WVR_ClearPersistedSpatialAnchors())
+        if (WVR_ClearPersistedSpatialAnchors() != WVR_Success)
         {
             result = false;
             LOGE("clear persist anchor fail");
@@ -501,7 +501,8 @@ bool anchorManager::getExistedSpatialAnchor(CubeManager *cm)
 
     // assign memory space for anchor
     allSpatialAnchor = (WVR_SpatialAnchor *)malloc(sizeof(WVR_SpatialAnchor) * allSpatialAnchorCount);
-    WVR_EnumerateSpatialAnchors(allSpatialAnchorCount, &allSpatialAnchorCount, allSpatialAnchor);
+    uint32_t tempCount; // this may different with allSpatialAnchorCount
+    WVR_EnumerateSpatialAnchors(allSpatialAnchorCount, &tempCount, allSpatialAnchor);
 
     // classified different spatial anchors
     for (int a = 0; a < allSpatialAnchorCount; a++)
@@ -545,7 +546,8 @@ bool anchorManager::getExistedCachedAnchor()
     LOGI("Enumerate cached count=%d", cachedAnchorCount);
     WVR_SpatialAnchorName *allCachedName;
     allCachedName = (WVR_SpatialAnchorName *)malloc(sizeof(WVR_SpatialAnchorName) * cachedAnchorCount);
-    WVR_EnumerateCachedSpatialAnchorNames(cachedAnchorCount, &cachedAnchorCount, allCachedName);
+    uint32_t tempCount; // this may different with cachedAnchorCount
+    WVR_EnumerateCachedSpatialAnchorNames(cachedAnchorCount, &tempCount, allCachedName);
     // Let all cached anchor as spatial anchor
     WVR_SpatialAnchorFromCacheNameCreateInfo cacheInfo;
     for (int a = 0; a < cachedAnchorCount; a++)
@@ -569,7 +571,8 @@ bool anchorManager::getExistedPersistedAnchor()
     LOGI("Enumerate persisted count=%d", persistedAnchorCount);
     WVR_SpatialAnchorName *allPersistedName;
     allPersistedName = (WVR_SpatialAnchorName *)malloc(sizeof(WVR_SpatialAnchorName) * persistedAnchorCount);
-    WVR_EnumeratePersistedSpatialAnchorNames(persistedAnchorCount, &persistedAnchorCount, allPersistedName);
+    uint32_t tempCount; // this may different with persistedAnchorCount
+    WVR_EnumeratePersistedSpatialAnchorNames(persistedAnchorCount, &tempCount, allPersistedName);
     // Let all persisted anchor as spatial anchor
     WVR_SpatialAnchorFromPersistenceNameCreateInfo persistInfo;
     for (int a = 0; a < persistedAnchorCount; a++)
