@@ -1,4 +1,4 @@
-// "WaveVR SDK 
+// "WaveVR SDK
 // © 2017 HTC Corporation. All Rights Reserved.
 //
 // Unless otherwise required by copyright law and practice,
@@ -11,44 +11,51 @@
 #include <GLES3/gl31.h>
 #include <GLES3/gl3ext.h>
 
-class VertexArrayObject {
+class VertexArrayObject
+{
 private:
     GLuint mVAO;
     GLuint mAB;
     GLuint mEAB;
-    VertexArrayObject& operator=(const VertexArrayObject&) {return *this;}
+    VertexArrayObject &operator=(const VertexArrayObject &) { return *this; }
 
 public:
     VertexArrayObject(bool hasAB, bool hasEAB);
     ~VertexArrayObject();
 
-    inline GLuint getVertexArrayObject() {return mVAO;}
+    inline GLuint getVertexArrayObject() { return mVAO; }
 
-    inline GLuint getArrayBuffer() {return mAB;}
+    inline GLuint getArrayBuffer() { return mAB; }
 
-    inline GLuint getElementArrayBuffer() {return mEAB;}
+    inline GLuint getElementArrayBuffer() { return mEAB; }
 
-    inline void bindVAO() {
+    inline void bindVAO()
+    {
         glBindVertexArray(mVAO);
     }
 
-    inline void unbindVAO() {
+    inline void unbindVAO()
+    {
         glBindVertexArray(0);
     }
 
-    inline void bindArrayBuffer() {
+    inline void bindArrayBuffer()
+    {
         glBindBuffer(GL_ARRAY_BUFFER, mAB);
     }
 
-    inline void unbindArrayBuffer() {
+    inline void unbindArrayBuffer()
+    {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    inline void bindElementArrayBuffer() {
+    inline void bindElementArrayBuffer()
+    {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEAB);
     }
 
-    inline void unbindElementArrayBuffer() {
+    inline void unbindElementArrayBuffer()
+    {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 };

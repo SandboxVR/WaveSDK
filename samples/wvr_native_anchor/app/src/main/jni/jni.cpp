@@ -16,6 +16,9 @@
 #include <unistd.h>
 #include <wvr/wvr.h>
 
+// get scene mesh permission
+extern bool sceneMeshPermissionGranted;
+
 // DEBUG can be disabled when the Activity ask.
 extern bool gDebug;
 extern bool gDebugOld;
@@ -51,6 +54,8 @@ int main(int argc, char *argv[])
         LOGW("NativeAnchor main, example not support on this device");
         while (1)
         {
+            if (app->handleInput())
+                break;
             if (app->renderFrame())
             {
                 LOGE("Unknown render error. Quit.");
@@ -78,8 +83,16 @@ int main(int argc, char *argv[])
             LOGE("Unknown pass through error. Quit.");
             break;
         }
+
         app->updateAnchors();
         app->updateScenePlanes();
+
+        if (sceneMeshPermissionGranted == false)
+        {
+            LOGI("Perceptoion permission is denied, can not get mesh data.");
+        }
+        app->updateMesh();
+
         app->updateHMDMatrixPose();
         app->updateInteractStatus();
     }
@@ -96,6 +109,7 @@ extern "C"
 {
     JNIEXPORT void JNICALL Java_com_htc_vr_samples_wvr_1native_1anchor_MainActivity_init(JNIEnv *env, jobject act, jobject am);
     JNIEXPORT void JNICALL Java_com_htc_vr_samples_wvr_1native_1anchor_MainActivity_setFlag(JNIEnv *env, jclass clazz, jint flag);
+    JNIEXPORT void JNICALL Java_com_htc_vr_samples_wvr_1native_1anchor_MainActivity_setPermission(JNIEnv *env, jclass clazz, jboolean permission);
     JNIEXPORT void JNICALL Java_com_htc_vr_samples_wvr_1native_1anchor_MainActivity_onResumeCall(JNIEnv *env, jclass clazz);
 };
 
@@ -116,6 +130,20 @@ JNIEXPORT void JNICALL Java_com_htc_vr_samples_wvr_1native_1anchor_MainActivity_
     LOGD("gMsaa = %d", gMsaa ? 1 : 0);
     gScene = (flag & 0x4) != 0;
     LOGD("gScene = %d", gScene ? 1 : 0);
+}
+
+JNIEXPORT void JNICALL Java_com_htc_vr_samples_wvr_1native_1anchor_MainActivity_setPermission(JNIEnv *env, jclass clazz, jboolean permission)
+{
+    // set permission valuse
+    sceneMeshPermissionGranted = permission;
+    if (sceneMeshPermissionGranted==true)
+    {
+        app->startScenePerception();
+    }
+    else
+    {
+        LOGI("permission deny");
+    }
 }
 
 JNIEXPORT void JNICALL Java_com_htc_vr_samples_wvr_1native_1anchor_MainActivity_onResumeCall(JNIEnv *env, jclass clazz)

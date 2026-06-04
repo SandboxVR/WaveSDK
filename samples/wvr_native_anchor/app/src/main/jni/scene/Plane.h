@@ -18,6 +18,7 @@ struct Plane
     Matrix4 mPose;
     Vector3 mScale;
     planeState status;
+    int scenePlaneIndex;
 };
 
 class PlaneManager : public Object
@@ -38,7 +39,7 @@ public:
 
     PlaneManager();
     ~PlaneManager();
-    void addPlane(Matrix4 pose, Vector3 scale);
+    void addPlane(int index, Matrix4 pose, Vector3 scale);
     void clearPlanes();
     void addSinglePlaneVertex(const Vector3 &v, std::vector<float> &vertdata);
     void setupShareVertex(std::vector<float> &vertdata, std::vector<uint32_t> &indexdata);
@@ -46,7 +47,8 @@ public:
     void updatePlanesStatus(Matrix4 rightCursorPose);
     bool checkEachInteract(Matrix4 cursorPose, Plane plane, Matrix4 &interactPose);
     Vector4 expressViaPlaneCoordinate(Vector4 worldCoord, Matrix4 planePose);
-    Matrix4 mapingPoseOnPlane(Matrix4 cursorPose, Matrix4 planePose);
+    Matrix4 mappingPoseOnPlane(Matrix4 cursorPose, Matrix4 planePose);
     void renderAxes(std::vector<Matrix4> &pose);
+    std::vector<Plane> getPlanes();
 };
 #endif // WVR_NATIVE_ANCHOR_PLANE_H

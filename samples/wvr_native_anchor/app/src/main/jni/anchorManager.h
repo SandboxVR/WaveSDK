@@ -2,6 +2,7 @@
 #define WVR_NATIVE_ANCHOR_ANCHORMANAGER_H
 #include <Plane.h>
 #include "Cube.h"
+#include "SceneMesh.h"
 #include <wvr/wvr_anchor.h>
 #include <wvr/wvr_scene.h>
 #include <wvr/wvr_device.h>
@@ -12,18 +13,17 @@ class anchorManager
 
     uint32_t anchorCount;
     uint32_t planeCount;
-    bool perceptionOn = false;
 
 public:
     anchorManager();
     ~anchorManager();
-    // anchor
     bool init(CubeManager *cm, PlaneManager *pm);
+    void startScenePerception();
     void deinit();
     bool getExistedPlanes(PlaneManager *pm);
     bool createCubeAnchor(Matrix4 pose, Vector3 scale);
     bool getExistedAnchor(CubeManager *cm);
-    bool updateExistedAnchor(PlaneManager *pm, CubeManager *cm);
+    bool updateExistedAnchor(CubeManager *cm);
     bool addCubeAnchor(PlaneManager *pm, Matrix4 controllerPose, Vector3 scale = Vector3(0.05, 0.05, 0.05));
     bool addUndefineCubeAnchor(CubeManager *cm);
     bool deleteChosenAnchor2changing(CubeManager *cm);
@@ -33,5 +33,8 @@ public:
     // utility
     Matrix4 convertToMatrix4(WVR_Pose_t pose);
     WVR_Pose_t convertToWVRPose(Matrix4 pose);
+    // mesh
+    void getMesh_2D(PlaneManager* pm, sceneMeshData2D* sceneMesh2D);
+    void getMesh_3D(sceneMeshData3D* sceneMesh3D);//visual mesh and collider mesh
 };
 #endif // WVR_NATIVE_ANCHOR_ANCHORMANAGER_H

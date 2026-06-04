@@ -12,6 +12,7 @@
 #include <Shader.h>
 #include <vector>
 #include "log.h"
+#include <string>
 
 Shader::Shader(const char * name, const char * vname, const char * vertex, const char * fname, const char * fragment) : 
     mName(name), mVName(vname), mFName(fname), mVertexShader(vertex), mFragmentShader(fragment), mProgramId(0) {
@@ -22,6 +23,7 @@ Shader::~Shader() {
         return;
     glDeleteProgram(mProgramId);
     mProgramId = 0;
+
 }
 
 bool Shader::hasShaderError(const char * name, int shaderId) {
@@ -30,10 +32,11 @@ bool Shader::hasShaderError(const char * name, int shaderId) {
     glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
     if (result == GL_FALSE) {
         glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLength);
-        std::vector<GLchar> errorMessage(infoLength + 1);
+        std::vector<char> errorMessage(infoLength + 1);
         glGetShaderInfoLog(shaderId, infoLength, NULL, &errorMessage[0]);
-        LOGE("Unable to compile shader \"%s\" (%u):\n%s", 
-            name, shaderId, &errorMessage[0]);
+        LOGE("Unable to compile shader \"%s\" (%u):\n%s", name, shaderId, &errorMessage[0]);
+        std::string ss(errorMessage.begin(),errorMessage.end());
+        LOGE("Unable to compile, Error: %s", ss.c_str());
         return false;
     }
     return true;

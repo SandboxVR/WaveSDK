@@ -1,4 +1,4 @@
-// "WaveVR SDK 
+// "WaveVR SDK
 // © 2017 HTC Corporation. All Rights Reserved.
 //
 // Unless otherwise required by copyright law and practice,
@@ -10,8 +10,8 @@
 
 #include <VertexArrayObject.h>
 
-VertexArrayObject::VertexArrayObject(bool hasAB, bool hasEAB) :
-    mVAO(0), mAB(0), mEAB(0) {
+VertexArrayObject::VertexArrayObject(bool hasAB, bool hasEAB) : mVAO(0), mAB(0), mEAB(0)
+{
     glGenVertexArrays(1, &mVAO);
     glBindVertexArray(mVAO);
 
@@ -22,7 +22,8 @@ VertexArrayObject::VertexArrayObject(bool hasAB, bool hasEAB) :
         glGenBuffers(1, &mEAB);
 }
 
-VertexArrayObject::~VertexArrayObject() {
+VertexArrayObject::~VertexArrayObject()
+{
     glDeleteVertexArrays(1, &mVAO);
     glDeleteBuffers(1, &mAB);
     glDeleteBuffers(1, &mEAB);

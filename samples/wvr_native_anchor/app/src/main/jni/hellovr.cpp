@@ -31,6 +31,7 @@
 #include <wvr/wvr_overlay.h>
 #include <wvr/wvr_system.h>
 #include <wvr/wvr_events.h>
+#include <wvr/wvr_scene.h>
 
 #include "scene/HandManager.h"
 
@@ -43,6 +44,7 @@
 #undef LOGENTRY
 #define LOGENTRY(...)
 
+bool sceneMeshPermissionGranted = false;
 bool gDebug = true;
 bool gDebugOld = gDebug;
 bool gMsaa = true;
@@ -79,7 +81,7 @@ static void dumpMatrix(const char *name, const Matrix4 &mat)
 }
 
 MainApplication::MainApplication()
-    : deviceSupport(false), mAnchorManager(nullptr), mPlanes(nullptr),
+    : deviceSupport(false), mAnchorManager(nullptr), mPlanes(nullptr), meshSelect(1),
       mControllerCount(0), mControllerCount_Last(-1), mValidPoseCount(0), mValidPoseCount_Last(-1),
       mPoseClasses(""), m3DOF(true), mMove(true), mTimeDiff(0.0f), mDriveSpeed(0.0f), mDriveAngle(0.0f),
       mIndexLeft(0), mIndexRight(0), mLeftEyeQ(NULL), mRightEyeQ(NULL)
@@ -116,12 +118,38 @@ void MainApplication::onResume()
 
 void MainApplication::updateAnchors()
 {
-    mAnchorManager->updateExistedAnchor(mPlanes, mCubes);
+    mAnchorManager->updateExistedAnchor(mCubes);
 }
 
 void MainApplication::updateScenePlanes()
 {
     mAnchorManager->getExistedPlanes(mPlanes);
+}
+
+void MainApplication::updateMesh()
+{
+    switch (meshSelect)
+    {
+    case 1:
+        // render collider mesh
+        mAnchorManager->getMesh_3D(mSceneMesh->mColliderMeshData);
+        break;
+    case 2:
+        // render visual mesh
+        mAnchorManager->getMesh_3D(mSceneMesh->mVisualMeshData);
+        break;
+    case 3:
+        // render 2d plane
+        mAnchorManager->getMesh_2D(mPlanes, mSceneMesh->mPlaneMeshData);
+        break;
+    default:
+        break;
+    }
+}
+
+void MainApplication::startScenePerception(){
+    if (mAnchorManager!=nullptr)
+        mAnchorManager->startScenePerception();
 }
 
 bool MainApplication::initVR()
@@ -163,7 +191,7 @@ bool MainApplication::initVR()
     }
 
     mInteractionMode = WVR_GetInteractionMode();
-
+    // WVR_SetParameters(WVR_DeviceType_HMD, "ClearRecenterXform");
     mAnchorManager = new anchorManager();
 
     return true;
@@ -200,6 +228,7 @@ bool MainApplication::initGL()
 
     mCubes = new CubeManager();
     mPlanes = new PlaneManager();
+    mSceneMesh = new SceneMesh();
 
     mControllerObjs[0] = new Controller(WVR_DeviceType_Controller_Right);
     mControllerObjs[0]->mCursorShift.translate(-0.011, -0.028, 0);
@@ -519,7 +548,14 @@ bool MainApplication::handleInput()
             }
             if (event.input.inputId == WVR_InputId_Alias1_A)
             {
-                LOGI("BTCheck WVR_InputId_Alias1_A");
+                LOGI("BTCheck WVR_InputId_Alias1_A (hide sceneMesh/ show sceneMesh)");
+                SceneMesh::show = !SceneMesh::show;
+            }
+            if (event.input.inputId == WVR_InputId_Alias1_B)
+            {
+                LOGI("BTCheck WVR_InputId_Alias1_B (Collider/Visual/Plane mesh)");
+                meshSelect = meshSelect % 3 + 1;
+                mSceneMesh->changeRenderTarget();
             }
         }
     }
@@ -997,6 +1033,7 @@ void MainApplication::renderScene(WVR_Eye nEye)
 {
     WVR_RenderMask(nEye);
     bool isInputCapturedBySystem = WVR_IsInputFocusCapturedBySystem();
+
     if (isInputCapturedBySystem == false)
     {
         for (uint32_t cID = 0; cID < 2; ++cID)
@@ -1056,6 +1093,26 @@ void MainApplication::renderScene(WVR_Eye nEye)
     {
         if (deviceSupport == true)
         {
+            if (SceneMesh::show == true)
+            {
+                switch (meshSelect)
+                {
+                case 1:
+                    // render collider mesh
+                    mSceneMesh->render(mSceneMesh->mColliderMeshData, mProjectionLeft, mEyePosLeft, mHMDPose);
+                    break;
+                case 2:
+                    // render visual mesh
+                    mSceneMesh->render(mSceneMesh->mVisualMeshData, mProjectionLeft, mEyePosLeft, mHMDPose);
+                    break;
+                case 3:
+                    // render 2d plane
+                    mSceneMesh->render(mSceneMesh->mPlaneMeshData, mProjectionLeft, mEyePosLeft, mHMDPose);
+                    break;
+                default:
+                    break;
+                }
+            }
             mCubes->renderCubes(mProjectionLeft, mEyePosLeft, mHMDPose);
             mPlanes->render(mProjectionLeft, mEyePosLeft, mHMDPose);
         }
@@ -1069,6 +1126,26 @@ void MainApplication::renderScene(WVR_Eye nEye)
     {
         if (deviceSupport == true)
         {
+            if (SceneMesh::show == true)
+            {
+                switch (meshSelect)
+                {
+                case 1:
+                    // render collider mesh
+                    mSceneMesh->render(mSceneMesh->mColliderMeshData, mProjectionRight, mEyePosRight, mHMDPose);
+                    break;
+                case 2:
+                    // render visual mesh
+                    mSceneMesh->render(mSceneMesh->mVisualMeshData, mProjectionRight, mEyePosRight, mHMDPose);
+                    break;
+                case 3:
+                    // render 2d plane
+                    mSceneMesh->render(mSceneMesh->mPlaneMeshData, mProjectionRight, mEyePosRight, mHMDPose);
+                    break;
+                default:
+                    break;
+                }
+            }
             mCubes->renderCubes(mProjectionRight, mEyePosRight, mHMDPose);
             mPlanes->render(mProjectionRight, mEyePosRight, mHMDPose);
         }

@@ -20,6 +20,7 @@ make[2]: Entering directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_
 [arm64-v8a] Compile++      : nativeAnchor_common <= Plane.cpp
 [arm64-v8a] Compile++      : nativeAnchor_common <= Axes.cpp
 [arm64-v8a] Compile++      : nativeAnchor_common <= Text.cpp
+[arm64-v8a] Compile++      : nativeAnchor_common <= SceneMesh.cpp
 [arm64-v8a] Prebuilt       : libwvr_api.so <= /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/build/install/lib/arm64-v8a/
 [arm64-v8a] SharedLibrary  : libnativeAnchor_common.so
 [arm64-v8a] Compile++      : nativeAnchor_jni <= jni.cpp

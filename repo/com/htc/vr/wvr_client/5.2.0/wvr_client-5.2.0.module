@@ -1,0 +1,67 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.htc.vr",
+    "module": "wvr_client",
+    "version": "5.2.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "wvr_client-5.2.0.aar",
+          "url": "wvr_client-5.2.0.aar",
+          "size": 19255514,
+          "sha512": "c19f837a645c8f27421e0c6d309a301dc1013dbb01864685b2553e7400306ad87364a3cb46e5148af8dce4a9fa0780c323b55ad2a728b6ddfcf55a72530cdd9b",
+          "sha256": "17ec5bd0393fde91f6610951694e1607072556263133fe786bba26db68b8d801",
+          "sha1": "119cedac3c19c5f954c419a64bcfadf08e36022e",
+          "md5": "adc94eed18f2952bdef58bfb10d98bad"
+        }
+      ]
+    },
+    {
+      "name": "releaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.htc.vr",
+          "module": "vr.client.abi",
+          "version": {
+            "requires": "5.2.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "wvr_client-5.2.0.aar",
+          "url": "wvr_client-5.2.0.aar",
+          "size": 19255514,
+          "sha512": "c19f837a645c8f27421e0c6d309a301dc1013dbb01864685b2553e7400306ad87364a3cb46e5148af8dce4a9fa0780c323b55ad2a728b6ddfcf55a72530cdd9b",
+          "sha256": "17ec5bd0393fde91f6610951694e1607072556263133fe786bba26db68b8d801",
+          "sha1": "119cedac3c19c5f954c419a64bcfadf08e36022e",
+          "md5": "adc94eed18f2952bdef58bfb10d98bad"
+        }
+      ]
+    }
+  ]
+}

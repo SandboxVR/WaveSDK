@@ -1,3 +1,8 @@
+/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor/src/main/jni/anchorManager.cpp:260:85: warning: format specifies type 'int' but the argument has type 'std::__ndk1::vector<Cube *, std::__ndk1::allocator<Cube *> >::size_type' (aka 'unsigned long') [-Wformat]
+    __android_log_print(ANDROID_LOG_INFO, "vrsample", "Anchor cubeVector size= %d", cm->cubeVector.size());
+                                                                               ~~   ^~~~~~~~~~~~~~~~~~~~~
+                                                                               %lu
+1 warning generated.
 /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor/src/main/jni/scene/Cube.cpp:83:56: warning: cast to 'const void *' from smaller integer type 'GLuint' (aka 'unsigned int') [-Wint-to-void-pointer-cast]
     glVertexAttribPointer(0, 3, 0x1406, false, stride, (const void *)offset);
                                                        ^
@@ -15,4 +20,11 @@
 /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor/src/main/jni/scene/Text.cpp:67:56: warning: cast to 'const void *' from smaller integer type 'GLuint' (aka 'unsigned int') [-Wint-to-void-pointer-cast]
     glVertexAttribPointer(1, 2, 0x1406, false, stride, (const void*) offset);
                                                        ^
+2 warnings generated.
+/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor/src/main/jni/scene/SceneMesh.cpp:234:64: warning: cast to 'const void *' from smaller integer type 'GLuint' (aka 'unsigned int') [-Wint-to-void-pointer-cast]
+            glVertexAttribPointer(0, 3, 0x1406, false, stride, (const void *)offset);
+                                                               ^
+/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_native_anchor/src/main/jni/scene/SceneMesh.cpp:238:64: warning: cast to 'const void *' from smaller integer type 'GLuint' (aka 'unsigned int') [-Wint-to-void-pointer-cast]
+            glVertexAttribPointer(1, 3, 0x1406, false, stride, (const void *)offset);
+                                                               ^
 2 warnings generated.

@@ -133,9 +133,9 @@ void PlaneManager::addSinglePlaneVertex(const Vector3 &v, std::vector<float> &ve
     vertdata.push_back(v.z);
 }
 
-void PlaneManager::addPlane(Matrix4 pose, Vector3 scale)
+void PlaneManager::addPlane(int index, Matrix4 pose, Vector3 scale)
 {
-    planesVector.push_back(Plane{pose, scale, noRay});
+    planesVector.push_back(Plane{pose, scale, noRay, index});
 }
 
 void PlaneManager::clearPlanes()
@@ -145,8 +145,8 @@ void PlaneManager::clearPlanes()
 
 void PlaneManager::updatePlanesStatus(Matrix4 rightCursorPose)
 {
-    float shortestDistance=std::numeric_limits<float>::max();
-    Vector3 p0(rightCursorPose[12],rightCursorPose[13],rightCursorPose[14]);
+    float shortestDistance = std::numeric_limits<float>::max();
+    Vector3 p0(rightCursorPose[12], rightCursorPose[13], rightCursorPose[14]);
     Matrix4 shortestPose;
     Matrix4 interactPose;
     int shortestIndex;
@@ -156,22 +156,23 @@ void PlaneManager::updatePlanesStatus(Matrix4 rightCursorPose)
         planesVector[a].status = noRay;
         if (checkEachInteract(rightCursorPose, planesVector[a], interactPose))
         {
-            float dis=p0.distance(Vector3 (interactPose[12],interactPose[13],interactPose[14]));
-            if(shortestDistance>dis)
+            float dis = p0.distance(Vector3(interactPose[12], interactPose[13], interactPose[14]));
+            if (shortestDistance > dis)
             {
-                shortestPose=interactPose;
-                shortestDistance=dis;
-                shortestIndex=a;
+                shortestPose = interactPose;
+                shortestDistance = dis;
+                shortestIndex = a;
             }
         }
     }
-    if(shortestDistance!=std::numeric_limits<float>::max()){
+    if (shortestDistance != std::numeric_limits<float>::max())
+    {
         planesVector[shortestIndex].status = rightHandSelect;
         intersectionPose_world.push_back(shortestPose);
     }
 }
 
-Matrix4 PlaneManager::mapingPoseOnPlane(Matrix4 cursorPose, Matrix4 planePose)
+Matrix4 PlaneManager::mappingPoseOnPlane(Matrix4 cursorPose, Matrix4 planePose)
 {
     Vector4 cursorPosition(cursorPose[12], cursorPose[13], cursorPose[14], 1);
     Vector4 cursorPosition_x = cursorPose * Vector4(1, 0, 0, 0);
@@ -248,14 +249,25 @@ void PlaneManager::renderAxes(std::vector<Matrix4> &pose)
     mAxes->renderInner(pose);
 }
 
+std::vector<Plane> PlaneManager::getPlanes()
+{
+    return planesVector;
+}
+
 void PlaneManager::render(const Matrix4 &projection, const Matrix4 &eye, const Matrix4 &view)
 {
     if (!mEnable || mHasError)
         return;
     GLboolean oldCullingFace = glIsEnabled(GL_CULL_FACE);
     GLboolean oldBlend = glIsEnabled(GL_BLEND);
+    GLboolean oldDept = glIsEnabled(GL_DEPTH_TEST);
+
+    glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glEnable(GL_BLEND);
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(1.0f, 0.8f);
+
     std::vector<Matrix4> matrix;
 
     mShader->useProgram();
@@ -263,15 +275,15 @@ void PlaneManager::render(const Matrix4 &projection, const Matrix4 &eye, const M
     {
         if (planesVector[a].status == rightHandSelect)
         {
-            glUniform4f(mColor, 0.3f, 0.9f, 0.87f, 0.8f);
+            glUniform4f(mColor, 0.3f, 0.8f, 0.3f, 1.0f);
         }
         else if (planesVector[a].status == leftHandSelect)
         {
-            glUniform4f(mColor, 0.8f, 0.3f, 0.3f, 0.8f);
+            glUniform4f(mColor, 0.9f, 0.3f, 0.3f, 1.0f);
         }
         else
         {
-            glUniform4f(mColor, 0.3f, 0.8f, 0.87f, 0.3f);
+            glUniform4f(mColor, 0.8f, 0.8f, 0.8f, 1.0f);
         }
 
         matrix.push_back(projection * eye * view * planesVector[a].mPose);
@@ -285,6 +297,7 @@ void PlaneManager::render(const Matrix4 &projection, const Matrix4 &eye, const M
 
     renderAxes(matrix);
 
+    glDisable(GL_POLYGON_OFFSET_FILL);
     if (oldCullingFace == GL_TRUE)
     {
         glEnable(GL_CULL_FACE);
@@ -300,5 +313,13 @@ void PlaneManager::render(const Matrix4 &projection, const Matrix4 &eye, const M
     else
     {
         glDisable(GL_BLEND);
+    }
+    if (oldDept == GL_TRUE)
+    {
+        glEnable(GL_DEPTH_TEST);
+    }
+    else
+    {
+        glDisable(GL_DEPTH_TEST);
     }
 }

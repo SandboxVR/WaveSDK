@@ -321,8 +321,7 @@ bool CubeManager::checkInteract(Matrix4 rightCursorPose, Matrix4 leftCursorPose)
 
     for (int a = 0; a < cubeVector.size(); a++)
     {
-        if(cubeVector[a]->anchorLost==false)
-        {
+        if(cubeVector[a]->anchorLost==false){
             inv = cubeVector[a]->mPose;
             inv = inv.invert();
             leftCursorPose_cube = inv * leftCursorPose;
@@ -431,7 +430,7 @@ void CubeManager::renderUndefineCubes(Matrix4 projection, Matrix4 eye, Matrix4 v
     mShader->useProgram();
     glDisable(GL_CULL_FACE);
     glEnable(GL_POLYGON_OFFSET_FILL);
-    glPolygonOffset(1.0f, 0.8f);
+    glPolygonOffset(1.0f, 2.0f);
     for (int a = 0; a < undefineCubes.size(); a++)
     {
         Matrix4 matrix = projection * eye * view * undefineCubes[a].mPose;

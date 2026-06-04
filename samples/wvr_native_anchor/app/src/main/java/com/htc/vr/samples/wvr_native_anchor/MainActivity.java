@@ -34,6 +34,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.content.DialogInterface;
 
 public class MainActivity extends VRActivity {
     private static final String TAG = "wvr_native_anchor";
@@ -41,6 +42,7 @@ public class MainActivity extends VRActivity {
     private static final String ACTION_SWITCH_DEBUG = "com.htc.vr.samples.wvr_native_anchor.ACTION_SWITCH_DEBUG";
     private static final String ACTION_SWITCH_MSAA = "com.htc.vr.samples.wvr_native_anchor.ACTION_SWITCH_MSAA";
     private static final String ACTION_SWITCH_SCENE = "com.htc.vr.samples.wvr_native_anchor.ACTION_SWITCH_SCENE";
+    public static final String SCENE_PERMISSION = "wave.permission.GET_SCENE_MESH";
     private static final String SP_DEBUG = "debug";
     private static final int FLAG_DEBUG = 0x01;
     private static final int FLAG_MSAA = 0x02;
@@ -48,6 +50,11 @@ public class MainActivity extends VRActivity {
     private boolean mDebug = false;
     private int mFlag = FLAG_MSAA;
     private final String CHANNEL_ID = "channel.id.wvr_native_anchor";
+    private static int REQUEST_CODE=123;
+
+    // The scene mesh permission.
+    // need the permission to get scene plane and scene mesh work.
+    private boolean mHasPermission = false;
 
     static {
         System.loadLibrary("nativeAnchor_jni");
@@ -84,10 +91,24 @@ public class MainActivity extends VRActivity {
     };
 
     static native void setFlag(int flag);
+    static native void setPermission(boolean granted);
     static native void onResumeCall();
 
     @Override
     protected void onCreate(Bundle icicle) {
+        //check permission
+        int hasPermission=checkSelfPermission(SCENE_PERMISSION);
+        if(hasPermission!=PackageManager.PERMISSION_GRANTED){
+            Log.i(TAG, "Permission not granted try to aquire: "+SCENE_PERMISSION);
+            requestPermissions(new String[]{SCENE_PERMISSION},REQUEST_CODE);
+        }else{
+            Log.i(TAG, "Permission granted: "+SCENE_PERMISSION);
+            mHasPermission=true;
+        }
+
+        //send permission status to native
+        setPermission(mHasPermission);
+
         Log.i(TAG,"onCreate:call init");
         init(getResources().getAssets());
         super.onCreate(icicle);
@@ -110,13 +131,6 @@ public class MainActivity extends VRActivity {
         Log.i(TAG,"onCreate:end");
 
     }
-
-    // The camera support.
-    // If the external camera exist, we use external camera.
-    // If not, we use the camera on the phone.  However the phone's camera
-    // need the permission to get work.  Please add a right permission in the
-    // AndroidManifest.
-    private boolean mHasCameraPermission = false;
 
     private void setNotification() {
     Log.i(TAG,"setNotification:start");
@@ -209,10 +223,14 @@ public class MainActivity extends VRActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,  String[] permissions,  int[] grantResults) {
-        // Avoid crash when user don't confirm the permission after pause/resume.
-        if (requestCode == 1 && grantResults != null && grantResults.length > 0) {
+        if (requestCode == REQUEST_CODE && grantResults != null && grantResults.length > 0) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mHasCameraPermission = true;
+                mHasPermission = true;
+                Log.i(TAG, "Permission granted");
+                //send permission status to native
+                setPermission(mHasPermission);
+            }else{
+                Log.i(TAG, "Permission deny");
             }
         }
     }

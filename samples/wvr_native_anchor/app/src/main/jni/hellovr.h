@@ -23,6 +23,7 @@
 #include "Cube.h"
 #include "anchorManager.h"
 #include "Text.h"
+#include "SceneMesh.h"
 
 class Context;
 class HandManager;
@@ -48,6 +49,7 @@ public:
     bool supportCheck();
     WVR_Result settingPassThrough();
     void initAnchor();
+    void startScenePerception();
     void deinitAnchor();
 #if defined(USE_CONTROLLER) || defined(USE_CUSTOM_CONTROLLER)
     void setupControllers();
@@ -72,6 +74,7 @@ public:
     void updateEyeToHeadMatrix(bool is6DoF);
     void updateAnchors();
     void updateScenePlanes();
+    void updateMesh();
     void updateInteractStatus();
 
     inline Matrix4 wvrmatrixConverter(const WVR_Matrix4f_t &mat) const
@@ -145,6 +148,8 @@ protected:
     Text *mText;
     CubeManager *mCubes;
     PlaneManager *mPlanes;
+    int meshSelect;//visual(1); collider(2); plane(3)
+    SceneMesh *mSceneMesh;
 
     std::vector<float> mLUV{0, 0};
     std::vector<float> mUUV{0, 0};
