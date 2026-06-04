@@ -1,0 +1,67 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.htc.vr",
+    "module": "wvr_client",
+    "version": "5.1.1",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5.1"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "wvr_client-5.1.1.aar",
+          "url": "wvr_client-5.1.1.aar",
+          "size": 14333681,
+          "sha512": "b2820dd82a0827f108a5ecc4fc7fe1ad06e45f2f460a517b97af186a764d9d194c857e732f1a53749218988abb468324e5fd169e0ccb8939941ff156bdfce961",
+          "sha256": "48e146e3e9068d3f8979c2ef766677a0185bedbd229c20f7cdf8e3284ccb135d",
+          "sha1": "79d9ae157d50e89bfc7fd2088c4fd70cc92a6864",
+          "md5": "1ffa99367a0f6be6424665e7cb5f6c83"
+        }
+      ]
+    },
+    {
+      "name": "releaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.htc.vr",
+          "module": "vr.client.abi",
+          "version": {
+            "requires": "5.1.1"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "wvr_client-5.1.1.aar",
+          "url": "wvr_client-5.1.1.aar",
+          "size": 14333681,
+          "sha512": "b2820dd82a0827f108a5ecc4fc7fe1ad06e45f2f460a517b97af186a764d9d194c857e732f1a53749218988abb468324e5fd169e0ccb8939941ff156bdfce961",
+          "sha256": "48e146e3e9068d3f8979c2ef766677a0185bedbd229c20f7cdf8e3284ccb135d",
+          "sha1": "79d9ae157d50e89bfc7fd2088c4fd70cc92a6864",
+          "md5": "1ffa99367a0f6be6424665e7cb5f6c83"
+        }
+      ]
+    }
+  ]
+}

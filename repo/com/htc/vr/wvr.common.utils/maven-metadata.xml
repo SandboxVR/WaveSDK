@@ -3,11 +3,11 @@
   <groupId>com.htc.vr</groupId>
   <artifactId>wvr.common.utils</artifactId>
   <versioning>
-    <latest>5.1.0</latest>
-    <release>5.1.0</release>
+    <latest>5.1.1</latest>
+    <release>5.1.1</release>
     <versions>
-      <version>5.1.0</version>
+      <version>5.1.1</version>
     </versions>
-    <lastUpdated>20221228030327</lastUpdated>
+    <lastUpdated>20230118011435</lastUpdated>
   </versioning>
 </metadata>
