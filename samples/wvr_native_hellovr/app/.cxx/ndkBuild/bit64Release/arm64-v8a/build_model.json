@@ -1,0 +1,64 @@
+{
+  "variant": {
+    "module": {
+      "rootBuildGradleFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/misc",
+      "sdkFolder": "/buildenv",
+      "isNativeCompilerSettingsCacheEnabled": false,
+      "isBuildOnlyTargetAbiEnabled": true,
+      "splitsAbiFilterSet": [],
+      "intermediatesFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/misc/build/wvr_native_hellovr/intermediates",
+      "gradleModulePathName": ":wvr_native_hellovr",
+      "moduleRootFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr",
+      "makeFile": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/src/main/jni/Android.mk",
+      "buildSystem": "NDK_BUILD",
+      "compilerSettingsCacheFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/misc/.cxx",
+      "cxxFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx",
+      "ndkFolder": "/buildenv/android-ndk-r16b",
+      "ndkVersion": "16.1.4479499",
+      "ndkSupportedAbiList": [
+        "ARMEABI",
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "MIPS",
+        "MIPS64",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "cmakeToolchainFile": "."
+    },
+    "buildSystemArgumentList": [
+      "VR_SDK_ROOT\u003d/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/build/install",
+      "NDK_DEBUG\u003d0"
+    ],
+    "cFlagList": [],
+    "cppFlagsList": [],
+    "variantName": "bit64Release",
+    "soFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/misc/build/wvr_native_hellovr/intermediates/ndkBuild/bit64Release/lib",
+    "objFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/misc/build/wvr_native_hellovr/intermediates/ndkBuild/bit64Release/obj/local",
+    "jsonFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release",
+    "gradleBuildOutputFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/cxx/bit64Release",
+    "isDebuggableEnabled": false,
+    "validAbiList": [
+      "ARMEABI_V7A",
+      "ARM64_V8A"
+    ],
+    "buildTargetSet": []
+  },
+  "abi": "ARM64_V8A",
+  "abiPlatformVersion": 24,
+  "cxxBuildFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a",
+  "jsonFile": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a/android_gradle_build.json",
+  "gradleBuildOutputFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/cxx/bit64Release/arm64-v8a",
+  "objFolder": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/misc/build/wvr_native_hellovr/intermediates/ndkBuild/bit64Release/obj/local/arm64-v8a",
+  "buildCommandFile": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a/build_command.txt",
+  "buildOutputFile": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a/build_output.txt",
+  "modelOutputFile": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a/build_model.json",
+  "jsonGenerationLoggingRecordFile": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a/json_generation_record.json",
+  "compileCommandsJsonFile": "/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a/compile_commands.json"
+}

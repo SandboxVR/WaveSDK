@@ -1,0 +1,81 @@
+{
+  "ndkFolder": "/buildenv/android-ndk-r16b",
+  "messages": [
+    {
+      "level": "INFO",
+      "message": "android.ndkVersion from module build.gradle is not set"
+    },
+    {
+      "level": "INFO",
+      "message": "ndk.dir in local.properties is /buildenv/android-ndk-r16b"
+    },
+    {
+      "level": "INFO",
+      "message": "ANDROID_NDK_HOME environment variable is /buildenv/android-ndk-r16b"
+    },
+    {
+      "level": "INFO",
+      "message": "sdkFolder is /buildenv"
+    },
+    {
+      "level": "WARN",
+      "message": "Support for ANDROID_NDK_HOME is deprecated and will be removed in the future. Use android.ndkVersion in build.gradle instead."
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/android-ndk-r16b by ndk.dir"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/android-ndk-r16b by ANDROID_NDK_HOME"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk-bundle in SDK ndk-bundle folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk/18.1.5063045 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk/21.4.7075529 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk/17.2.4988734 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk/16.1.4479499 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk/21.1.6352462 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk/20.1.5948944 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk/21.3.6528147 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk/22.1.7171670 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk/22.0.7026061 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk/23.0.7599858 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Found requested ndk.dir (/buildenv/android-ndk-r16b) which has version 16.1.4479499"
+    }
+  ]
+}

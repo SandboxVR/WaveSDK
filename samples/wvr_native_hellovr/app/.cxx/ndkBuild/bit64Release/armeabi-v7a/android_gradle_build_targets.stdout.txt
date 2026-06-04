@@ -1,0 +1,31 @@
+make[2]: Entering directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr'
+[armeabi-v7a] Compile++ thumb: hellovr_common <= hellovr.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= Context.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= Matrices.cpp
+[armeabi-v7a] Compile thumb  : hellovr_common <= quat.c
+[armeabi-v7a] Compile thumb  : hellovr_common <= matrix.c
+[armeabi-v7a] Compile thumb  : hellovr_common <= vector.c
+[armeabi-v7a] Compile++ thumb: hellovr_common <= Texture.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= VertexArrayObject.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= FrameBufferObject.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= Shader.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= Object.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= Mesh.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= SkyBox.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= ControllerAxes.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= Picture.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= ControllerCube.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= Sphere.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= Floor.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= ReticlePointer.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= Controller.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= CustomController.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= HandManager.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= HandModel.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= HandObj.cpp
+[armeabi-v7a] Compile++ thumb: hellovr_common <= Axes.cpp
+[armeabi-v7a] Prebuilt       : libwvr_api.so <= /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/build/install/lib/armeabi-v7a/
+[armeabi-v7a] SharedLibrary  : libhellovr_common.so
+[armeabi-v7a] Compile++ thumb: hellovr_jni <= jni.cpp
+[armeabi-v7a] SharedLibrary  : libhellovr_jni.so
+make[2]: Leaving directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr'

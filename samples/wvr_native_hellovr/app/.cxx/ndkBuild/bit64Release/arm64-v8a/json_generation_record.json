@@ -1,0 +1,66 @@
+[
+  {
+    "level": "INFO",
+    "message": "Version minSdkVersion\u003d\u002725\u0027 is mapped to \u002724\u0027."
+  },
+  {
+    "level": "INFO",
+    "message": "Start JSON generation. Platform version: 24 min SDK version: arm64-v8a"
+  },
+  {
+    "level": "INFO",
+    "message": "rebuilding JSON /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a/android_gradle_build.json due to:"
+  },
+  {
+    "level": "INFO",
+    "message": "- expected json /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a/android_gradle_build.json file is not present, will remove stale json folder"
+  },
+  {
+    "level": "INFO",
+    "message": "- missing previous command file /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a/build_command.txt, will remove stale json folder"
+  },
+  {
+    "level": "INFO",
+    "message": "- command changed from previous, will remove stale json folder"
+  },
+  {
+    "level": "INFO",
+    "message": "removing stale contents from \u0027/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a\u0027"
+  },
+  {
+    "level": "INFO",
+    "message": "created folder \u0027/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a\u0027"
+  },
+  {
+    "level": "INFO",
+    "message": "executing ndkBuild Executable : /buildenv/android-ndk-r16b/ndk-build\narguments : \nNDK_PROJECT_PATH\u003dnull\nAPP_BUILD_SCRIPT\u003d/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/src/main/jni/Android.mk\nNDK_APPLICATION_MK\u003d/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/src/main/jni/Application.mk\nAPP_ABI\u003darm64-v8a\nNDK_ALL_ABIS\u003darm64-v8a\nNDK_DEBUG\u003d0\nAPP_PLATFORM\u003dandroid-24\nNDK_OUT\u003d/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/misc/build/wvr_native_hellovr/intermediates/ndkBuild/bit64Release/obj\nNDK_LIBS_OUT\u003d/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/misc/build/wvr_native_hellovr/intermediates/ndkBuild/bit64Release/lib\nVR_SDK_ROOT\u003d/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/build/install\nNDK_DEBUG\u003d0\nAPP_SHORT_COMMANDS\u003dfalse\nLOCAL_SHORT_COMMANDS\u003dfalse\n-B\n-n\njvmArgs : \n\n"
+  },
+  {
+    "level": "INFO",
+    "message": "Executable : /buildenv/android-ndk-r16b/ndk-build\narguments : \nNDK_PROJECT_PATH\u003dnull\nAPP_BUILD_SCRIPT\u003d/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/src/main/jni/Android.mk\nNDK_APPLICATION_MK\u003d/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/src/main/jni/Application.mk\nAPP_ABI\u003darm64-v8a\nNDK_ALL_ABIS\u003darm64-v8a\nNDK_DEBUG\u003d0\nAPP_PLATFORM\u003dandroid-24\nNDK_OUT\u003d/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/misc/build/wvr_native_hellovr/intermediates/ndkBuild/bit64Release/obj\nNDK_LIBS_OUT\u003d/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/misc/build/wvr_native_hellovr/intermediates/ndkBuild/bit64Release/lib\nVR_SDK_ROOT\u003d/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/build/install\nNDK_DEBUG\u003d0\nAPP_SHORT_COMMANDS\u003dfalse\nLOCAL_SHORT_COMMANDS\u003dfalse\n-B\n-n\njvmArgs : \n\n"
+  },
+  {
+    "level": "INFO",
+    "message": "done executing ndkBuild"
+  },
+  {
+    "level": "INFO",
+    "message": "write build output /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a/build_output.txt"
+  },
+  {
+    "level": "INFO",
+    "message": "parse and convert ndk-build output to build configuration JSON"
+  },
+  {
+    "level": "INFO",
+    "message": "found application make file /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/src/main/jni/Application.mk"
+  },
+  {
+    "level": "INFO",
+    "message": "write command file /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr/.cxx/ndkBuild/bit64Release/arm64-v8a/build_command.txt"
+  },
+  {
+    "level": "INFO",
+    "message": "JSON generation completed without problems"
+  }
+]

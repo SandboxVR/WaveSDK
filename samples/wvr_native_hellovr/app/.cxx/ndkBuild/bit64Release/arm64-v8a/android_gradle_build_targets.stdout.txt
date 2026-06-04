@@ -1,0 +1,31 @@
+make[2]: Entering directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr'
+[arm64-v8a] Compile++      : hellovr_common <= hellovr.cpp
+[arm64-v8a] Compile++      : hellovr_common <= Context.cpp
+[arm64-v8a] Compile++      : hellovr_common <= Matrices.cpp
+[arm64-v8a] Compile        : hellovr_common <= quat.c
+[arm64-v8a] Compile        : hellovr_common <= matrix.c
+[arm64-v8a] Compile        : hellovr_common <= vector.c
+[arm64-v8a] Compile++      : hellovr_common <= Texture.cpp
+[arm64-v8a] Compile++      : hellovr_common <= VertexArrayObject.cpp
+[arm64-v8a] Compile++      : hellovr_common <= FrameBufferObject.cpp
+[arm64-v8a] Compile++      : hellovr_common <= Shader.cpp
+[arm64-v8a] Compile++      : hellovr_common <= Object.cpp
+[arm64-v8a] Compile++      : hellovr_common <= Mesh.cpp
+[arm64-v8a] Compile++      : hellovr_common <= SkyBox.cpp
+[arm64-v8a] Compile++      : hellovr_common <= ControllerAxes.cpp
+[arm64-v8a] Compile++      : hellovr_common <= Picture.cpp
+[arm64-v8a] Compile++      : hellovr_common <= ControllerCube.cpp
+[arm64-v8a] Compile++      : hellovr_common <= Sphere.cpp
+[arm64-v8a] Compile++      : hellovr_common <= Floor.cpp
+[arm64-v8a] Compile++      : hellovr_common <= ReticlePointer.cpp
+[arm64-v8a] Compile++      : hellovr_common <= Controller.cpp
+[arm64-v8a] Compile++      : hellovr_common <= CustomController.cpp
+[arm64-v8a] Compile++      : hellovr_common <= HandManager.cpp
+[arm64-v8a] Compile++      : hellovr_common <= HandModel.cpp
+[arm64-v8a] Compile++      : hellovr_common <= HandObj.cpp
+[arm64-v8a] Compile++      : hellovr_common <= Axes.cpp
+[arm64-v8a] Prebuilt       : libwvr_api.so <= /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/build/install/lib/arm64-v8a/
+[arm64-v8a] SharedLibrary  : libhellovr_common.so
+[arm64-v8a] Compile++      : hellovr_jni <= jni.cpp
+[arm64-v8a] SharedLibrary  : libhellovr_jni.so
+make[2]: Leaving directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr'
