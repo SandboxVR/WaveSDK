@@ -35,6 +35,10 @@
     },
     {
       "level": "INFO",
+      "message": "Considering /buildenv/ndk/24.0.8215888 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
       "message": "Considering /buildenv/ndk/18.1.5063045 in SDK ndk folder"
     },
     {
@@ -52,6 +56,10 @@
     {
       "level": "INFO",
       "message": "Considering /buildenv/ndk/21.1.6352462 in SDK ndk folder"
+    },
+    {
+      "level": "INFO",
+      "message": "Considering /buildenv/ndk/23.1.7779620 in SDK ndk folder"
     },
     {
       "level": "INFO",

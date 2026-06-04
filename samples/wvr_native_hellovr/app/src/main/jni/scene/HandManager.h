@@ -66,6 +66,7 @@ protected:
     HandObj *mHandObjs[Hand_MaxNumber];
     Texture *mHandAlphaTex;
     Axes *mAxes;
+    Matrix4 mShift;
     bool mHandInitialized;
 protected:
     std::thread mLoadModelThread;

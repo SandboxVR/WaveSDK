@@ -1,4 +1,4 @@
-make[2]: Entering directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr'
+make[2]: Entering directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_hellovr'
 [armeabi-v7a] Compile++ thumb: hellovr_common <= hellovr.cpp
 [armeabi-v7a] Compile++ thumb: hellovr_common <= Context.cpp
 [armeabi-v7a] Compile++ thumb: hellovr_common <= Matrices.cpp
@@ -24,8 +24,8 @@ make[2]: Entering directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_
 [armeabi-v7a] Compile++ thumb: hellovr_common <= HandModel.cpp
 [armeabi-v7a] Compile++ thumb: hellovr_common <= HandObj.cpp
 [armeabi-v7a] Compile++ thumb: hellovr_common <= Axes.cpp
-[armeabi-v7a] Prebuilt       : libwvr_api.so <= /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/build/install/lib/armeabi-v7a/
+[armeabi-v7a] Prebuilt       : libwvr_api.so <= /home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/build/install/lib/armeabi-v7a/
 [armeabi-v7a] SharedLibrary  : libhellovr_common.so
 [armeabi-v7a] Compile++ thumb: hellovr_jni <= jni.cpp
 [armeabi-v7a] SharedLibrary  : libhellovr_jni.so
-make[2]: Leaving directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_400_release/MatrixVR/packages/samples/client/wvr_hellovr'
+make[2]: Leaving directory `/home/vrmbuild/jenkins_workspace/workspace/SVR_SDK_Master_release/MatrixVR/packages/samples/client/wvr_hellovr'

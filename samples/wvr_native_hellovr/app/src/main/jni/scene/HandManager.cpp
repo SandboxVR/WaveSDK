@@ -129,7 +129,7 @@ HandManager::HandManager(WVR_HandTrackerType iType)
 , mHandInitialized(false)
 , mAxes(nullptr)
 {
-
+    mShift.translate(1,1.5,2);
 }
 
 HandManager::~HandManager()
@@ -298,8 +298,8 @@ void HandManager::updateAndRender(DrawModeEnum iMode, size_t iEyeID,
             }
 
             if (mHandObjs[handID] != nullptr && mIsHandPoseValids[handID] == true) {
-                //mAxes->renderInner(iProjs[iEyeID], iEyes[iEyeID],
-                //     iView, mHandPoseMats[handID]);
+                mAxes->renderInner(iProjs[iEyeID], iEyes[iEyeID],
+                     iView * mShift, mHandPoseMats[handID]);
 
                 mHandObjs[handID]->updateSkeleton(mJointMats[handID],
                     Vector3(trackingScale.v[0], trackingScale.v[1], trackingScale.v[2]));

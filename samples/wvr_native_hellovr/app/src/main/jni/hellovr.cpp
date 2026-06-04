@@ -523,7 +523,7 @@ bool MainApplication::handleInput() {
                 && mCurFocusController==WVR_DeviceType_Controller_Right){
                 moveSphereHandler();
             }
- 
+
             if (event.device.deviceType == WVR_DeviceType_Controller_Left && event.input.inputId == WVR_InputId_Alias1_Touchpad
                 && mCurFocusController==WVR_DeviceType_Controller_Left){
                 moveSphereHandler();
@@ -781,7 +781,7 @@ bool MainApplication::renderFrame() {
             leftEyeTexture.layout.rightUpUVs.v[1] = mUUV[1];
         }
 #endif
-        e = WVR_SubmitFrame(WVR_Eye_Left, &leftEyeTexture, NULL, (WVR_SubmitExtend)ext);
+        e = WVR_SubmitFrame(WVR_Eye_Left, &leftEyeTexture, &(mVRDevicePairs[WVR_DEVICE_HMD].pose), (WVR_SubmitExtend)ext);
         if (e != WVR_SubmitError_None) return true;
 
         // Right eye
@@ -801,7 +801,7 @@ bool MainApplication::renderFrame() {
             rightEyeTexture.layout.rightUpUVs.v[1] = mUUV[1];
         }
 #endif
-        e = WVR_SubmitFrame(WVR_Eye_Right, &rightEyeTexture, NULL, (WVR_SubmitExtend)ext);
+        e = WVR_SubmitFrame(WVR_Eye_Right, &rightEyeTexture, &(mVRDevicePairs[WVR_DEVICE_HMD].pose), (WVR_SubmitExtend)ext);
         if (e != WVR_SubmitError_None) return true;
 
     updateTime();
@@ -1158,7 +1158,7 @@ void MainApplication::renderScene(WVR_Eye nEye) {
                     Matrix4 projs[2], eyes[2];
                     Matrix4 view;
                     if(m3DOF){
-                        view = mHMDPose; 
+                        view = mHMDPose;
                     }
                     if (nEye == WVR_Eye_Left) {
                         projs[0] = mProjectionLeft;
@@ -1311,7 +1311,7 @@ void MainApplication::renderScene(WVR_Eye nEye) {
     }
 
     glUseProgram(0);
-    
+
     GLenum glerr = glGetError();
     if (glerr != GL_NO_ERROR) {
         LOGW("glGetError(): %d", glerr);

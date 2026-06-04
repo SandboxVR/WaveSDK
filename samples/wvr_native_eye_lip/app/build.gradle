@@ -1,0 +1,29 @@
+apply plugin: 'com.android.application'
+apply from: "$rootDir/gradle/build_base.gradle"
+apply from: "$rootDir/gradle/build_sdk.gradle"
+
+android {
+    defaultConfig {
+        applicationId "com.htc.vr.samples.eye_lip"
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        debug {}
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+
+dependencies {
+    api 'com.htc.vr:wvr_client:+'
+}

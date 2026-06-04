@@ -40,10 +40,10 @@ void ControllerAxes::init() {
     const int stride = 2 * 3 * sizeof(float);
     GLuint offset = 0;
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, (const void *)(size_t) offset);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, (const void *) offset);
     offset += 3 * sizeof(float);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, false, stride, (const void *)(size_t) offset);
+    glVertexAttribPointer(1, 3, GL_FLOAT, false, stride, (const void *) offset);
 
     mVAO->unbindVAO();
     glDisableVertexAttribArray(0);

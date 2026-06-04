@@ -200,9 +200,9 @@ void Sphere::initSphere() {
     mVAO->bindArrayBuffer();
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * alVertix.size(), &alVertix[0], GL_STATIC_DRAW);
-    glVertexAttribPointer(mPositionHandle, 3, GL_FLOAT, false, 3 * 4, (const void *)(size_t) offset);
+    glVertexAttribPointer(mPositionHandle, 3, GL_FLOAT, false, 3 * 4, (const void *)offset);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * alVertix.size(), normals, GL_STATIC_DRAW);
-    glVertexAttribPointer(mNormalHandle, 3, GL_FLOAT, false, 3 * 4, (const void *)(size_t) offset);
+    glVertexAttribPointer(mNormalHandle, 3, GL_FLOAT, false, 3 * 4, (const void *)offset);
     glEnableVertexAttribArray(mPositionHandle);
     glEnableVertexAttribArray(mNormalHandle);
     glEnable(GL_DEPTH_TEST);
@@ -213,6 +213,10 @@ void Sphere::initSphere() {
 }
 
 void Sphere::draw(const Matrix4& projection, const Matrix4& eye, const Matrix4& view, const Vector4& lightDir) {
+    if (!mEnable || mHasError || !mVAO) {
+        return;
+    }
+
     float *currMatrix=new float[16]();//current Transformation Matrix
     GLfloat cameraLocation[3];
     if (!currMatrix) return;
@@ -221,11 +225,6 @@ void Sphere::draw(const Matrix4& projection, const Matrix4& eye, const Matrix4& 
     float y=mTranslate.y;
     float z=mTranslate.z;
     translateM(currMatrix,0,x,y,z);
-
-    if (!mEnable || mHasError || !mVAO) {
-        delete [] currMatrix;
-        return;
-    }
 
     mShader->useProgram();
     mVAO->bindVAO();
@@ -260,7 +259,6 @@ void Sphere::draw(const Matrix4& projection, const Matrix4& eye, const Matrix4& 
     mCenter.x = currMatrix[12];
     mCenter.y = currMatrix[13];
     mCenter.z = currMatrix[14];
-
     delete [] currMatrix;
 }
 

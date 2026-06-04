@@ -58,11 +58,11 @@ Picture::Picture() : Object() {
     int stride = (2 + 3) * sizeof(float);
     GLuint offset = 0;
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, (const void*)(size_t) offset);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, (const void*) offset);
 
     offset += sizeof(float) * 3;
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, false, stride, (const void*)(size_t) offset);
+    glVertexAttribPointer(1, 2, GL_FLOAT, false, stride, (const void*) offset);
 
     mVAO->unbindVAO();
     mVAO->unbindArrayBuffer();

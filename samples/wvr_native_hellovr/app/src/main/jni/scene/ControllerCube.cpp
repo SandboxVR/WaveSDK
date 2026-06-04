@@ -81,15 +81,15 @@ void ControllerCube::initCubes() {
         return;
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, (const void *)(size_t) offset);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, (const void *)offset);
 
     offset += 3 * sizeof(float);
     glEnableVertexAttribArray( 1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, false, stride, (const void *)(size_t) offset);
+    glVertexAttribPointer(1, 2, GL_FLOAT, false, stride, (const void *)offset);
 
     offset += 2 * sizeof(float);
     glEnableVertexAttribArray( 2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, false, stride, (const void *)(size_t) offset);
+    glVertexAttribPointer(2, 3, GL_FLOAT, false, stride, (const void *)offset);
 
     // populate the index buffer
     mVAO->bindElementArrayBuffer();

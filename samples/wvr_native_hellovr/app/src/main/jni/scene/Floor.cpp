@@ -124,11 +124,11 @@ void Floor::initFloor() {
     glBufferData(GL_ARRAY_BUFFER, 30 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(VERTEX_POS_INDEX);
-    glVertexAttribPointer(VERTEX_POS_INDEX, 3, GL_FLOAT, false, stride, (const void*)(size_t) offset);
+    glVertexAttribPointer(VERTEX_POS_INDEX, 3, GL_FLOAT, false, stride, (const void*)offset);
 
     offset += 3*sizeof(GLfloat);
     glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 2, GL_FLOAT, false, stride, (const void*)(size_t) offset);
+    glVertexAttribPointer(3, 2, GL_FLOAT, false, stride, (const void*)offset);
     mVAO->unbindArrayBuffer();
 
     glEnable(GL_DEPTH_TEST);
