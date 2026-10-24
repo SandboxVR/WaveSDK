@@ -1,0 +1,44 @@
+{
+  "classes": [
+    {
+      "type": "Lcom/htc/vr/sdk/util/CustomizeHandler;",
+      "mode": "merge",
+      "jar": true,
+      "fields": [{"name": "mDispatchClosed", "descriptor": "Z"}],
+      "methods": [
+        {"name": "runOnThreadAsync", "descriptor": "(Ljava/lang/Runnable;)V", "action": "replace"},
+        {"name": "runOnThreadAsync", "descriptor": "(Ljava/lang/Runnable;J)V", "action": "replace"},
+        {"name": "runOnUiThreadImmediateAsync", "descriptor": "(Ljava/lang/Runnable;)V", "action": "replace"},
+        {"name": "runOnThreadSync", "descriptor": "(Ljava/lang/Runnable;)V", "action": "replace"},
+        {"name": "runOnThreadSync", "descriptor": "(Ljava/lang/Runnable;JI)V", "action": "replace"},
+        {"name": "quit", "descriptor": "()V", "action": "replace"},
+        {"name": "checkDispatchOpen", "descriptor": "()V", "action": "add"},
+        {"name": "dispatchSync", "descriptor": "(Ljava/lang/Runnable;J)V", "action": "add"},
+        {"name": "awaitCompletion", "descriptor": "(Lcom/htc/vr/sdk/util/CustomizeHandler$SyncRunnable;JZ)V", "action": "add"},
+        {"name": "shutdownOnThread", "descriptor": "()V", "action": "add"},
+        {"name": "access$000", "descriptor": "(Lcom/htc/vr/sdk/util/CustomizeHandler;)V", "action": "add"}
+      ]
+    },
+    {"type": "Lcom/htc/vr/sdk/util/CustomizeHandler$SyncRunnable;", "mode": "replace", "jar": true},
+    {"type": "Lcom/htc/vr/sdk/util/CustomizeHandler$ShutdownRunnable;", "mode": "add", "jar": true},
+    {
+      "type": "Lcom/htc/vr/sdk/overlay/OverlaySurfaces;",
+      "mode": "merge",
+      "jar": false,
+      "fields": [{"name": "mClosing", "descriptor": "Z"}],
+      "methods": [
+        {"name": "-$$Nest$fgetmEnableFrameAvailable", "descriptor": "(Lcom/htc/vr/sdk/overlay/OverlaySurfaces;)Z", "donor_name": "patchFrameAvailable", "action": "replace"},
+        {"name": "add", "descriptor": "(IZI)V", "action": "replace"},
+        {"name": "remove", "descriptor": "(I)V", "action": "replace"},
+        {"name": "quit", "descriptor": "()V", "action": "replace"},
+        {"name": "lambda$quit$0$com-htc-vr-sdk-overlay-OverlaySurfaces", "descriptor": "()V", "donor_name": "patchQuitOnThread", "action": "replace"}
+      ]
+    }
+  ],
+  "exclude": [
+    "Lcom/htc/vr/sdk/overlay/OverlaySurfaces$OverlaySurface;",
+    "Lcom/htc/vr/sdk/overlay/OverlaySurfaces$$ExternalSyntheticLambda0;",
+    "Lcom/htc/vr/sdk/overlay/OverlaySurfaces$$ExternalSyntheticLambda1;",
+    "Lcom/htc/vr/sdk/overlay/OverlaySurfaces$1;"
+  ]
+}

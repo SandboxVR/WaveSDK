@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "completed_utc": "2026-10-24T04:40:25.238675+00:00",
+  "client_aar_sha256": "74d8c0a67e24c4b7dd3c213f21ec93077217ee5cf1afa2b80829e3dbdcbba390",
+  "runtime_dex_sha256": "2b37042b6dac0c5f75642ea916b23350b968cc7d214d49117065be8fd80bfba8",
+  "dispatch_actual_grafted_jar_assertions": 146,
+  "overlay_donor_model_assertions": 23,
+  "compositor_helper_donor_assertions": 110,
+  "isolated_headset_art_assertions": 15,
+  "published_archive_and_maven_verification": "passed",
+  "native_libraries_and_cap60": "preserved",
+  "ssvr_app_installed": false,
+  "full_rendering_soak_performed": false
+}
