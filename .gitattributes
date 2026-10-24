@@ -1,3 +1,5 @@
 # Keep this checksum-addressed Gradle metadata byte-identical across platforms.
 repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.module text eol=lf
 repo/com/htc/vr/wvr.common.utils/6.2.0/wvr.common.utils-6.2.0.module text eol=lf
+repo/com/htc/vr/wvr_ime_client/6.2.0/wvr_ime_client-6.2.0.module text eol=lf
+repo/com/htc/vr/wvr_permission_client/6.2.0/wvr_permission_client-6.2.0.module text eol=lf

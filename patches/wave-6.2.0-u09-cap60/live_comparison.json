@@ -1,0 +1,910 @@
+[
+  {
+    "name": "01_original_cap50",
+    "seconds": 180,
+    "samples": 335,
+    "unavailable_latency_samples": 73,
+    "unavailable_percent": 21.791044776119403,
+    "wave_prediction_warning_count": 2915,
+    "wave_fps": {
+      "n": 179,
+      "mean": 75.03184357541899,
+      "p50": 75.0,
+      "p95": 75.11,
+      "p99": 75.2,
+      "min": 74.9,
+      "max": 75.2
+    },
+    "tws_state_histogram": {
+      "2": 179
+    },
+    "eye_buffer_histogram": {
+      "2448x2448": 179
+    },
+    "loss_delta": 0,
+    "decoder_warning_count": 0,
+    "host_warning_count": 3,
+    "metrics": {
+      "client_fps": {
+        "n": 335,
+        "mean": 69.19402985074628,
+        "p50": 74.0,
+        "p95": 81.0,
+        "p99": 83.66000000000003,
+        "min": 35.0,
+        "max": 93.0
+      },
+      "server_fps": {
+        "n": 335,
+        "mean": 75.19701492537314,
+        "p50": 75.0,
+        "p95": 83.0,
+        "p99": 87.98000000000008,
+        "min": 63.0,
+        "max": 99.0
+      },
+      "total_latency_ms": {
+        "n": 262,
+        "mean": 74.21031903435114,
+        "p50": 74.89712,
+        "p95": 82.95412900000001,
+        "p99": 87.80007979999999,
+        "min": 56.144325,
+        "max": 89.819466
+      },
+      "encode_latency_ms": {
+        "n": 335,
+        "mean": 8.39017252119403,
+        "p50": 8.2751,
+        "p95": 9.44159,
+        "p99": 10.056344000000008,
+        "min": 6.3478003,
+        "max": 11.5626
+      },
+      "decode_latency_ms": {
+        "n": 335,
+        "mean": 6.838326784179104,
+        "p50": 6.7486463,
+        "p95": 7.65807321,
+        "p99": 9.143395120000003,
+        "min": 6.162969,
+        "max": 9.50672
+      },
+      "network_latency_ms": {
+        "n": 335,
+        "mean": 1.5805098492537313,
+        "p50": 1.565025,
+        "p95": 1.8951175,
+        "p99": 2.1177122000000015,
+        "min": 1.1047249,
+        "max": 2.300075
+      },
+      "game_time_ms": {
+        "n": 335,
+        "mean": 7.756536418507463,
+        "p50": 7.379,
+        "p95": 10.745229300000002,
+        "p99": 11.830022000000003,
+        "min": 5.1158,
+        "max": 13.7333
+      },
+      "video_mbits_per_sec": {
+        "n": 335,
+        "mean": 44.97054805970149,
+        "p50": 44.963406,
+        "p95": 45.7778209,
+        "p99": 46.22452296,
+        "min": 42.76689,
+        "max": 46.389328
+      }
+    },
+    "gpu_temperature": {
+      "n": 36,
+      "mean": 77.97222222222223,
+      "p50": 78.0,
+      "p95": 79.0,
+      "p99": 79.0,
+      "min": 76.0,
+      "max": 79.0
+    },
+    "diagnostic_windows": 0,
+    "diagnostic_counts": {},
+    "diagnostic_refresh_histogram": {},
+    "observed_valid_prediction_horizon_ms": null,
+    "live_cap_readbacks": [],
+    "counter_resets": 0,
+    "capture_errors": []
+  },
+  {
+    "name": "02_production_restore_check",
+    "seconds": 60,
+    "samples": 113,
+    "unavailable_latency_samples": 32,
+    "unavailable_percent": 28.31858407079646,
+    "wave_prediction_warning_count": 1274,
+    "wave_fps": {
+      "n": 60,
+      "mean": 75.02666666666667,
+      "p50": 75.0,
+      "p95": 75.1,
+      "p99": 75.14099999999999,
+      "min": 74.9,
+      "max": 75.2
+    },
+    "tws_state_histogram": {
+      "2": 60
+    },
+    "eye_buffer_histogram": {
+      "2448x2448": 60
+    },
+    "loss_delta": 0,
+    "decoder_warning_count": 0,
+    "host_warning_count": 0,
+    "metrics": {
+      "client_fps": {
+        "n": 113,
+        "mean": 74.8141592920354,
+        "p50": 75.0,
+        "p95": 81.0,
+        "p99": 83.75999999999999,
+        "min": 67.0,
+        "max": 88.0
+      },
+      "server_fps": {
+        "n": 113,
+        "mean": 76.070796460177,
+        "p50": 75.0,
+        "p95": 83.39999999999999,
+        "p99": 90.88,
+        "min": 62.0,
+        "max": 93.0
+      },
+      "total_latency_ms": {
+        "n": 81,
+        "mean": 71.90722125925926,
+        "p50": 70.15878,
+        "p95": 78.82058,
+        "p99": 79.83028800000001,
+        "min": 65.26114,
+        "max": 81.9369
+      },
+      "encode_latency_ms": {
+        "n": 113,
+        "mean": 7.8974017628318585,
+        "p50": 7.9219,
+        "p95": 8.533739999999998,
+        "p99": 8.814180879999999,
+        "min": 6.8544,
+        "max": 9.4974
+      },
+      "decode_latency_ms": {
+        "n": 113,
+        "mean": 6.76629007699115,
+        "p50": 6.690885,
+        "p95": 7.558676999999999,
+        "p99": 7.853952303999999,
+        "min": 6.2339067,
+        "max": 7.9706244
+      },
+      "network_latency_ms": {
+        "n": 113,
+        "mean": 1.6605460185840708,
+        "p50": 1.6237,
+        "p95": 2.09630504,
+        "p99": 2.2061189999999997,
+        "min": 1.250125,
+        "max": 2.2851999
+      },
+      "game_time_ms": {
+        "n": 113,
+        "mean": 7.750788468141592,
+        "p50": 7.6424,
+        "p95": 10.086179999999999,
+        "p99": 12.692947999999992,
+        "min": 5.4117,
+        "max": 13.249
+      },
+      "video_mbits_per_sec": {
+        "n": 113,
+        "mean": 44.87877567256637,
+        "p50": 44.8675,
+        "p95": 45.504809800000004,
+        "p99": 45.73379824,
+        "min": 43.94094,
+        "max": 45.785484
+      }
+    },
+    "gpu_temperature": {
+      "n": 12,
+      "mean": 78.33333333333333,
+      "p50": 78.0,
+      "p95": 79.45,
+      "p99": 79.89,
+      "min": 77.0,
+      "max": 80.0
+    },
+    "diagnostic_windows": 0,
+    "diagnostic_counts": {},
+    "diagnostic_refresh_histogram": {},
+    "observed_valid_prediction_horizon_ms": null,
+    "live_cap_readbacks": [],
+    "counter_resets": 0,
+    "capture_errors": []
+  },
+  {
+    "name": "03_probe_control50_a",
+    "seconds": 180,
+    "samples": 338,
+    "unavailable_latency_samples": 192,
+    "unavailable_percent": 56.80473372781065,
+    "wave_prediction_warning_count": 7652,
+    "wave_fps": {
+      "n": 180,
+      "mean": 75.02722222222222,
+      "p50": 75.0,
+      "p95": 75.1,
+      "p99": 75.2,
+      "min": 74.9,
+      "max": 75.2
+    },
+    "tws_state_histogram": {
+      "1": 180
+    },
+    "eye_buffer_histogram": {
+      "2448x2448": 180
+    },
+    "loss_delta": 0,
+    "decoder_warning_count": 0,
+    "host_warning_count": 0,
+    "metrics": {
+      "client_fps": {
+        "n": 338,
+        "mean": 74.2603550295858,
+        "p50": 74.0,
+        "p95": 81.0,
+        "p99": 82.63,
+        "min": 36.0,
+        "max": 86.0
+      },
+      "server_fps": {
+        "n": 338,
+        "mean": 74.66863905325444,
+        "p50": 74.0,
+        "p95": 83.0,
+        "p99": 87.63,
+        "min": 64.0,
+        "max": 96.0
+      },
+      "total_latency_ms": {
+        "n": 146,
+        "mean": 77.77929640410959,
+        "p50": 77.945058,
+        "p95": 80.68450725,
+        "p99": 82.737684,
+        "min": 71.21236,
+        "max": 83.22181
+      },
+      "encode_latency_ms": {
+        "n": 338,
+        "mean": 8.843655036982248,
+        "p50": 8.914700499999999,
+        "p95": 9.388375,
+        "p99": 9.690029,
+        "min": 7.212,
+        "max": 11.4814
+      },
+      "decode_latency_ms": {
+        "n": 338,
+        "mean": 6.75541545443787,
+        "p50": 6.6908855,
+        "p95": 7.371947605,
+        "p99": 7.864338329,
+        "min": 6.149687,
+        "max": 8.557396
+      },
+      "network_latency_ms": {
+        "n": 338,
+        "mean": 1.4430431226627218,
+        "p50": 1.39598745,
+        "p95": 1.8359737499999995,
+        "p99": 2.0529075,
+        "min": 0.99544996,
+        "max": 2.1826751
+      },
+      "game_time_ms": {
+        "n": 338,
+        "mean": 8.021681656804734,
+        "p50": 8.0503505,
+        "p95": 10.52802515,
+        "p99": 11.975451684999996,
+        "min": 5.131,
+        "max": 13.5426
+      },
+      "video_mbits_per_sec": {
+        "n": 338,
+        "mean": 44.859400615384615,
+        "p50": 44.8560265,
+        "p95": 45.7575783,
+        "p99": 46.18095397,
+        "min": 43.273663,
+        "max": 46.75598
+      }
+    },
+    "gpu_temperature": {
+      "n": 36,
+      "mean": 77.58333333333333,
+      "p50": 78.0,
+      "p95": 79.0,
+      "p99": 79.0,
+      "min": 76.0,
+      "max": 79.0
+    },
+    "diagnostic_windows": 179,
+    "diagnostic_counts": {
+      "iter": 13532,
+      "new": 13495,
+      "repeat": 37,
+      "lobby": 0,
+      "predict_zero": 7663,
+      "predict_stale": 0,
+      "predict_future": 5869,
+      "texture_skip": 0,
+      "render_fail": 0,
+      "submit_error_left": 0,
+      "submit_error_right": 0
+    },
+    "diagnostic_refresh_histogram": {
+      "75": 179
+    },
+    "observed_valid_prediction_horizon_ms": {
+      "min": 42.807,
+      "max": 49.977
+    },
+    "live_cap_readbacks": [
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fd8a0000 address=0x78fe2d49a4 liveCapSeconds=0.05",
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fd8a0000 address=0x78fe2d49a4 liveCapSeconds=0.05",
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fd8a0000 address=0x78fe2d49a4 liveCapSeconds=0.05",
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fd8a0000 address=0x78fe2d49a4 liveCapSeconds=0.05",
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fd8a0000 address=0x78fe2d49a4 liveCapSeconds=0.05",
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fd8a0000 address=0x78fe2d49a4 liveCapSeconds=0.05"
+    ],
+    "counter_resets": 0,
+    "capture_errors": []
+  },
+  {
+    "name": "04_probe_cap60",
+    "seconds": 180,
+    "samples": 336,
+    "unavailable_latency_samples": 0,
+    "unavailable_percent": 0.0,
+    "wave_prediction_warning_count": 0,
+    "wave_fps": {
+      "n": 180,
+      "mean": 75.02055555555556,
+      "p50": 75.0,
+      "p95": 75.1,
+      "p99": 75.121,
+      "min": 74.9,
+      "max": 75.2
+    },
+    "tws_state_histogram": {
+      "1": 180
+    },
+    "eye_buffer_histogram": {
+      "2448x2448": 180
+    },
+    "loss_delta": 0,
+    "decoder_warning_count": 0,
+    "host_warning_count": 1,
+    "metrics": {
+      "client_fps": {
+        "n": 336,
+        "mean": 70.73809523809524,
+        "p50": 74.0,
+        "p95": 81.0,
+        "p99": 82.64999999999998,
+        "min": 36.0,
+        "max": 85.0
+      },
+      "server_fps": {
+        "n": 336,
+        "mean": 74.84821428571429,
+        "p50": 74.5,
+        "p95": 83.25,
+        "p99": 89.29999999999995,
+        "min": 63.0,
+        "max": 92.0
+      },
+      "total_latency_ms": {
+        "n": 336,
+        "mean": 88.10394816071428,
+        "p50": 88.580195,
+        "p95": 95.67738,
+        "p99": 97.54791949999999,
+        "min": 68.15288,
+        "max": 99.93953
+      },
+      "encode_latency_ms": {
+        "n": 336,
+        "mean": 8.43159045625,
+        "p50": 8.4114505,
+        "p95": 9.39495025,
+        "p99": 10.601690649999993,
+        "min": 6.3003,
+        "max": 13.346499
+      },
+      "decode_latency_ms": {
+        "n": 336,
+        "mean": 6.83572685625,
+        "p50": 6.72955685,
+        "p95": 7.588776299999999,
+        "p99": 8.066666399999999,
+        "min": 6.190157,
+        "max": 8.292396
+      },
+      "network_latency_ms": {
+        "n": 336,
+        "mean": 1.6029696422619046,
+        "p50": 1.5904999499999999,
+        "p95": 1.99158745,
+        "p99": 2.1872811799999985,
+        "min": 1.152925,
+        "max": 2.4082
+      },
+      "game_time_ms": {
+        "n": 336,
+        "mean": 8.193173195833333,
+        "p50": 8.0215005,
+        "p95": 10.953425249999999,
+        "p99": 12.623214999999997,
+        "min": 5.1209,
+        "max": 14.407499
+      },
+      "video_mbits_per_sec": {
+        "n": 336,
+        "mean": 44.728343339285715,
+        "p50": 44.726943500000004,
+        "p95": 45.549423000000004,
+        "p99": 45.771687799999995,
+        "min": 43.532825,
+        "max": 46.06026
+      }
+    },
+    "gpu_temperature": {
+      "n": 36,
+      "mean": 77.75,
+      "p50": 78.0,
+      "p95": 79.0,
+      "p99": 79.0,
+      "min": 76.0,
+      "max": 79.0
+    },
+    "diagnostic_windows": 178,
+    "diagnostic_counts": {
+      "iter": 13456,
+      "new": 12787,
+      "repeat": 669,
+      "lobby": 0,
+      "predict_zero": 0,
+      "predict_stale": 1,
+      "predict_future": 13455,
+      "texture_skip": 0,
+      "render_fail": 0,
+      "submit_error_left": 0,
+      "submit_error_right": 0
+    },
+    "diagnostic_refresh_histogram": {
+      "75": 178
+    },
+    "observed_valid_prediction_horizon_ms": {
+      "min": 42.635,
+      "max": 56.263
+    },
+    "live_cap_readbacks": [
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x7901c8b000 address=0x79026bf9a4 liveCapSeconds=0.06",
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x7901c8b000 address=0x79026bf9a4 liveCapSeconds=0.06",
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x7901c8b000 address=0x79026bf9a4 liveCapSeconds=0.06",
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x7901c8b000 address=0x79026bf9a4 liveCapSeconds=0.06",
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x7901c8b000 address=0x79026bf9a4 liveCapSeconds=0.06",
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x7901c8b000 address=0x79026bf9a4 liveCapSeconds=0.06"
+    ],
+    "counter_resets": 0,
+    "capture_errors": []
+  },
+  {
+    "name": "05_probe_control50_b",
+    "seconds": 180,
+    "samples": 338,
+    "unavailable_latency_samples": 184,
+    "unavailable_percent": 54.437869822485204,
+    "wave_prediction_warning_count": 7387,
+    "wave_fps": {
+      "n": 180,
+      "mean": 75.02666666666666,
+      "p50": 75.0,
+      "p95": 75.1,
+      "p99": 75.2,
+      "min": 74.8,
+      "max": 75.2
+    },
+    "tws_state_histogram": {
+      "1": 180
+    },
+    "eye_buffer_histogram": {
+      "2448x2448": 180
+    },
+    "loss_delta": 0,
+    "decoder_warning_count": 0,
+    "host_warning_count": 1,
+    "metrics": {
+      "client_fps": {
+        "n": 338,
+        "mean": 74.55621301775147,
+        "p50": 75.0,
+        "p95": 81.0,
+        "p99": 83.25999999999999,
+        "min": 65.0,
+        "max": 86.0
+      },
+      "server_fps": {
+        "n": 338,
+        "mean": 75.49112426035504,
+        "p50": 75.5,
+        "p95": 82.0,
+        "p99": 86.0,
+        "min": 62.0,
+        "max": 88.0
+      },
+      "total_latency_ms": {
+        "n": 154,
+        "mean": 82.14472322077923,
+        "p50": 81.863767,
+        "p95": 86.41236125,
+        "p99": 88.6165681,
+        "min": 76.84628,
+        "max": 89.064316
+      },
+      "encode_latency_ms": {
+        "n": 338,
+        "mean": 8.163684566863905,
+        "p50": 8.128449499999999,
+        "p95": 9.062399849999998,
+        "p99": 9.443505629999999,
+        "min": 6.7985997,
+        "max": 10.6015005
+      },
+      "decode_latency_ms": {
+        "n": 338,
+        "mean": 6.799219666272189,
+        "p50": 6.7469795,
+        "p95": 7.520632549999998,
+        "p99": 7.966013591,
+        "min": 6.187812,
+        "max": 8.980678
+      },
+      "network_latency_ms": {
+        "n": 338,
+        "mean": 1.5476052497041421,
+        "p50": 1.512175,
+        "p95": 1.91943625,
+        "p99": 2.085643926,
+        "min": 1.152525,
+        "max": 2.2312
+      },
+      "game_time_ms": {
+        "n": 338,
+        "mean": 7.924393505621302,
+        "p50": 7.6819500000000005,
+        "p95": 11.044634999999998,
+        "p99": 12.21844,
+        "min": 5.0411,
+        "max": 13.8194
+      },
+      "video_mbits_per_sec": {
+        "n": 338,
+        "mean": 44.728272606508874,
+        "p50": 44.727222999999995,
+        "p95": 45.52326745,
+        "p99": 45.742808849999996,
+        "min": 43.500988,
+        "max": 46.152683
+      }
+    },
+    "gpu_temperature": {
+      "n": 36,
+      "mean": 77.88888888888889,
+      "p50": 78.0,
+      "p95": 79.0,
+      "p99": 79.65,
+      "min": 76.0,
+      "max": 80.0
+    },
+    "diagnostic_windows": 179,
+    "diagnostic_counts": {
+      "iter": 13538,
+      "new": 13534,
+      "repeat": 4,
+      "lobby": 0,
+      "predict_zero": 7454,
+      "predict_stale": 0,
+      "predict_future": 6084,
+      "texture_skip": 0,
+      "render_fail": 0,
+      "submit_error_left": 0,
+      "submit_error_right": 0
+    },
+    "diagnostic_refresh_histogram": {
+      "75": 179
+    },
+    "observed_valid_prediction_horizon_ms": {
+      "min": 42.635,
+      "max": 49.969
+    },
+    "live_cap_readbacks": [
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fe742000 address=0x78ff1769a4 liveCapSeconds=0.05",
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fe742000 address=0x78ff1769a4 liveCapSeconds=0.05",
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fe742000 address=0x78ff1769a4 liveCapSeconds=0.05",
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fe742000 address=0x78ff1769a4 liveCapSeconds=0.05",
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fe742000 address=0x78ff1769a4 liveCapSeconds=0.05",
+      "LIVE_CAP_READBACK variant=control verifiedRuntimeSha256=7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18 base=0x78fe742000 address=0x78ff1769a4 liveCapSeconds=0.05"
+    ],
+    "counter_resets": 0,
+    "capture_errors": []
+  },
+  {
+    "name": "06_probe_cap60_b",
+    "seconds": 180,
+    "samples": 338,
+    "unavailable_latency_samples": 0,
+    "unavailable_percent": 0.0,
+    "wave_prediction_warning_count": 0,
+    "wave_fps": {
+      "n": 180,
+      "mean": 75.02888888888889,
+      "p50": 75.0,
+      "p95": 75.1,
+      "p99": 75.2,
+      "min": 74.7,
+      "max": 75.2
+    },
+    "tws_state_histogram": {
+      "1": 180
+    },
+    "eye_buffer_histogram": {
+      "2448x2448": 180
+    },
+    "loss_delta": 0,
+    "decoder_warning_count": 0,
+    "host_warning_count": 2,
+    "metrics": {
+      "client_fps": {
+        "n": 338,
+        "mean": 74.59171597633136,
+        "p50": 74.0,
+        "p95": 81.0,
+        "p99": 83.25999999999999,
+        "min": 64.0,
+        "max": 86.0
+      },
+      "server_fps": {
+        "n": 338,
+        "mean": 74.00591715976331,
+        "p50": 74.0,
+        "p95": 80.0,
+        "p99": 83.63,
+        "min": 62.0,
+        "max": 89.0
+      },
+      "total_latency_ms": {
+        "n": 338,
+        "mean": 83.82410787573964,
+        "p50": 83.482215,
+        "p95": 90.4317865,
+        "p99": 91.3990723,
+        "min": 73.778275,
+        "max": 93.627365
+      },
+      "encode_latency_ms": {
+        "n": 338,
+        "mean": 8.515629875443787,
+        "p50": 8.4298995,
+        "p95": 9.43049,
+        "p99": 9.64982337,
+        "min": 6.9447002,
+        "max": 11.1112
+      },
+      "decode_latency_ms": {
+        "n": 338,
+        "mean": 6.801921076035503,
+        "p50": 6.71963525,
+        "p95": 7.581056899999999,
+        "p99": 8.214030039999999,
+        "min": 6.2232294,
+        "max": 8.910363
+      },
+      "network_latency_ms": {
+        "n": 338,
+        "mean": 1.5642048014792898,
+        "p50": 1.52895,
+        "p95": 1.95124375,
+        "p99": 2.1258947499999996,
+        "min": 1.129425,
+        "max": 2.2098498
+      },
+      "game_time_ms": {
+        "n": 338,
+        "mean": 7.780317771597634,
+        "p50": 7.62575,
+        "p95": 10.20365985,
+        "p99": 11.274848630000001,
+        "min": 5.0142,
+        "max": 13.4806
+      },
+      "video_mbits_per_sec": {
+        "n": 338,
+        "mean": 44.90667832840237,
+        "p50": 44.898556,
+        "p95": 45.65486,
+        "p99": 46.02196739,
+        "min": 43.6105,
+        "max": 46.40461
+      }
+    },
+    "gpu_temperature": {
+      "n": 36,
+      "mean": 77.91666666666667,
+      "p50": 78.0,
+      "p95": 79.0,
+      "p99": 79.65,
+      "min": 76.0,
+      "max": 80.0
+    },
+    "diagnostic_windows": 178,
+    "diagnostic_counts": {
+      "iter": 13453,
+      "new": 13447,
+      "repeat": 6,
+      "lobby": 0,
+      "predict_zero": 0,
+      "predict_stale": 0,
+      "predict_future": 13453,
+      "texture_skip": 0,
+      "render_fail": 0,
+      "submit_error_left": 0,
+      "submit_error_right": 0
+    },
+    "diagnostic_refresh_histogram": {
+      "75": 178
+    },
+    "observed_valid_prediction_horizon_ms": {
+      "min": 42.583,
+      "max": 56.285
+    },
+    "live_cap_readbacks": [
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x78fbf64000 address=0x78fc9989a4 liveCapSeconds=0.06",
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x78fbf64000 address=0x78fc9989a4 liveCapSeconds=0.06",
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x78fbf64000 address=0x78fc9989a4 liveCapSeconds=0.06",
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x78fbf64000 address=0x78fc9989a4 liveCapSeconds=0.06",
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x78fbf64000 address=0x78fc9989a4 liveCapSeconds=0.06",
+      "LIVE_CAP_READBACK variant=cap60 verifiedRuntimeSha256=7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a base=0x78fbf64000 address=0x78fc9989a4 liveCapSeconds=0.06"
+    ],
+    "counter_resets": 0,
+    "capture_errors": []
+  },
+  {
+    "name": "07_final_production_restore",
+    "seconds": 60,
+    "samples": 112,
+    "unavailable_latency_samples": 22,
+    "unavailable_percent": 19.642857142857142,
+    "wave_prediction_warning_count": 869,
+    "wave_fps": {
+      "n": 60,
+      "mean": 75.02666666666667,
+      "p50": 75.0,
+      "p95": 75.1,
+      "p99": 75.2,
+      "min": 74.9,
+      "max": 75.2
+    },
+    "tws_state_histogram": {
+      "2": 60
+    },
+    "eye_buffer_histogram": {
+      "2448x2448": 60
+    },
+    "loss_delta": 0,
+    "decoder_warning_count": 0,
+    "host_warning_count": 0,
+    "metrics": {
+      "client_fps": {
+        "n": 112,
+        "mean": 71.91964285714286,
+        "p50": 74.5,
+        "p95": 81.0,
+        "p99": 82.0,
+        "min": 36.0,
+        "max": 85.0
+      },
+      "server_fps": {
+        "n": 112,
+        "mean": 75.08928571428571,
+        "p50": 74.0,
+        "p95": 83.44999999999999,
+        "p99": 86.78,
+        "min": 60.0,
+        "max": 90.0
+      },
+      "total_latency_ms": {
+        "n": 90,
+        "mean": 66.19678612222222,
+        "p50": 65.630443,
+        "p95": 73.572587,
+        "p99": 84.72906225,
+        "min": 59.31891,
+        "max": 86.6372
+      },
+      "encode_latency_ms": {
+        "n": 112,
+        "mean": 8.628075058928571,
+        "p50": 8.750399999999999,
+        "p95": 9.3175449,
+        "p99": 9.639488,
+        "min": 7.1565003,
+        "max": 12.5145
+      },
+      "decode_latency_ms": {
+        "n": 112,
+        "mean": 6.704159222321429,
+        "p50": 6.6603636999999996,
+        "p95": 7.3438954,
+        "p99": 7.5294790769999995,
+        "min": 6.102396,
+        "max": 7.569219
+      },
+      "network_latency_ms": {
+        "n": 112,
+        "mean": 1.5831285741071428,
+        "p50": 1.5577250500000002,
+        "p95": 1.977882545,
+        "p99": 2.05609275,
+        "min": 1.20215,
+        "max": 2.1681
+      },
+      "game_time_ms": {
+        "n": 112,
+        "mean": 8.200869658035714,
+        "p50": 8.5159495,
+        "p95": 11.01720045,
+        "p99": 11.622467,
+        "min": 5.2057004,
+        "max": 11.7974
+      },
+      "video_mbits_per_sec": {
+        "n": 112,
+        "mean": 44.82304338392857,
+        "p50": 44.807788,
+        "p95": 46.06567565,
+        "p99": 46.62429708,
+        "min": 43.06726,
+        "max": 46.932293
+      }
+    },
+    "gpu_temperature": {
+      "n": 12,
+      "mean": 77.41666666666667,
+      "p50": 77.5,
+      "p95": 78.45,
+      "p99": 78.89,
+      "min": 76.0,
+      "max": 79.0
+    },
+    "diagnostic_windows": 0,
+    "diagnostic_counts": {},
+    "diagnostic_refresh_histogram": {},
+    "observed_valid_prediction_horizon_ms": null,
+    "live_cap_readbacks": [],
+    "counter_resets": 0,
+    "capture_errors": []
+  }
+]

@@ -1,0 +1,321 @@
+{
+  "classes": [
+    {
+      "type": "Lcom/htc/vr/permission/client/PermissionManager;",
+      "mode": "merge",
+      "jar": true,
+      "fields": [
+        {
+          "name": "mP2Active",
+          "descriptor": "Z"
+        },
+        {
+          "name": "mP2Generation",
+          "descriptor": "J"
+        },
+        {
+          "name": "mP2Request",
+          "descriptor": "J"
+        },
+        {
+          "name": "mP2UsbSubscription",
+          "descriptor": "J"
+        },
+        {
+          "name": "mP2Context",
+          "descriptor": "Landroid/content/Context;"
+        },
+        {
+          "name": "mP2Receiver",
+          "descriptor": "Lcom/htc/vr/permission/client/P2UsbReceiver;"
+        },
+        {
+          "name": "mP2Bindings",
+          "descriptor": "Ljava/util/ArrayList;"
+        },
+        {
+          "name": "mP2ConfigPoll",
+          "descriptor": "Ljava/lang/Runnable;"
+        },
+        {
+          "name": "mP2NotifyWork",
+          "descriptor": "Ljava/lang/Runnable;"
+        },
+        {
+          "name": "mP2Usb2DReceiver",
+          "descriptor": "Lcom/htc/vr/permission/client/P2UsbReceiver;"
+        },
+        {
+          "name": "mP2Usb2DIntent",
+          "descriptor": "Landroid/app/PendingIntent;"
+        },
+        {
+          "name": "mP2Usb2DAction",
+          "descriptor": "Ljava/lang/String;"
+        },
+        {
+          "name": "mP2Usb2DDevice",
+          "descriptor": "Landroid/hardware/usb/UsbDevice;"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setActivity",
+          "descriptor": "(Landroid/app/Activity;)V",
+          "action": "replace"
+        },
+        {
+          "name": "release",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2Current",
+          "descriptor": "(J)Z",
+          "action": "add"
+        },
+        {
+          "name": "p2RequestCurrent",
+          "descriptor": "(JJ)Z",
+          "action": "add"
+        },
+        {
+          "name": "p2Bind",
+          "descriptor": "(Landroid/content/Intent;IJJ)Lcom/htc/vr/permission/client/P2PermissionBinding;",
+          "action": "add"
+        },
+        {
+          "name": "p2Close",
+          "descriptor": "(Landroid/content/ServiceConnection;)V",
+          "action": "add"
+        },
+        {
+          "name": "checkServerConnection",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "connectPermissionService",
+          "descriptor": "(I)V",
+          "action": "replace"
+        },
+        {
+          "name": "p2ConnectRequest",
+          "descriptor": "(IJJ)V",
+          "action": "add"
+        },
+        {
+          "name": "connectConfigService",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2ConnectConfig",
+          "descriptor": "(J)V",
+          "action": "add"
+        },
+        {
+          "name": "connectNotificationService",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2ConnectNotification",
+          "descriptor": "(JJ)V",
+          "action": "add"
+        },
+        {
+          "name": "p2Connected",
+          "descriptor": "(Lcom/htc/vr/permission/client/P2PermissionBinding;Landroid/os/IBinder;)V",
+          "action": "add"
+        },
+        {
+          "name": "p2Disconnected",
+          "descriptor": "(Lcom/htc/vr/permission/client/P2PermissionBinding;)V",
+          "action": "add"
+        },
+        {
+          "name": "p2PollConfig",
+          "descriptor": "(Lcom/htc/vr/permission/client/P2ConfigPoll;)Z",
+          "action": "add"
+        },
+        {
+          "name": "requestPermissions",
+          "descriptor": "([Ljava/lang/String;Lcom/htc/vr/permission/client/PermissionCallback;)V",
+          "action": "replace"
+        },
+        {
+          "name": "requestPermissions3D",
+          "descriptor": "([Ljava/lang/String;Lcom/htc/vr/permission/client/PermissionCallback;)V",
+          "action": "replace"
+        },
+        {
+          "name": "p2RequestPermission3D",
+          "descriptor": "([Ljava/lang/String;Lcom/htc/vr/permission/client/PermissionCallback;J)V",
+          "action": "add"
+        },
+        {
+          "name": "requestPermission",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2SendPermission",
+          "descriptor": "(JJ)V",
+          "action": "add"
+        },
+        {
+          "name": "p2PermissionResult",
+          "descriptor": "(JJ[Ljava/lang/String;[IZ)V",
+          "action": "add"
+        },
+        {
+          "name": "requestPermissionCompleted",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2CompletePermission",
+          "descriptor": "(JJ)V",
+          "action": "add"
+        },
+        {
+          "name": "requestPermissions2D",
+          "descriptor": "([Ljava/lang/String;Lcom/htc/vr/permission/client/PermissionCallback;)V",
+          "action": "replace"
+        },
+        {
+          "name": "p2RequestPermission2D",
+          "descriptor": "([Ljava/lang/String;Lcom/htc/vr/permission/client/PermissionCallback;J)V",
+          "action": "add"
+        },
+        {
+          "name": "requestPermissions2D",
+          "descriptor": "([Ljava/lang/String;)V",
+          "action": "replace"
+        },
+        {
+          "name": "p2Request2D",
+          "descriptor": "(JJ[Ljava/lang/String;)V",
+          "action": "add"
+        },
+        {
+          "name": "p2Notify",
+          "descriptor": "(Lcom/htc/vr/permission/client/P2NotifyWork;Z)Z",
+          "action": "add"
+        },
+        {
+          "name": "requestUsbPermission",
+          "descriptor": "(Lcom/htc/vr/permission/client/UsbPermissionCallback;)V",
+          "action": "replace"
+        },
+        {
+          "name": "p2RetryUsb",
+          "descriptor": "(J)V",
+          "action": "add"
+        },
+        {
+          "name": "requestUsbPermission",
+          "descriptor": "()V",
+          "action": "replace",
+          "use_donor_access": true
+        },
+        {
+          "name": "p2RequestUsb",
+          "descriptor": "(J)V",
+          "action": "add"
+        },
+        {
+          "name": "requestUsbPermissions2D",
+          "descriptor": "(Landroid/hardware/usb/UsbDevice;Lcom/htc/vr/permission/client/UsbPermissionCallback;)V",
+          "action": "replace"
+        },
+        {
+          "name": "p2RequestUsb2D",
+          "descriptor": "(Landroid/hardware/usb/UsbDevice;Lcom/htc/vr/permission/client/UsbPermissionCallback;JJ)V",
+          "action": "add"
+        },
+        {
+          "name": "requestUsbPermissions3D",
+          "descriptor": "(Landroid/hardware/usb/UsbDevice;Lcom/htc/vr/permission/client/UsbPermissionCallback;)V",
+          "action": "replace"
+        },
+        {
+          "name": "p2RequestUsb3D",
+          "descriptor": "(Landroid/hardware/usb/UsbDevice;Lcom/htc/vr/permission/client/UsbPermissionCallback;JJ)V",
+          "action": "add"
+        },
+        {
+          "name": "requestUsbPermissionService",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2SendUsb",
+          "descriptor": "(JJ)V",
+          "action": "add"
+        },
+        {
+          "name": "p2UsbResult",
+          "descriptor": "(JJLandroid/hardware/usb/UsbDevice;Z)V",
+          "action": "add"
+        },
+        {
+          "name": "requestUsbPermissionCompleted",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2CompleteUsb",
+          "descriptor": "(JJ)V",
+          "action": "add"
+        },
+        {
+          "name": "onPauseAndReturnFail",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2Receive",
+          "descriptor": "(JLandroid/content/Intent;)V",
+          "action": "add"
+        }
+      ]
+    },
+    {
+      "type": "Lcom/htc/vr/permission/client/P2ConfigPoll;",
+      "mode": "add",
+      "jar": true
+    },
+    {
+      "type": "Lcom/htc/vr/permission/client/P2NotifyWork;",
+      "mode": "add",
+      "jar": true
+    },
+    {
+      "type": "Lcom/htc/vr/permission/client/P2PermissionBinding;",
+      "mode": "add",
+      "jar": true
+    },
+    {
+      "type": "Lcom/htc/vr/permission/client/P2PermissionResult;",
+      "mode": "add",
+      "jar": true
+    },
+    {
+      "type": "Lcom/htc/vr/permission/client/P2UsbReceiver;",
+      "mode": "add",
+      "jar": true
+    },
+    {
+      "type": "Lcom/htc/vr/permission/client/P2UsbResult;",
+      "mode": "add",
+      "jar": true
+    },
+    {
+      "type": "Lcom/htc/vr/permission/client/P2UsbRetry;",
+      "mode": "add",
+      "jar": true
+    }
+  ]
+}

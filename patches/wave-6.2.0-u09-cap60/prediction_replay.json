@@ -1,0 +1,225 @@
+{
+  "kind": "offline ARM64 execution with mocked external callbacks and constructed runtime state",
+  "runtime_sha256": "b4e0e369b53e1ca016a33ddacc2af31400b134f05372532b0b02153c70c3a72b",
+  "runtime_version": "6.2.0-u25",
+  "getter_address": "0x5e8c8c",
+  "estimator_address": "0x5e8ae0",
+  "memory_only_candidate": "gMaxPosePredictionTime 50ms -> 60ms",
+  "cases": [
+    {
+      "hz": 60,
+      "tws": false,
+      "cap_ms": 50,
+      "phase_samples": 1000,
+      "zero_results": 1,
+      "warnings": 1,
+      "valid_min_ms": 33.350002,
+      "valid_max_ms": 49.983337
+    },
+    {
+      "hz": 60,
+      "tws": true,
+      "cap_ms": 50,
+      "phase_samples": 1000,
+      "zero_results": 1000,
+      "warnings": 1000,
+      "valid_min_ms": null,
+      "valid_max_ms": null
+    },
+    {
+      "hz": 72,
+      "tws": false,
+      "cap_ms": 50,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 27.791667,
+      "valid_max_ms": 41.666667
+    },
+    {
+      "hz": 72,
+      "tws": true,
+      "cap_ms": 50,
+      "phase_samples": 1000,
+      "zero_results": 401,
+      "warnings": 401,
+      "valid_min_ms": 41.680555,
+      "valid_max_ms": 49.986109
+    },
+    {
+      "hz": 75,
+      "tws": false,
+      "cap_ms": 50,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 26.68,
+      "valid_max_ms": 39.999999
+    },
+    {
+      "hz": 75,
+      "tws": true,
+      "cap_ms": 50,
+      "phase_samples": 1000,
+      "zero_results": 251,
+      "warnings": 251,
+      "valid_min_ms": 40.013335,
+      "valid_max_ms": 49.986667
+    },
+    {
+      "hz": 90,
+      "tws": false,
+      "cap_ms": 50,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 22.233333,
+      "valid_max_ms": 33.333335
+    },
+    {
+      "hz": 90,
+      "tws": true,
+      "cap_ms": 50,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 33.344443,
+      "valid_max_ms": 44.444445
+    },
+    {
+      "hz": 120,
+      "tws": false,
+      "cap_ms": 50,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 16.675001,
+      "valid_max_ms": 25.000002
+    },
+    {
+      "hz": 120,
+      "tws": true,
+      "cap_ms": 50,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 25.008335,
+      "valid_max_ms": 33.333335
+    },
+    {
+      "hz": 60,
+      "tws": false,
+      "cap_ms": 60,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 33.350002,
+      "valid_max_ms": 50.000004
+    },
+    {
+      "hz": 60,
+      "tws": true,
+      "cap_ms": 60,
+      "phase_samples": 1000,
+      "zero_results": 401,
+      "warnings": 401,
+      "valid_min_ms": 50.016671,
+      "valid_max_ms": 59.983335
+    },
+    {
+      "hz": 72,
+      "tws": false,
+      "cap_ms": 60,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 27.791667,
+      "valid_max_ms": 41.666667
+    },
+    {
+      "hz": 72,
+      "tws": true,
+      "cap_ms": 60,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 41.680555,
+      "valid_max_ms": 55.555555
+    },
+    {
+      "hz": 75,
+      "tws": false,
+      "cap_ms": 60,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 26.68,
+      "valid_max_ms": 39.999999
+    },
+    {
+      "hz": 75,
+      "tws": true,
+      "cap_ms": 60,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 40.013335,
+      "valid_max_ms": 53.333334
+    },
+    {
+      "hz": 90,
+      "tws": false,
+      "cap_ms": 60,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 22.233333,
+      "valid_max_ms": 33.333335
+    },
+    {
+      "hz": 90,
+      "tws": true,
+      "cap_ms": 60,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 33.344443,
+      "valid_max_ms": 44.444445
+    },
+    {
+      "hz": 120,
+      "tws": false,
+      "cap_ms": 60,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 16.675001,
+      "valid_max_ms": 25.000002
+    },
+    {
+      "hz": 120,
+      "tws": true,
+      "cap_ms": 60,
+      "phase_samples": 1000,
+      "zero_results": 0,
+      "warnings": 0,
+      "valid_min_ms": 25.008335,
+      "valid_max_ms": 33.333335
+    }
+  ],
+  "checks": {
+    "unchanged_valid_75_90_results": 3749,
+    "restored_75_90_results": 251,
+    "max_model_rounding_error_ns": 5,
+    "asserted_model_error_bound_ns": 20,
+    "dynamic_refresh_vs_stored_period_checks": 4000,
+    "out_of_range_rejection": "passed"
+  },
+  "limitations": [
+    "Constructed object flags and vsync phase are not observed live state.",
+    "Clock, vsync query, debug settings, logging, and virtual dispatch setup are stubbed.",
+    "No compositor, display, tracking, GPU, Android loader, or full runtime initialization executes.",
+    "A nonzero prediction is not proof of correct display timing or smoother streaming.",
+    "60ms is a test candidate for 75/90Hz, not a general low-refresh solution."
+  ]
+}

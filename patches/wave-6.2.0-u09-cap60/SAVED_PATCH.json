@@ -1,0 +1,19 @@
+{
+  "time_utc": "2026-10-24T00:33:02.403344+00:00",
+  "destination": "C:\\Users\\kevin.mok\\Documents\\GitHub\\WaveSDK",
+  "artifact": "C:\\Users\\kevin.mok\\Documents\\GitHub\\WaveSDK\\repo\\com\\htc\\vr\\wvr_client\\6.2.0\\wvr_client-6.2.0.aar",
+  "artifact_sha256": "efe06b38dc84827d7b46f44d5a45dd535e7d1754257c739cc3bea5de9ef20b41",
+  "base_commit": "0ed9b131d4e37369f0a2f8135caf5a58e9b3633a",
+  "maven_coordinates": "com.htc.vr:wvr_client:6.2.0",
+  "maven_metadata_variants_updated": 2,
+  "checksum_algorithms": [
+    "md5",
+    "sha1",
+    "sha256",
+    "sha512"
+  ],
+  "committed": false,
+  "pushed": false,
+  "new_version_or_tag_created": false,
+  "benchmark_evidence_root": "C:\\Users\\kevin.mok\\Documents\\PerformanceBaselines\\ALVR\\2026-10-23_wave_tws_patch"
+}

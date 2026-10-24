@@ -1,0 +1,56 @@
+Wave prediction feedback and decoder timestamp audit
+2026-10-23; read-only source and shipped-binary inspection
+
+Scope and conclusion
+Valid Wave display predictions do affect future SSVR tracking prediction and timestamp labels through the latency average. No direct dependency on that prediction was found in SSVR's render-loop deadline or decoder queue target. The timestamp labels also reach Android's explicit output-surface timestamp API in the exact deployed Rust core. That API call alone does NOT establish that this ImageReader output waits until that timestamp. No causal explanation of repeated images is proven by this audit.
+
+Prediction -> submission statistics
+Repository root: C:/Users/kevin.mok/Documents/GitHub/alvr_private
+android/app/src/main/cpp/cpp_main.cpp:1047 selects a decoded image and its matching metadata before getPredictedDisplayTimeNs at line 1120; reportWaveSubmit is at line 1123. Thus this prediction cannot select the current image retroactively.
+android/app/src/main/cpp/wave_submit_timing.h:8 returns without reporting for the repeated-image sentinel UINT64_MAX. For a fresh image, missing/invalid prediction becomes unavailable queue sentinel UINT64_MAX rather than a fabricated queue duration.
+alvr/client_core/src/c_api.rs:517 maps unavailable queue to None.
+alvr/client_core/src/statistics.rs:121-128 records queue and total latency. A valid prediction computes elapsed time since input acquisition plus predicted queue, updates total_pipeline_latency_average, and supplies a nonzero total latency. An unavailable prediction supplies zero total latency and preserves the previous average.
+statistics.rs:134-137 records real elapsed intervals between fresh-image reports, irrespective of prediction availability. Accordingly client_fps derived from these reports is not the physical display refresh rate. Cached repeats are excluded by wave_submit_timing.h.
+alvr/client_core/src/connection.rs:546-560 records input acquisition after sending tracking, keyed by target timestamp. Total latency is not computed by simply subtracting the future target timestamp from now.
+
+Latency average -> next tracking poses and timestamp labels
+alvr/client_core/src/lib.rs:254-259 exposes average_total_pipeline_latency through get_head_prediction_offset; c_api.rs:508 exports alvr_get_head_prediction_offset_ns.
+android/app/src/main/cpp/cpp_main.cpp:566-573 reads it in the fixed 240 Hz input thread, truncates to whole milliseconds, clamps to 100 ms, asks WVR_GetPoseState for that prediction horizon, and sets targetTimestampNs = monotonic now + the same horizon. The tracking sample is retained under that exact label and sent to the server.
+alvr/common/src/average.rs implements a sample-count sliding average. Default statistics_history_size is 256 in alvr/session/src/settings.rs:1391. Restoring previously unavailable samples therefore changes both sample selection and the effective wall-time covered by the average. Whether the actual mean changed, and by how much, requires captured values.
+
+Tracking labels -> video codec IDs
+alvr/server/src/connection.rs:1048,1070,1130 transforms/registers tracking and calls SetTracking with target timestamp.
+alvr/server/cpp/alvr_server/alvr_server.cpp:277-305 passes timestamp and motion to HMD; the separate tracker time offset is applied to controllers, not HMD.
+alvr/server/cpp/alvr_server/HMD.cpp:201-225 stores pose/timestamp and submits the OpenVR pose.
+alvr/server/cpp/alvr_server/PoseHistory.cpp:51-116 matches render rotation to tracking history; newest pose wins indistinguishable ties. The age check uses the newest tracking timestamp, not a display prediction deadline.
+alvr/server/cpp/platform/win32/OvrDirectModeComponent.cpp:175-202 selects the matching pose/timestamp for a submitted render.
+alvr/server/src/frame_pose.rs:102-111 assigns frame_id = max(timestamp_ns, previous_frame_id + 1), preserving monotonic uniqueness while normally retaining the tracking timestamp's value. Video metadata separately carries the original tracking timestamp.
+alvr/client_core/src/decoder.rs:128-130 stores metadata by frame_id, then submits that frame_id to the codec as its timestamp.
+
+Exact output timestamp behavior in source and deployed binary
+alvr/client_core/src/platform/android.rs:397-401 intentionally places nanoseconds in the codec input's microsecond field to preserve exact frame IDs. Do not change those units independently of the frame-ID and metadata protocol.
+platform/android.rs:670-673 reads presentation_time_us back as the original nanosecond ID and calls release_output_buffer_at_time(buffer, presentation_time_ns).
+The local ndk-0.7.0 wrapper in C:/Users/kevin.mok/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ndk-0.7.0/src/media/media_codec.rs:382 calls AMediaCodec_releaseOutputBufferAtTime with that timestamp.
+Verified binary: C:/Users/kevin.mok/Documents/PerformanceBaselines/ALVR/2026-10-23_wave_tws_patch/probe_build_v3/jniLibs/arm64-v8a/libalvr_client_core.so
+SHA256: be81181c8d442c91bfd73a6fb7fd0dbe147e607bc464ae3b9b3dcb31f1371639
+This file was extracted from ssvr_rc38_installed.apk and is identical in both v3 probe APKs.
+LLVM disassembly confirms callsite 0x1d4e44 invokes 0x2a9db8, the symbol ndk::media::media_codec::MediaCodec::release_output_buffer_at_time::h3d1d17e25617bef1E. Immediately before that call, 0x1d4e38 loads x2 from the decoded buffer stack field. At 0x2a9dd8 the wrapper calls AMediaCodec_releaseOutputBufferAtTime@plt at 0x444ca0, preserving x2 as the timestamp argument. The timed-output-surface API is therefore present and called in the deployed core, not merely current source.
+Inspection command used LLVM 25.1.8937393 llvm-objdump.exe -d, restricting printed output to this callsite and wrapper. No binary was changed.
+
+Critical SurfaceView-versus-ImageReader limitation
+Official reference: https://developer.android.com/reference/android/media/MediaCodec#releaseOutputBuffer(int,%20long)
+The documentation describes output timestamp assignment generally but promises VSYNC scheduling specifically under SurfaceView specifics. This decoder uses ImageReader::new_with_usage at platform/android.rs:549, not SurfaceView. Therefore timestamp propagation is confirmed; an output hold until the future ID is NOT confirmed for this consumer. No OEM MediaCodec/ImageReader implementation was traced in this bounded audit.
+The local NDK header NdkMediaCodec.h:320-332 likewise describes updating the surface timestamp and returning the buffer for rendering; it points to the Java reference for details.
+
+Queue and render-loop paths
+platform/android.rs:594 uses acquire_latest_image, which can discard older images. Its listener enqueues decoded images, keyed by returned image timestamp. decoder_queue.rs:64-84 applies occupancy-based dropping and pops available images; it has no display-prediction deadline.
+decoder.rs:157-173 retrieves a decoded lease and exact metadata. cpp_main.cpp:1047-1075 further requires a matching retained Wave tracking sample and current reference-space origin. Empty queues or rejected metadata/poses reuse the previous complete image/pose pair. A repeated-image count does not identify which of these paths caused reuse.
+android/app/src/main/java/alvr/client/VRActivity.java:693-738 renders then chooses runtime pacing or nextRenderDelayMs; lines 839-859 use refresh rate and monotonic uptime. No use of the measured total latency or predicted display timestamp was found in that deadline.
+WVR_SubmitFrame itself can block inside vendor code; this source audit does not rule out internal runtime behavior affected by the patched cap.
+
+Interpretation of live trials
+The first cap60 interval had more repeated images than the first control interval, but a second cap60 interval initially had almost none. These observations do not support attributing the first repeat-rate difference to the cap. The matched repeated trials, complete duration, startup conditions, and any thermal/clock/phase differences must be retained in the final report.
+Proven direct effect: restored predictions supply valid latency samples and update the prediction average more often.
+Proven downstream path: that average controls future pose horizons and source/frame timestamp labels, which reach the codec output-surface timestamp call.
+Unproven: whether those changed timestamps delayed ImageReader delivery, or caused any specific repeat-rate difference.
+Possible further evidence, without changing timestamp units: record actual prediction offset, frame_id minus monotonic now at codec release, ImageReader arrival delay, queue occupancy/drop counters, and image rejection reason in a separate controlled diagnostic if required. Keep the present cap A/B pair unchanged.

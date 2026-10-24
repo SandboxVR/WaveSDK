@@ -1,0 +1,25 @@
+{
+  "status": "Experimental prediction-cap fix verified in four alternating180-second stationary probe trials; not a production release",
+  "original_sdk_tag": "SandboxVR/WaveSDK v6.2.0",
+  "original_sdk_commit": "0ed9b131d4e37369f0a2f8135caf5a58e9b3633a",
+  "original_aar_sha256": "b14ced0d4c6d80e4ffff600100de3d5865aeea11095d884468381c81be04d796",
+  "candidate_aar": "../../repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar",
+  "candidate_aar_sha256": "efe06b38dc84827d7b46f44d5a45dd535e7d1754257c739cc3bea5de9ef20b41",
+  "changed_members": [
+    "assets/wavevr/client-module.apk"
+  ],
+  "other_members_identical": true,
+  "zip_crc_verified": true,
+  "scope": "Only ARM64 app-private Wave runtime cap50 to cap60. Preserve matching6.2 host/API/bootstrap and ABI dependencies.",
+  "limitations": [
+    "Not a system provider APK or firmware update.",
+    "Nested module signing metadata no longer authenticates the modified module.",
+    "A runtime module update could replace the patch; check the mapped SHA and live cap.",
+    "60ms is a tested experimental bound, not a general refresh-aware policy.",
+    "Motion accuracy and visual comfort are not established by stationary testing."
+  ],
+  "integration": "Do not replace the normal Maven cache or normal vendor dependency directory. Use an explicit isolated build overlay; standard dependency preparation may otherwise fetch the original SDK.",
+  "rollback": "Remove the explicit experimental dependency/asset overlay and rebuild with the original6.2 SDK; clear only the test app module cache.",
+  "status_at_creation": "experimental SDK candidate; use only with explicit laboratory build configuration",
+  "live_validation_status": "VALIDATION_STATUS.json"
+}

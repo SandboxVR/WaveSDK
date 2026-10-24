@@ -1,0 +1,37 @@
+{
+  "classes": [
+    {
+      "type": "Lcom/htc/vr/client/VRNotifyDeviceProvider;",
+      "mode": "merge",
+      "jar": false,
+      "fields": [
+        {"name": "mNotifyClosed", "descriptor": "Z"},
+        {"name": "mNotifyTransition", "descriptor": "Z"}
+      ],
+      "methods": [
+        {"name": "start", "descriptor": "(II)Z", "action": "replace", "use_donor_access": true},
+        {"name": "stop", "descriptor": "(I)V", "action": "replace", "use_donor_access": true},
+        {"name": "updateData", "descriptor": "(ILjava/lang/String;)V", "action": "replace"},
+        {"name": "close", "descriptor": "()V", "action": "replace"},
+        {"name": "isNotifyAttemptCurrent", "descriptor": "(Lcom/htc/vr/client/VRNotifyDeviceProvider$Layer;)Z", "action": "add"},
+        {"name": "rollbackNotifyRemote", "descriptor": "(Lcom/htc/vr/client/VRNotifyDeviceProvider$Layer;IZZ)V", "action": "add"}
+      ]
+    },
+    {
+      "type": "Lcom/htc/vr/client/VRNotifyDeviceProvider$Layer;",
+      "mode": "merge",
+      "jar": false,
+      "fields": [{"name": "mNotifyClosed", "descriptor": "Z"}],
+      "methods": [
+        {"name": "createShareMemory", "descriptor": "(I)V", "action": "replace"},
+        {"name": "getSharedMemory", "descriptor": "()Landroid/os/Bundle;", "action": "replace"},
+        {"name": "close", "descriptor": "()V", "action": "replace"},
+        {"name": "writeNotifyData", "descriptor": "(Lcom/google/flatbuffers/FlatBufferBuilder;)V", "action": "add"}
+      ]
+    }
+  ],
+  "exclude": [
+    "Lcom/htc/vr/client/VRNotifyDeviceProvider$mDeathRecipient$1;",
+    "Lcom/htc/vr/client/VRNotifyDeviceProvider$updateData$1;"
+  ]
+}

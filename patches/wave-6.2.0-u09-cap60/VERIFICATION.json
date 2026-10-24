@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "sdk_aar_sha256": "efe06b38dc84827d7b46f44d5a45dd535e7d1754257c739cc3bea5de9ef20b41",
+  "nested_module_sha256": "e34a189c520da9b660a9e9f2b5e65d849d893c8a28471b9717faa819fd9c3c5c",
+  "runtime_sha256": "7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a",
+  "only_aar_member_changed": "assets/wavevr/client-module.apk",
+  "only_module_member_changed": "lib/arm64-v8a/libwvr_runtime.so",
+  "runtime_change_only": "float initializer50ms ->60ms at0xa329a4",
+  "outer_java_and_native_api_unchanged": true,
+  "other_abis_unchanged": true,
+  "zip_crc_verified": true,
+  "aar_and_gradle_metadata_checksums_verified": [
+    "md5",
+    "sha1",
+    "sha256",
+    "sha512"
+  ],
+  "maven_metadata_only_size_and_hashes_changed": true,
+  "base_commit": "0ed9b131d4e37369f0a2f8135caf5a58e9b3633a"
+}

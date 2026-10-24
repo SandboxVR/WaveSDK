@@ -1,0 +1,34 @@
+{
+  "status": "Experimental prediction-cap fix verified in four alternating180-second stationary probe trials; not a production release",
+  "version": "6.2.0-u09",
+  "original_module_path": "C:\\Users\\kevin.mok\\Documents\\PerformanceBaselines\\ALVR\\2026-10-23_wave_tws_patch\\load_path\\ssvr_bundled_client_module.apk",
+  "original_module_sha256": "19fade83706d9427346644aa47ddb01a85a5e5bfec1eb8af75062ffd803dd667",
+  "original_runtime_sha256": "7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18",
+  "candidate_runtime_sha256": "7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a",
+  "candidate_module_sha256": "e34a189c520da9b660a9e9f2b5e65d849d893c8a28471b9717faa819fd9c3c5c",
+  "modified_member": "lib/arm64-v8a/libwvr_runtime.so",
+  "cap_file_offset": "0xa329a4",
+  "cap_virtual_address": "0xa349a4",
+  "before_bytes": "cdcc4c3d",
+  "after_bytes": "8fc2753d",
+  "changed_byte_offsets": [
+    "0xa329a4",
+    "0xa329a5",
+    "0xa329a6"
+  ],
+  "old_seconds": 0.05000000074505806,
+  "new_seconds": 0.05999999865889549,
+  "zip_crc_verification": "passed",
+  "other_member_contents_identical": true,
+  "limitations": [
+    "Only arm64 runtime changed; other ABIs remain original.",
+    "Any APK signing metadata is no longer a valid signature for the modified archive.",
+    "This is an app-private module candidate, not an installable provider update.",
+    "Mutable runtime settings can override the initializer.",
+    "The cap is shared with pose-prediction callers; tracking accuracy above50ms needs headset validation.",
+    "60ms accommodates the tested75Hz path but is not a universal refresh-aware fix."
+  ],
+  "rollback": "Use the byte-identical original module, clear only the diagnostic app module cache, and restart the diagnostic app.",
+  "status_at_creation": "experimental offline-validated candidate; not live validated or deployed",
+  "live_validation_status": "VALIDATION_STATUS.json"
+}

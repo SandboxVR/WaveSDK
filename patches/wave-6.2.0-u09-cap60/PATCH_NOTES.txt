@@ -1,0 +1,75 @@
+Wave 6.2.0-u09 ARM64 prediction-cap patch
+Saved 2026-10-23; experimental, not a production release.
+
+Artifact
+  repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar
+  Maven coordinates remain com.htc.vr:wvr_client:6.2.0.
+  Original SDK commit: 0ed9b131d4e37369f0a2f8135caf5a58e9b3633a
+  Patched AAR SHA256:
+  efe06b38dc84827d7b46f44d5a45dd535e7d1754257c739cc3bea5de9ef20b41
+
+Change
+  Nested assets/wavevr/client-module.apk -> lib/arm64-v8a/libwvr_runtime.so.
+  gMaxPosePredictionTime initializer:50ms ->60ms.
+  File offset0xa329a4, runtime RVA0xa349a4; cd cc 4c 3d ->8f c2 75 3d.
+  The getter's clipping/error branch is intact. Outer Java classes, native API,
+  bootstrap, other module members and other ABIs are byte-identical to original.
+  The changed AAR's Gradle metadata size/hashes and all checksum sidecars are
+  updated. A targeted .gitattributes rule preserves metadata LF bytes on checkout.
+
+Live validation: SPC11 / VIVE Focus Vision
+  75Hz,2448x2448 per eye,1ms packet pacing,TWS forced on.
+  Four alternating180-second trials, with fresh isolated probe app caches.
+  Original50ms A:192/338 unavailable latency samples,7652 Wave warnings.
+  Patched60ms A:0/336 unavailable,0 Wave warnings.
+  Original50ms B:184/338 unavailable,7387 Wave warnings.
+  Patched60ms B:0/338 unavailable,0 Wave warnings.
+  Mapped runtime hashes and effective caps verified repeatedly in every trial.
+  All trials had zero packet loss, decoder warnings, and eye-submission errors.
+
+Limits and interpretation
+  This fixes the tested zero-return prediction failure; it does not establish
+  lower physical latency or resolve all perceived stuttering. The headset was
+  stationary with the proximity sensor covered. Motion quality remains untested.
+  First patched trial reused4.97% of images, second0.045%; controls0.27%/0.030%.
+  The higher reuse did not repeat consistently and its cause remains unproven.
+  One stale prediction occurred in the first patched run, zero in the second.
+  Latency averages cannot be compared directly because controls omit failing
+  samples. Restored measurements also affect SSVR's prediction feedback.
+  The60ms cap is an experimental bound for the tested75/90Hz paths, not a
+  universal refresh-rate policy. Live prediction horizons reached56.285ms.
+  The initial control launch failed refresh-rate readiness checks. A later
+  patched launch also exited before capture, with its reason not separately
+  established. Unchanged retries succeeded; no startup fix was included.
+  Nested APK signing metadata no longer authenticates the modified module;
+  this is an application asset, not an installable signed system-provider APK.
+
+Verification
+  From the SDK repository root:
+  python patches/wave-6.2.0-u09-cap60/verify_sdk.py
+  This checks nested ZIP CRCs, exact-only runtime edits, unchanged payloads,
+  Gradle metadata and all relevant checksum sidecars against the original Git
+  commit. VERIFICATION.json records the latest result.
+  Offline replay scripts/results are also included. The replay needs Python
+  unicorn2.1.4,capstone5.0.6 and pyelftools0.32; its callback/state mocks are
+  documented in replay_prediction.py. It is separate from headset validation.
+
+Build consumption / rollback
+  These are local working-tree changes; no commit, tag, or push was performed.
+  SSVR's normal dependency preparation fetches its configured WaveSDK tag;
+  saving this local checkout does not automatically switch that dependency.
+  A build must explicitly consume this patched checkout or a later chosen ref.
+  Invalidate only the test application's cached Wave module and verify the
+  mapped hash/live cap after startup; a runtime update can replace this asset.
+  The unmodified SDK remains recoverable from the original Git commit and the
+  original investigation archive. Preserve any later work before reverting.
+
+Lab restoration
+  The temporary probe was removed, debug overrides cleared, kiosk restored,
+  production rc38 APK hash unchanged, and75Hz streaming/settings verified.
+  Production headset runtime was not replaced by this saved SDK candidate.
+
+Full raw evidence and report
+  C:\Users\kevin.mok\Documents\PerformanceBaselines\ALVR\2026-10-23_wave_tws_patch\REPORT.html
+  VALIDATION_STATUS.json, live_comparison.json and audit notes accompany this
+  patch. Raw logcat, server events/CSV and GPU captures remain in that folder.
