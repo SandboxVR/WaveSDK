@@ -1,0 +1,66 @@
+{
+  "trials": [
+    {
+      "name": "03_probe_control50_a",
+      "live_readbacks": 6,
+      "live_identity_and_cap_verified": true,
+      "no_identity_mismatch": true,
+      "all_render_diagnostics_at75": true,
+      "all_eye_buffers_2448_square": true,
+      "all_tws_on": true,
+      "session_settings_unchanged": true,
+      "openvr_config_unchanged": true,
+      "counter_resets_zero": true,
+      "capture_errors_zero": true,
+      "timed_seconds": 180,
+      "passed": true
+    },
+    {
+      "name": "04_probe_cap60",
+      "live_readbacks": 6,
+      "live_identity_and_cap_verified": true,
+      "no_identity_mismatch": true,
+      "all_render_diagnostics_at75": true,
+      "all_eye_buffers_2448_square": true,
+      "all_tws_on": true,
+      "session_settings_unchanged": true,
+      "openvr_config_unchanged": true,
+      "counter_resets_zero": true,
+      "capture_errors_zero": true,
+      "timed_seconds": 180,
+      "passed": true
+    },
+    {
+      "name": "05_probe_control50_b",
+      "live_readbacks": 6,
+      "live_identity_and_cap_verified": true,
+      "no_identity_mismatch": true,
+      "all_render_diagnostics_at75": true,
+      "all_eye_buffers_2448_square": true,
+      "all_tws_on": true,
+      "session_settings_unchanged": true,
+      "openvr_config_unchanged": true,
+      "counter_resets_zero": true,
+      "capture_errors_zero": true,
+      "timed_seconds": 180,
+      "passed": true
+    },
+    {
+      "name": "06_probe_cap60_b",
+      "live_readbacks": 6,
+      "live_identity_and_cap_verified": true,
+      "no_identity_mismatch": true,
+      "all_render_diagnostics_at75": true,
+      "all_eye_buffers_2448_square": true,
+      "all_tws_on": true,
+      "session_settings_unchanged": true,
+      "openvr_config_unchanged": true,
+      "counter_resets_zero": true,
+      "capture_errors_zero": true,
+      "timed_seconds": 180,
+      "passed": true
+    }
+  ],
+  "all_passed": true,
+  "interpretation": "Validity and matching checks, separate from performance or visual-quality claims."
+}

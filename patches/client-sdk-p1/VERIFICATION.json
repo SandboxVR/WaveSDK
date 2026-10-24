@@ -1,0 +1,52 @@
+{
+  "base_commit": "647da312ad377108e4187a3643bffaba7662b05d",
+  "applied": true,
+  "artifacts": {
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar": {
+      "before_sha256": "efe06b38dc84827d7b46f44d5a45dd535e7d1754257c739cc3bea5de9ef20b41",
+      "after_sha256": "74d8c0a67e24c4b7dd3c213f21ec93077217ee5cf1afa2b80829e3dbdcbba390",
+      "bytes": 10290675
+    },
+    "repo/com/htc/vr/wvr.common.utils/6.2.0/wvr.common.utils-6.2.0.aar": {
+      "before_sha256": "3941f15ce4f069ed238a90ee79069b6cc4e5c99f0514d3aed04465e07e33b0d6",
+      "after_sha256": "00f6192b7478522f9c142adb91b26227cba0b54a2c73cb1b258b11ce56176f37",
+      "bytes": 152536
+    }
+  },
+  "source_sha256": {
+    "build.py": "bb2d3f82b6d5a0e7f223a5d77155248c9240cb2aecaa519a81ed27f51d8783b4",
+    "compositor/donor/com/htc/vr/core/VRCompositorManager$Listener$binder$1.java": "6f6908fcceb439f162141cfdb0624b64bbb65074e6f6550bebb47d8c3e7ec590",
+    "compositor/donor/com/htc/vr/sdk/VRActivityDelegate.java": "c1dc283eaa448d41e77acbd7315cfcb2e0ce2d72672d046fdbb66372af3d1550",
+    "compositor/patch-spec.json": "ee852495ccb9e951778e8d22e7395442db9bb3037cbd066428bcd648a73ee4b5",
+    "compositor/src/com/htc/vr/core/ClientSdkP1Compositor.java": "77c4594910a28987b9dcd06540c55ff6bd6f88f6516d5a09a375eadf521aec2a",
+    "compositor/src/com/htc/vr/sdk/patch/p1/CompositorLifecycle.java": "c7ae6d983f25dbf5790a352e034738b8021a169aee63d38d168a5595e7ee4267",
+    "compositor/tests/stubs/androidx/lifecycle/Lifecycle.java": "2718516c22110ab014dafe1c0c59c5eb15041cb9edd1a45f67c0b63fe18fb080",
+    "compositor/tests/stubs/com/htc/vr/core/IVRCompositor.java": "1c98e3d00f71eb4df5f8e610e50772121d3a990669a6bc406bf978a9f0a04f55",
+    "compositor/tests/stubs/com/htc/vr/core/IVRCompositorListener.java": "e5072b9f88d5f591284f07387fae39db0edf1c94b500ee4552ce3c2e8f3bbd1b",
+    "compositor/tests/stubs/com/htc/vr/core/lifecycle/ManualLifecycleOwner.java": "9d6941ee7e586a90eb442cc8ed3ec74c47f45c76c94352ecab1a8e2b5cbffbd1",
+    "compositor/tests/stubs/com/htc/vr/core/VRCompositor.java": "1b410c5d6a1190d02ec7acfa59c01f202e63a8e172ae5185b159a4105f8d27dd",
+    "compositor/tests/stubs/com/htc/vr/core/VRCompositorInfo.java": "b9f60b80b869fe0fd28dd5cfb27b9aafa833e6475e770a27a18dcec2c31c7fde",
+    "compositor/tests/stubs/com/htc/vr/core/VRCompositorManager.java": "18a6085ee89a6e3cc38db4a4ec0116c316318df46b98fa69697f90bc09481ddc",
+    "compositor/tests/stubs/com/htc/vr/sdk/DoubleWideRenderer.java": "3c770ca64243ac3b5d98f023562a28cb0ee59b317eb7de931b7a3780128d6288",
+    "compositor/tests/stubs/com/htc/vr/sdk/VRAndroidContext.java": "d0409072491a58ad4a91799171627a6b3ca76e1127733e20eb924e948689a4c6",
+    "dispatch/compile-stubs/com/htc/vr/sdk/overlay/OverlaySurfaces$$ExternalSyntheticLambda0.java": "8008dd863dd384d7a6a077d7ea24f7d6be86a942eb8574f0c254f0e780f62989",
+    "dispatch/compile-stubs/com/htc/vr/sdk/overlay/OverlaySurfaces$$ExternalSyntheticLambda1.java": "89c2de4bd9e7c06816951e40116c7b1e362637aa0d9aea5e5bbfd7e8b6b53fe4",
+    "dispatch/compile-stubs/com/htc/vr/sdk/overlay/OverlaySurfaces$1.java": "38aa68f46930f650c9589d1c6a86a5a7a203e37a3fbafc99733df619441b54e0",
+    "dispatch/graft-manifest.json": "8929f369e13dd2a819903066db72cd290deb907666e154908421091a75d80d08",
+    "dispatch/src/com/htc/vr/sdk/overlay/OverlaySurfaces.java": "00edc2840723f6014d7651274a12fbc452feb96561372987e63208c881d268b7",
+    "dispatch/src/com/htc/vr/sdk/util/CustomizeHandler.java": "6f2c6a671b23d163a838b1c79793e7438404f894c6670113d135fdc5328f9e6e",
+    "tools/Graft.java": "e1246d421e387b05a358ed1d1d58fd14a862e04d554c699a49ee3505c2ff0c17"
+  },
+  "patched_dex_sha256": "2b37042b6dac0c5f75642ea916b23350b968cc7d214d49117065be8fd80bfba8",
+  "native_runtime_sha256": "7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a",
+  "native_libraries_unchanged": true,
+  "only_client_module_member_changed": "classes.dex",
+  "only_utils_member_changed": "classes.jar",
+  "dex_structural_roundtrip_verified": true,
+  "maven_checksums": [
+    "md5",
+    "sha1",
+    "sha256",
+    "sha512"
+  ]
+}

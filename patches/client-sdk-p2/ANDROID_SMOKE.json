@@ -1,0 +1,17 @@
+{
+  "serial": "10.253.1.235:5555",
+  "status": "passed",
+  "module_sha256": "741e08dbd669c1527f0ceb7288372ede8a3fcf0b9b2bf72561f8e7026c7becda",
+  "dex_sha256": "7db9c1a759941de217726fff76af2338adaa874db43a207c9b294adc06228d50",
+  "optional_jar_sha256": {
+    "wvr_ime_client.jar": "b71bdca3ce065375c342929c0ea941e5abd67c03e8a9e967b48002ee47f451be",
+    "wvr_permission_client.jar": "aaca0113a09b6cde1362bbc928116e7d735894077cafa7042e1e57575998967f"
+  },
+  "test_source_sha256": {
+    "patches/client-sdk-p2/run_android_smoke.py": "96ee436f880975694f1ba73fbf67289070da27ccdffa0e81edf972f2c7cf0b6c",
+    "patches/client-sdk-p2/tests/P2LinkSmoke.java": "41806c5794a8280ee618036496782aea208ce8694851221fbfe48d6e050509c8",
+    "patches/client-sdk-p1/tests/AndroidSmoke.java": "951e87fc659f554e5ff5bcd75bca13dfad5c24428e950868f9df0b3671d0f096"
+  },
+  "scope": "isolated shell app_process; P1 dispatch and P2 class/member linkage; no app replacement or optional feature activation",
+  "output": "PASS Android ART smoke: 15 assertions; no Wave service/JNI calls\nPASS P2 ART class/member resolution: 22 classes; optional services not activated\n"
+}

@@ -1,0 +1,14 @@
+Review resolution - 2026-10-23
+
+Reviewed current replay_prediction.py, verify_candidate.py and candidate_binary_replay.json. No emulator rerun or device operation was performed for this review closure.
+
+Point 1: RESOLVED within the stated constructed-state scope.
+Replay now retains the ELF timing-control flag and configured-period initializer by default. A virtual GetRefreshRate callback is installed at vtable+56 and returns the selected frequency as a float in s0. The comparison explicitly exercises flag1 and flag0 when queried frequency equals the stored period. verify_candidate.py creates fresh replay instances and leaves flag1 intact. A mismatch between queried frequency and stored period remains outside this test, consistent with the declared live-state limitation.
+
+Point 2: RESOLVED.
+Both scripts now assert modeled timestamp error <=20ns. The file-loaded candidate verifier additionally tests60/70/100ms override requests and requires zero timestamps plus one warning. It never overrides the cap in memory. The saved candidate result reports maximum model error5ns, all4000 candidate phase results valid,3749 original valid results unchanged, and251 formerly unavailable75Hz/TWS results restored. Original/candidate SHA256 values match the reviewed u09 identities.
+
+Point 3: PENDING LIVE VERIFICATION.
+The mutable-cap concern is not closed by offline replay. Parent reports probe_snapshot.py and Java LIVE_CAP_READBACK are prepared; this closure review did not evaluate or execute their pending live capture. Effective cap, loaded runtime identity, actual display cadence and tracking quality remain to be confirmed on the headset.
+
+No additional actionable issue found in this focused review. This is review closure for offline validation, not a declaration that the headset issue is fixed.

@@ -1,0 +1,48 @@
+{
+  "time_utc": "2026-10-24T00:31:58.019891+00:00",
+  "checks": {
+    "kiosk_desired_enabled": true,
+    "kiosk_active": true,
+    "production_unsuspended": true,
+    "production_allowlisted": true,
+    "probe_removed": true,
+    "diagnostics_cleared": true,
+    "tws_override_cleared": true,
+    "production_apk_unchanged": true,
+    "production_running": true,
+    "session_settings_unchanged": true,
+    "openvr_config_unchanged": true,
+    "production_capture_near75_fps": true,
+    "production_capture_no_loss": true,
+    "production_capture_no_decoder_errors": true
+  },
+  "passed": true,
+  "kiosk_status": {
+    "status": "ok",
+    "packageName": "com.sandboxvr.deployment2",
+    "versionName": "0.0.5",
+    "port": 9128,
+    "uptimeSeconds": 6963,
+    "deviceOwner": true,
+    "syncRunning": false,
+    "lastAttemptAt": 1792801266657,
+    "nextPollAt": 1792802166689,
+    "syncSummary": "Store SANDBOXCA, revision 5ae8566d4c24\ncom.sandboxvr.ssvr: current (1.5.4.0.rc38-75Hz)\ncom.nextdoordeveloper.miperf.miperf: current (1.0)\ncom.sandboxvr.deployment2: current (0.0.5)\nLast check: Oct 23, 2026 5:21:06 PM",
+    "lastSyncSummary": "Store SANDBOXCA, revision 5ae8566d4c24\ncom.sandboxvr.ssvr: current (1.5.4.0.rc38-75Hz); kiosk stopped and app suspended\ncom.nextdoordeveloper.miperf.miperf: current (1.0)\ncom.sandboxvr.deployment2: current (0.0.5)\nLast check: Oct 23, 2026 5:21:06 PM",
+    "kioskPackage": "com.sandboxvr.ssvr",
+    "kioskStatus": "active",
+    "kioskDesiredEnabled": true,
+    "kioskAppInstalled": true,
+    "kioskAppSuspended": false,
+    "kioskAllowlisted": true,
+    "kioskActive": true,
+    "bluetooth": {
+      "available": true,
+      "permissionGranted": true,
+      "enabled": false,
+      "state": "off"
+    }
+  },
+  "production_pid": "12630",
+  "production_apk_sha256": "d5922226dcc427cb9977e12149b69fdd202fee2b5ca55db8042d73dc9b4d3f50"
+}

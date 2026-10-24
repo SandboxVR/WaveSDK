@@ -1,0 +1,41 @@
+{
+  "classes": [
+    {
+      "type": "Lcom/htc/vr/sdk/RemoteVRCameraManager;",
+      "mode": "merge",
+      "jar": false,
+      "fields": [
+        {"name": "mP2CameraSession", "descriptor": "Lcom/htc/vr/sdk/CameraSession;"},
+        {"name": "mP2CameraReleased", "descriptor": "Z"}
+      ],
+      "methods": [
+        {"name": "getVRCameraInfo", "descriptor": "()Lcom/htc/vr/core/DeprecatedCameraInfo;", "action": "replace"},
+        {"name": "getCameraIntrinsic", "descriptor": "()[F", "action": "replace"},
+        {"name": "getIVRCamera", "descriptor": "()Lcom/htc/vr/core/IVRCamera;", "action": "replace"},
+        {"name": "startCamera", "descriptor": "()I", "action": "replace", "use_donor_access": true},
+        {"name": "startCameraFromNative", "descriptor": "()Z", "action": "replace"},
+        {"name": "stopCamera", "descriptor": "()V", "action": "replace", "use_donor_access": true},
+        {"name": "stopCameraFromNative", "descriptor": "()V", "action": "replace"},
+        {"name": "releaseCameraResource", "descriptor": "()V", "action": "replace"},
+        {"name": "patchDetachSession", "descriptor": "(Lcom/htc/vr/sdk/CameraSession;)V", "action": "add"},
+        {"name": "patchFinishSession", "descriptor": "(Lcom/htc/vr/sdk/CameraSession;)V", "action": "add"},
+        {"name": "patchCloseSession", "descriptor": "(Lcom/htc/vr/sdk/CameraSession;)V", "action": "add"},
+        {"name": "patchImageAvailable", "descriptor": "(Lcom/htc/vr/sdk/CameraSession;Landroid/media/ImageReader;)V", "action": "add"},
+        {"name": "patchCameraAvailable", "descriptor": "(Lcom/htc/vr/core/IVRCamera;)V", "action": "add"},
+        {"name": "patchCameraUnavailable", "descriptor": "(Lcom/htc/vr/core/IVRCamera;)V", "action": "add"}
+      ]
+    },
+    {
+      "type": "Lcom/htc/vr/sdk/RemoteVRCameraManager$2;",
+      "mode": "merge",
+      "jar": false,
+      "methods": [
+        {"name": "onCameraAvailable", "descriptor": "(Lcom/htc/vr/core/IVRCamera;)V", "action": "replace"},
+        {"name": "onCameraUnavailable", "descriptor": "(Lcom/htc/vr/core/IVRCamera;)V", "action": "replace"}
+      ]
+    },
+    {"type": "Lcom/htc/vr/sdk/CameraSession;", "mode": "add", "jar": false},
+    {"type": "Lcom/htc/vr/sdk/CameraImageListener;", "mode": "add", "jar": false},
+    {"type": "Lcom/htc/vr/sdk/CameraRetirement;", "mode": "add", "jar": false}
+  ]
+}

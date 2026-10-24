@@ -1,0 +1,20 @@
+Review of cap60 candidate scripts - 2026-10-23
+
+Scope: make_cap60_candidate.py, replay_prediction.py, verify_candidate.py and candidate_u09_verified/manifest.json. Read-only review. No headset or repository changes.
+
+Actionable validation issues:
+
+1. Replay alters a stock timing-control flag. Replay.run writes cap-4 byte to0. In the actual u09 file, offset0xa329a0 is01000000: flag1. Flag1 invokes the render object's virtual GetRefreshRate method atvtable+56, then computes1/returnedRate. Current harness bypasses this branch and supplies the period atobject+2636. Add a bounded virtual callback returning the test refresh rate and exercise stock flag1 as well as flag0. The extra TWS period still usesobject+2636, so a mismatch between queried refresh and stored period is a separate scenario worth preserving as an explicit unknown. Until then, describe results as a constructed state with altered timing-control flag, not unchanged stock initialization. Replay also overwrites cap+4 from initializer1.5 to2.0; this is unused on config_path0 but matters if results are generalized to the alternate path.
+
+2. Correct target time is not an asserted condition. replay_prediction.py computes max_model_rounding_error_ns but never checks it. verify_candidate.py requires restored timestamps to be nonzero with no warning, but does not independently require the expected horizon. Assert a small nanosecond tolerance against the modeled three/four-period horizon. Exercise the file-loaded candidate's out-of-range/sentinel path too; currently out-of-range tests operate in the separate replay that overrides the cap in memory. The current exact code identity and cap-only byte comparison make a gross defect unlikely, but the pass/fail criteria should not accept wrong nonzero timestamps.
+
+3. Live confirmation must include effective cap readback. The patch modifies only the file initializer. The existing mutable gMaxPosePredictionTime registry and display/extras configuration can overwrite it during initialization or later. A successfully launched candidate APK, cached file hash, or unchanged ELF build ID alone does not establish that60ms is active. Record effective runtime cap after initialization and around the timed capture, alongside the loaded module path/hash. If it resets to50ms, treat this as a failed intervention rather than evidence that lifting the cap cannot help.
+
+Checked without additional actionable defects:
+- u09/u25 getter, estimator, cap, cap GOT, clock, vsync, override, log and stack-fail addresses match inspected disassembly.
+- Constructed object member offsets match the inspected estimator.
+- make_cap60_candidate.py locks module and runtime SHA256 and verifies only the intended member and cap bytes change.
+- verify_candidate.py compares exact candidate ELF bytes against the original plus one float initializer change.
+- Existing limitations correctly state that no compositor/loader/runtime initialization is emulated, that this affects pose prediction, and that signature metadata becomes invalid.
+
+No live correctness or performance conclusion follows from this review.

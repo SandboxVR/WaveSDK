@@ -1,0 +1,8 @@
+{
+  "serial": "10.253.1.235:5555",
+  "status": "passed",
+  "module_sha256": "045b833599f60b829a7fa520c53fd46083eb1c52c33ceb4318cdda333f01e170",
+  "dex_sha256": "2b37042b6dac0c5f75642ea916b23350b968cc7d214d49117065be8fd80bfba8",
+  "scope": "isolated shell ART; no app installation, compositor binding, or Wave JNI calls",
+  "output": "PASS Android ART smoke: 15 assertions; no Wave service/JNI calls\n"
+}

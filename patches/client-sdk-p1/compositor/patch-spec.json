@@ -1,0 +1,25 @@
+{
+  "classes": [
+    {
+      "type": "Lcom/htc/vr/core/VRCompositorManager$Listener$binder$1;",
+      "mode": "merge",
+      "methods": [
+        { "name": "compositorAvailable", "descriptor": "(Lcom/htc/vr/core/IVRCompositor;Landroid/os/Bundle;)V", "action": "replace" },
+        { "name": "compositorUnavailable", "descriptor": "(Lcom/htc/vr/core/IVRCompositor;)V", "action": "replace" }
+      ]
+    },
+    {
+      "type": "Lcom/htc/vr/sdk/VRActivityDelegate$1;",
+      "mode": "merge",
+      "methods": [
+        { "name": "onCompositorAvailable", "descriptor": "(Lcom/htc/vr/core/VRCompositor;)V", "action": "replace" },
+        { "name": "onCompositorUnavailable", "descriptor": "(Lcom/htc/vr/core/VRCompositor;)V", "action": "replace" }
+      ]
+    },
+    { "type": "Lcom/htc/vr/core/ClientSdkP1Compositor;", "mode": "add" },
+    { "type": "Lcom/htc/vr/core/ClientSdkP1Compositor$State;", "mode": "add" },
+    { "type": "Lcom/htc/vr/core/ClientSdkP1Compositor$Event;", "mode": "add" },
+    { "type": "Lcom/htc/vr/core/ClientSdkP1Compositor$Drain;", "mode": "add" },
+    { "type": "Lcom/htc/vr/sdk/patch/p1/CompositorLifecycle;", "mode": "add" }
+  ]
+}

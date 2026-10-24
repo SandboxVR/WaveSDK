@@ -1,0 +1,41 @@
+{
+  "time_utc": "2026-10-24T00:30:54.522712+00:00",
+  "status": "Experimental prediction-cap fix verified in four alternating180-second stationary probe trials; not a production release",
+  "tests": "control50 -> cap60 -> control50 -> cap60, TWS forced on,75Hz,2448x2448,1ms packet pacing",
+  "unavailable_latency_samples_control": [
+    192,
+    184
+  ],
+  "control_samples": [
+    338,
+    338
+  ],
+  "unavailable_latency_samples_patched": [
+    0,
+    0
+  ],
+  "patched_samples": [
+    336,
+    338
+  ],
+  "wave_zero_return_warnings_control": [
+    7652,
+    7387
+  ],
+  "wave_zero_return_warnings_patched": [
+    0,
+    0
+  ],
+  "live_identity_and_cap_verified": true,
+  "repeat_rate_percent_patched": [
+    4.9717598097502975,
+    0.04459971753512228
+  ],
+  "limitations": [
+    "Stationary headset; head-motion visual quality untested.",
+    "First patch frame-reuse increase not reproduced consistently; cause unestablished.",
+    "This restores valid timing measurements; it does not establish lower physical latency.",
+    "First-start refresh readiness race observed; unchanged retries succeeded."
+  ],
+  "production_runtime_replaced": false
+}

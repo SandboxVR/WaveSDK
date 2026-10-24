@@ -1,0 +1,219 @@
+{
+  "classes": [
+    {
+      "type": "Lcom/htc/vr/ime/client/IMEManager;",
+      "mode": "merge",
+      "jar": true,
+      "fields": [
+        {
+          "name": "mP2Active",
+          "descriptor": "Z"
+        },
+        {
+          "name": "mP2HandshakeFailures",
+          "descriptor": "I"
+        },
+        {
+          "name": "mP2Generation",
+          "descriptor": "J"
+        },
+        {
+          "name": "mP2ServiceGeneration",
+          "descriptor": "J"
+        },
+        {
+          "name": "mP2InputRequest",
+          "descriptor": "J"
+        },
+        {
+          "name": "mP2Context",
+          "descriptor": "Landroid/content/Context;"
+        },
+        {
+          "name": "mP2Binding",
+          "descriptor": "Lcom/htc/vr/ime/client/IMEBinding;"
+        },
+        {
+          "name": "mP2ManagerDeath",
+          "descriptor": "Lcom/htc/vr/ime/client/IMEDeath;"
+        },
+        {
+          "name": "mP2ServiceDeath",
+          "descriptor": "Lcom/htc/vr/ime/client/IMEDeath;"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setContext",
+          "descriptor": "(Landroid/content/Context;)V",
+          "action": "replace"
+        },
+        {
+          "name": "onCreate",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "onDestroy",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "release",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2Current",
+          "descriptor": "(J)Z",
+          "action": "add"
+        },
+        {
+          "name": "p2Retry",
+          "descriptor": "(J)V",
+          "action": "add"
+        },
+        {
+          "name": "p2ScheduleRetry",
+          "descriptor": "(J)V",
+          "action": "add"
+        },
+        {
+          "name": "connectIIMEManager",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2ConnectManager",
+          "descriptor": "(J)V",
+          "action": "add"
+        },
+        {
+          "name": "p2Connected",
+          "descriptor": "(Lcom/htc/vr/ime/client/IMEBinding;Landroid/os/IBinder;)V",
+          "action": "add"
+        },
+        {
+          "name": "p2ConnectFailed",
+          "descriptor": "(Lcom/htc/vr/ime/client/IMEBinding;Lcom/htc/vr/ime/manager/IIMEManagerAPi1;Lcom/htc/vr/ime/manager/IIMEManagerCallbackApi1;Lcom/htc/vr/ime/client/IMEDeath;)V",
+          "action": "add"
+        },
+        {
+          "name": "p2Disconnected",
+          "descriptor": "(Lcom/htc/vr/ime/client/IMEBinding;)V",
+          "action": "add"
+        },
+        {
+          "name": "connectIMEService",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2ConnectService",
+          "descriptor": "(Lcom/htc/vr/ime/client/IMEBinding;)V",
+          "action": "add"
+        },
+        {
+          "name": "p2Detach",
+          "descriptor": "()Lcom/htc/vr/ime/client/IMECleanup;",
+          "action": "add"
+        },
+        {
+          "name": "disconnectIMEManager",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2Died",
+          "descriptor": "(Lcom/htc/vr/ime/client/IMEDeath;)V",
+          "action": "add"
+        },
+        {
+          "name": "p2Switch",
+          "descriptor": "(Lcom/htc/vr/ime/client/IMEBinding;)V",
+          "action": "add"
+        },
+        {
+          "name": "hideKeyboard",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2Input",
+          "descriptor": "(JJIILjava/lang/String;I)V",
+          "action": "add"
+        },
+        {
+          "name": "requestIMECompleted",
+          "descriptor": "()V",
+          "action": "replace"
+        },
+        {
+          "name": "p2Complete",
+          "descriptor": "(JJ)V",
+          "action": "add"
+        },
+        {
+          "name": "showKeyboard",
+          "descriptor": "(Lcom/htc/vr/ime/server/IMEParameter;Lcom/htc/vr/ime/client/IMECallback;)V",
+          "action": "replace"
+        },
+        {
+          "name": "showKeyboard",
+          "descriptor": "(Lcom/htc/vr/ime/server/IMEParameter;Lcom/htc/vr/ime/client/IMECallback;Z)V",
+          "action": "replace"
+        },
+        {
+          "name": "showKeyboardDefault",
+          "descriptor": "(Lcom/htc/vr/ime/server/IMEParameter;Lcom/htc/vr/ime/client/IMECallback;)I",
+          "action": "replace"
+        },
+        {
+          "name": "showKeyboardDefault",
+          "descriptor": "(Lcom/htc/vr/ime/server/IMEParameter;Lcom/htc/vr/ime/client/IMECallback;Z)I",
+          "action": "replace"
+        },
+        {
+          "name": "p2Show",
+          "descriptor": "(Lcom/htc/vr/ime/server/IMEParameter;ZJJ)I",
+          "action": "add"
+        },
+        {
+          "name": "restoreShowKeyboard",
+          "descriptor": "()V",
+          "action": "replace"
+        }
+      ]
+    },
+    {
+      "type": "Lcom/htc/vr/ime/client/IMEBinding;",
+      "mode": "add",
+      "jar": true
+    },
+    {
+      "type": "Lcom/htc/vr/ime/client/IMECleanup;",
+      "mode": "add",
+      "jar": true
+    },
+    {
+      "type": "Lcom/htc/vr/ime/client/IMEDeath;",
+      "mode": "add",
+      "jar": true
+    },
+    {
+      "type": "Lcom/htc/vr/ime/client/IMEInput;",
+      "mode": "add",
+      "jar": true
+    },
+    {
+      "type": "Lcom/htc/vr/ime/client/IMEManagerEvents;",
+      "mode": "add",
+      "jar": true
+    },
+    {
+      "type": "Lcom/htc/vr/ime/client/IMERetry;",
+      "mode": "add",
+      "jar": true
+    }
+  ]
+}

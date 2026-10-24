@@ -1,0 +1,50 @@
+Wave prediction cap audit - 2026-10-23
+
+Scope: ordinary LLVM disassembly and Python address/relocation audit. These are not REA Evidence records. No binaries, repository files, device state, or old evidence archive were modified. Only this cap_audit directory was created.
+
+Identities:
+Provider u25 SHA256: b4e0e369b53e1ca016a33ddacc2af31400b134f05372532b0b02153c70c3a72b
+Bundled u09 SHA256: 7abd01d50ac948b38a41a55cef5a461b018ed29e1856d8198aa5deeb6db29d18
+Which is mapped in running SSVR was not observed by this audit.
+
+Both binaries have the same estimator/getter structure and object fields. The estimator clamps to a mutable float initially .05 sec; the getter returns0 when abs(prediction - cap)<1e-6. On the default three-period path, TWS adds a fourth period: 53.333ms at75Hz vs44.444ms at90Hz. Static derivation does not establish all active runtime flags.
+
+Exact addresses: u25 / u09
+Estimator: 0x5e8ae0 / 0x5e8db4
+Getter: 0x5e8c8c / 0x5e8f60
+Cap Vaddr: 0xa33f44 / 0xa349a4
+Cap file offset: 0xa31f44 / 0xa329a4
+Cap initial bytes: cd cc 4c 3d (.05000000074505806 sec) in both
+GOT cap pointer: 0xa212a8 / 0xa21d00
+Epsilon double: 0x364f10 / 0x364ed0 (1e-6) in both
+Vsync query: 0x611160 / 0x611434
+Estimator vtable entry: 0x9f6df8 / 0x9f7888
+Getter vtable entry: 0x9f6e00 / 0x9f7890
+TWS flag: *(object+2584)+8628; period: object+2636; pipeline flag: object+2397 in both.
+
+Reference coverage:
+Full linear ADR/ADRP+ADD/LDR propagation over LLVM disassembly, resolving RELATIVE GOT entries, finds only four direct cap use sites per binary: diagnostic logging read, registry address capture, estimator read, getter read.
+u25: 0x509b64, 0x50c870, 0x5e8b2c, 0x5e8cdc
+u09: 0x509e38, 0x50cb44, 0x5e8e00, 0x5e8fb0
+Both have one RELATIVE pointer relocation to cap. No other direct write found. This is NOT proof of complete indirect alias/CFG coverage. The registry pointer intentionally enables indirect writes.
+
+Mutable registry:
+Name: gMaxPosePredictionTime (u25 string0x3533f0, u09 string0x3533d0).
+Type: Variable<float> (RTTI 8VariableIfE). Registry object stores cap address at+88, name at+56.
+u25 registration 0x50c7f4..0x50c878; u09 registration 0x50cac8..0x50cb4c.
+u25 find0x5f3bf8, insert0x5f3cf0; u09 find0x5f3ecc, insert0x5f3fc4.
+u25 single-line name=value parser0x5f3e14, multiline0x5f410c; u09 single0x5f40e8, multi0x5f43e0.
+Setter via vtable+24: u25 function0x50a5e4 (store0x50a6ec); u09 function0x50a8b8 (store0x50a9c0). Numeric text is parsed without range validation.
+Configuration applies this parser to display configuration string member+600 (u25 call0x509758; u09 call0x509a2c). Extras event handler also parses union field17 string (u25 call0x555b6c, u090x555e40). Server event type109 uses VREvent_Extras. Ordinary app access to that event remains unestablished.
+
+Safety implications:
+Estimator also serves WaitGetPoses/GetSyncPose (u25 function0x5e8740, call0x5e879c) and ApplyPoseLatency (u25 function0x5e89d0, call0x5e8a1c). Raising cap changes actual pose horizons, not just statistics. Prediction above50ms could remain wrong if timing model or vsync measurement is wrong. Motion accuracy and smoothness require live validation; restoring measurements does not prove stutter fixed.
+
+Recommendation:
+Prefer a bounded experimental override through existing registry, scoped to SSVR and75Hz. Keep the clipping/error guard at a tested higher bound, e.g.60ms leaves margin above53.333ms. Preserve default50ms at90Hz unless evidence justifies otherwise. Do not bypass the getter error branch (would hide clipping) or reduce pipeline periods without evidence (could underpredict pose).
+If no official setter is accessible, exact binary identity and code/data fingerprints could gate an in-process invocation of the existing private parser. This avoids replacing the system runtime, but remains private ABI: use default-off feature flag, bounded constant string, readback, rollback and device validation; fail closed on unknown build. Do not call before registry initialization.
+
+Bounded public API audit (u25):
+WVR_SetParameters(0x4d6178) forwards device string via VRSystemStub::SetParameters(0x63de54), device callback request type9 and RPC. No local registry call; device-service support for extras unestablished.
+WVR_SetDisplayConfigPath(0x4e7a1c) dispatches vtable+1096, entry0x9f2028, function0x55aa60: log-only Set display config path not support stub.
+WVR_SetRenderParameter(0x4e9ea8) dispatches vtable+1432 to0x55af78; accepts only warp_border_transparent. No generic registry route.
