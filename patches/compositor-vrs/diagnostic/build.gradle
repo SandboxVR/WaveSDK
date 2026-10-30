@@ -1,0 +1,21 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:9.4.1'
+    }
+}
+
+allprojects {
+    repositories {
+        exclusiveContent {
+            forRepository { maven { url = uri("$rootDir/../../../repo") } }
+            filter { includeGroup 'com.htc.vr' }
+        }
+        google()
+        mavenCentral()
+    }
+}

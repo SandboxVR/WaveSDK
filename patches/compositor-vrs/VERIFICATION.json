@@ -1,0 +1,114 @@
+{
+  "base_commit": "023dc61446973ca6c7a968ef824262fb74ee4ba9",
+  "applied": true,
+  "source_sha256": {
+    "patches/compositor-vrs/build.py": "825ca1e8164909490c05c7675226d345f900b7f0416ae29629ba83e0bd078cf3",
+    "patches/compositor-vrs/extension/consumer-rules.pro": "9bd7db4dfdfa39e03cd902d8f8d8657c140c82fed7ccce61a80cfaa0ba94e2c9",
+    "patches/compositor-vrs/extension/native/compositor_settings_jni.cpp": "b9a5344456e2e6283b91b14ff202f22262f773d301c4cfe3034b7c3d507d6802",
+    "patches/compositor-vrs/extension/src/com/sandboxvr/wave/CompositorSettings.java": "89f9f9dbdeafe21a88eb09eea35f7ad2be7421d0a8f391615b0e3030efa351be",
+    "patches/compositor-vrs/extension/tests/android/content/Context.java": "f8ac96a7d546f7a1a05ec431c228977bef87ad798e7216c2322836b84df3e4ce",
+    "patches/compositor-vrs/extension/tests/android/content/SharedPreferences.java": "fed423263ad6501376131e38f07597c3f44864599108a5f36d2c947e53948f91",
+    "patches/compositor-vrs/extension/tests/com/sandboxvr/wave/CompositorSettingsTest.java": "ebd4791ab20a840b4a13a1f509eb383e159931b8e1da990fa11442690a34fdb6",
+    "patches/compositor-vrs/extension/tests/com/sandboxvr/wave/PatchedRuntimeIdentity.java": "b47c0df3efd0708d171e296c287558132b0d22c95df32ae8ea2ebe7dbf0bfaf6",
+    "patches/compositor-vrs/native_hook.S": "6c1b3aa5709e220ac0bdd674a0d97238b8e1095ef34618204bdeff2b9a9a86c8",
+    "patches/compositor-vrs/patch_runtime.py": "ab62d3c4bae84a243e0ecfbe63076f3b6f5b34f3378fb4dfe4bda6979072595f"
+  },
+  "runtime_sha256": "14a717297a5724c2dfc8c105896793f0457746079a2106e77a1780bf6e370c63",
+  "native_patch": {
+    "schema_version": 1,
+    "status": "experimental; offline validation only",
+    "baseline_sha256": "7d6bcf757430196b73eb44e217dd4d1e18c9b4873f910fdd008cf1fe4fd9c72a",
+    "runtime_sha256": "14a717297a5724c2dfc8c105896793f0457746079a2106e77a1780bf6e370c63",
+    "baseline_size": 10726328,
+    "runtime_size": 10728752,
+    "abi_version": 2,
+    "state_va": "0xa4fa00",
+    "state_size": 256,
+    "rx_va": "0xa51000",
+    "rx_file_offset": "0xa3b000",
+    "rx_size": 1328,
+    "rx_sha256": "7239df2b8094792a04d6ee72660e29f8c49a45c30ed2f6dee8de61b5c5ebc978",
+    "native_hook_source_sha256": "6c1b3aa5709e220ac0bdd674a0d97238b8e1095ef34618204bdeff2b9a9a86c8",
+    "hooks": {
+      "constructor_hook": {
+        "patch_va": "0x5bdb50",
+        "trampoline_va": "0xa51040"
+      },
+      "unsupported_hook": {
+        "patch_va": "0x5c2694",
+        "trampoline_va": "0xa512e0"
+      },
+      "draw_hook": {
+        "patch_va": "0x5c6ff0",
+        "trampoline_va": "0xa513f0"
+      }
+    },
+    "changes": [
+      {
+        "file_offset": "0x5bdb50",
+        "size": 4,
+        "before_hex": "68823039",
+        "after_hex": "3c4d1214",
+        "purpose": "constructor_hook"
+      },
+      {
+        "file_offset": "0x5c2694",
+        "size": 4,
+        "before_hex": "7f823039",
+        "after_hex": "133b1214",
+        "purpose": "unsupported_hook"
+      },
+      {
+        "file_offset": "0x5c6ff0",
+        "size": 4,
+        "before_hex": "68827039",
+        "after_hex": "00291214",
+        "purpose": "draw_hook"
+      },
+      {
+        "file_offset": "0x110",
+        "size": 8,
+        "before_hex": "10b0010000000000",
+        "after_hex": "f8b1010000000000",
+        "purpose": "extend RW BSS only"
+      },
+      {
+        "file_offset": "0x200",
+        "size": 56,
+        "before_hex": "0400000004000000380200000000000038020000000000003802000000000000bc00000000000000bc000000000000000400000000000000",
+        "after_hex": "010000000500000000b0a300000000000010a500000000000010a50000000000300500000000000030050000000000000010000000000000",
+        "purpose": "reuse PT_NOTE entry for RX trampoline"
+      }
+    ],
+    "appended_range": {
+      "file_offset": "0xa3abb8",
+      "size": 2424
+    },
+    "preserved": [
+      "all original bytes outside listed patch ranges",
+      "original section table and note bytes",
+      "cap60 and prior native changes"
+    ],
+    "permissions": "original RX/RW mappings preserved; new RX mapping; no RWX",
+    "validation_limits": [
+      "No Android loader or headset execution is implied by building.",
+      "Only this version-locked ARM64 runtime is supported."
+    ]
+  },
+  "aar_sha256": "81b73a4031cc243b6748aeb14f64567150ffc79e04ca44ef0c7ba905ed2297ba",
+  "module_sha256": "9606d6f87f13a3203186a9814e9eaed2cb40635b2be20a7269659db83e240c70",
+  "extension_sha256": "62e442d8e723db7e2a819fefc57b3399fbbbaa6dbf9da480be84fa02b4b9da78",
+  "preserved_module_dex_sha256": "7db9c1a759941de217726fff76af2338adaa874db43a207c9b294adc06228d50",
+  "published_sha256": {
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar": "81b73a4031cc243b6748aeb14f64567150ffc79e04ca44ef0c7ba905ed2297ba",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.module": "5c1c2ff66edca1706f947f530cf72cbdae9d141499aef57a019bae31b77ec734",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar.md5": "77eb00008a27d6ce43d4fe259cc6598c284039b3ae4daf932b71d597280a7998",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar.sha1": "4e1987f747bc137c9750e741e065457d4f87ba71581b0120c95beced9152eb43",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar.sha256": "a34c3faecd40021174b35ffe9d037e5ebf8a2dc15fe125506cd8fb47767f72f6",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar.sha512": "292bf98c92e245b14c469dd6c78eb41d909056fc3b7997569727a77252ab5b3c",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.module.md5": "679bb0fd01c8de21ba61f9a8f192d2c3a8fe0f03917a1ebb743fb8eb8e3a7d7b",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.module.sha1": "0755b7eac5d73a53af1305ce79c125bb8dbc9203aafa5d8ed865a435e45430a0",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.module.sha256": "f427cb83a675c7c1a3852e40e3ba9b7dfb02f917128191c62c4701b6f84066ca",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.module.sha512": "ec6a552b77f4123038f83a0eb0c028647576477152d35b43542df63bd3fe9057"
+  }
+}
