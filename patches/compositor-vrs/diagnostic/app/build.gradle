@@ -1,0 +1,126 @@
+apply plugin: 'com.android.application'
+
+import java.security.MessageDigest
+import java.util.zip.ZipFile
+import java.util.zip.ZipInputStream
+
+configurations {
+    waveSdk { transitive = false }
+}
+
+dependencies {
+    implementation 'com.htc.vr:wvr_client:6.2.0'
+    waveSdk 'com.htc.vr:wvr_client:6.2.0@aar'
+}
+
+def waveAar = configurations.waveSdk.singleFile
+def digestStream = { InputStream stream ->
+    def digest = MessageDigest.getInstance('SHA-256')
+    byte[] buffer = new byte[65536]
+    int count
+    while ((count = stream.read(buffer)) != -1) digest.update(buffer, 0, count)
+    digest.digest().encodeHex().toString()
+}
+def waveAarHash = waveAar.withInputStream { digestStream(it) }
+def runtimeHash
+new ZipFile(waveAar).withCloseable { aar ->
+    def module = aar.getEntry('assets/wavevr/client-module.apk')
+    if (module == null) throw new GradleException('Wave AAR has no client-module.apk')
+    new ZipInputStream(aar.getInputStream(module)).withCloseable { apk ->
+        def entry
+        while ((entry = apk.nextEntry) != null) {
+            if (entry.name == 'lib/arm64-v8a/libwvr_runtime.so') {
+                runtimeHash = digestStream(apk)
+                break
+            }
+        }
+    }
+}
+if (runtimeHash == null) throw new GradleException('Wave client module has no arm64 runtime')
+
+def extractedSdk = layout.buildDirectory.dir('wave-sdk')
+def extractWaveSdk = tasks.register('extractWaveSdk', Sync) {
+    from(zipTree(waveAar)) { include 'include/**', 'jni/**' }
+    into(extractedSdk)
+}
+
+android {
+    namespace = 'com.sandboxvr.wave.vrsdiagnostic'
+    compileSdk = 33
+    buildToolsVersion = '36.0.0'
+    ndkVersion = '25.1.8937393'
+
+    defaultConfig {
+        applicationId 'com.sandboxvr.wave.vrsdiagnostic'
+        minSdk = 29
+        targetSdk = 33
+        versionCode = 1
+        versionName = '0.1'
+        buildConfigField 'String', 'WAVE_AAR_SHA256', '"' + waveAarHash + '"'
+        buildConfigField 'String', 'WAVE_RUNTIME_SHA256', '"' + runtimeHash + '"'
+        ndk { abiFilters 'arm64-v8a' }
+        externalNativeBuild {
+            cmake {
+                arguments '-DWAVE_SDK_DIR=' + extractedSdk.get().asFile.absolutePath
+                cppFlags '-std=c++17 -Wall -Wextra -Werror'
+            }
+        }
+    }
+
+    buildFeatures { buildConfig = true }
+    signingConfigs {
+        diagnostic {
+            storeFile = rootProject.file('.local/vrs-diagnostic-debug.keystore')
+            storePassword = 'android'
+            keyAlias = 'vrs-diagnostic'
+            keyPassword = 'android'
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig = signingConfigs.diagnostic
+            jniDebuggable = true
+        }
+        minified {
+            initWith debug
+            signingConfig = signingConfigs.diagnostic
+            debuggable = false
+            jniDebuggable = false
+            minifyEnabled = true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path = file('src/main/cpp/CMakeLists.txt')
+            version = '3.22.1'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+            keepDebugSymbols += '**/*.so'
+        }
+    }
+    lint { disable 'Instantiatable' }
+}
+
+tasks.configureEach {
+    if (name.startsWith('configureCMake') || name.startsWith('buildCMake')) {
+        dependsOn(extractWaveSdk)
+    }
+}
+
+tasks.register('writeSdkIdentity') {
+    def output = layout.buildDirectory.file('sdk-identity.txt')
+    inputs.file(waveAar)
+    outputs.file(output)
+    doLast {
+        output.get().asFile.text = "coordinate=com.htc.vr:wvr_client:6.2.0\naar=${waveAar.absolutePath}\naarSha256=${waveAarHash}\nruntimeSha256=${runtimeHash}\n"
+    }
+}
+tasks.named('preBuild').configure { dependsOn 'writeSdkIdentity' }

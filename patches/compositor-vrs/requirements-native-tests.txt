@@ -1,0 +1,2 @@
+# Test-only ARM64 CPU emulation; the builder itself uses Python's standard library.
+unicorn==2.1.4
