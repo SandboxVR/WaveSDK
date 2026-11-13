@@ -180,6 +180,26 @@ public final class CompositorSettings {
         }
     }
 
+    /**
+     * Validate the loaded runtime and start a new TWS observation window. Call
+     * after Wave initialization on each resume. The exported native
+     * SSVR_GetTwsState() then returns -1 until a fresh runtime sample arrives.
+     */
+    public static boolean validateTwsRuntime() {
+        synchronized (LOCK) {
+            if (!ensureNative()) return false;
+            // Always revoke the preceding resume's validation first.
+            try {
+                nativeValidateTwsRuntime(null);
+                String path = nativeRuntimePath();
+                return path != null && matchesPackagedRuntime(path)
+                        && nativeValidateTwsRuntime(path);
+            } catch (RuntimeException | LinkageError e) {
+                return false;
+            }
+        }
+    }
+
     private static SharedPreferences preferences(Context context) {
         return context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
@@ -227,6 +247,7 @@ public final class CompositorSettings {
         for (byte b : digest.digest()) out.append(String.format(Locale.ROOT, "%02x", b & 255));
         return out.toString();
     }
+    private static native boolean nativeValidateTwsRuntime(String validatedPath);
     private static native String nativeRuntimePath();
     // 0 accepted, 1 sealed, 2 unsupported, 3 error, 4 runtime appeared during configuration.
     private static native int nativeConfigure(int mode, String validatedPath);

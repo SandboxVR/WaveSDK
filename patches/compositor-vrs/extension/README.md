@@ -49,7 +49,7 @@ library is `libssvr_wave_compositor.so`, placed in the AAR's `jni/arm64-v8a/`.
 The AAR also includes consumer shrinker rules to preserve JNI entry-point names.
 Before accessing state, Java hashes the mapped runtime file (or the runtime entry
 inside an APK), caches a verified path/file-size/mtime identity, and JNI checks
-the loaded pathname, ELF segment permissions, and private header ABI 2 on every
+the loaded pathname, ELF segment permissions, and private header ABI 3 on every
 access. All ELF header and state accesses happen inside `dl_iterate_phdr` callbacks,
 while Android bionic holds its recursive dynamic-linker mutex. The callback makes a
 nested inventory to confirm uniqueness under that same lock; it does not call into
@@ -65,3 +65,13 @@ No renderer object is dereferenced by this extension.
 and persistence tests. For example, compile the extension source and all test Java
 sources with Java 8 or newer and run `com.sandboxvr.wave.CompositorSettingsTest`.
 The tests do not substitute for a headset test of the patched runtime and GL path.
+
+
+The same companion provides `CompositorSettings.validateTwsRuntime()` (boolean),
+called after runtime initialization on every resume, and the native C export
+`SSVR_GetTwsState()` (-1 Unknown, 0 Off, 1 On). Validation hashes the exact loaded
+runtime and clears prior-resume acceptance. Native sampling reads only the patch's
+atomic status/timestamp word; it does not dereference renderer objects. Samples
+older than 250ms are Unknown. Requesting Off cannot suppress an observed On value.
+The native getter uses an architectural monotonic counter and performs no file I/O.
+See the parent `NATIVE_ABI.md` for source evidence and the full freshness contract.

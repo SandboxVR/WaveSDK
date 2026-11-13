@@ -2,9 +2,9 @@
 
 This SDK extension lets an application select compositor variable-rate shading
 (VRS) at process startup. It is a SandboxVR extension to the patched Wave 6.2.0-u09
-artifact, not an HTC API. The supported setting is deliberately limited to
-compositor VRS; it is not a general interface for changing undocumented renderer
-flags.
+artifact, not an HTC API. The supported setting is compositor VRS. The companion also provides read-only
+TWS active-state observations; it is not a general interface for changing
+undocumented renderer flags.
 
 `DeviceDefault` preserves the original device configuration and capability
 fallback. SDK consumers that never select a policy retain this behavior. `Off`
@@ -107,3 +107,26 @@ and data, and does not replace production SSVR. Diagnostic startup/renderer test
 are distinct from actual streaming, through-lens image quality and sustained
 75 Hz performance. See [VALIDATION.md](VALIDATION.md) for device results and
 outstanding coverage; static analysis alone is not device execution evidence.
+
+## Real-time TWS observation
+
+After Wave initialization and on every resume, call
+`CompositorSettings.validateTwsRuntime()`. A successful return arms the private
+native export `int SSVR_GetTwsState()` in `libssvr_wave_compositor.so`: `1` means the
+runtime's active TWS byte is On, `0` means Off, and `-1` means Unknown. This does not
+infer activity from the requested Off/On/Auto mode. The predictor observation is
+atomic and timestamped; unvalidated, pre-resume, invalid or >250ms-old samples are
+Unknown. The application must keep calling a Wave predictor API in the lobby too.
+See `NATIVE_ABI.md` for the hook and lifecycle contract.
+
+The AAR retains version 6.2.0 and the nested module's existing version/manifest.
+A device using a cached older Wave module will fail the identity check and report
+Unknown. Validate the loaded module after deployment; a local build does not prove
+that a device selected the newly bundled module.
+
+The native timestamp contract can also be checked on the host:
+
+```powershell
+& 'C:/Program Files/LLVM/bin/clang++.exe' -std=c++17 patches/compositor-vrs/extension/tests/tws_observation_test.cpp -o patches/compositor-vrs/.build/tws_observation_test.exe
+& patches/compositor-vrs/.build/tws_observation_test.exe
+```

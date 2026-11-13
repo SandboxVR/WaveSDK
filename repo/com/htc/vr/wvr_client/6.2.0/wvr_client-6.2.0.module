@@ -26,11 +26,11 @@
         {
           "name": "wvr_client-6.2.0.aar",
           "url": "wvr_client-6.2.0.aar",
-          "size": 10745866,
-          "sha512": "080c81f1c5753abbf7087dc3614d04e13ac6dacc43f7dfc80dbd94503810ceecdeca0add0efb47bc7538eaaf9ed4768e1e32eb95fde5191e65e772fc7c2e6394",
-          "sha256": "81b73a4031cc243b6748aeb14f64567150ffc79e04ca44ef0c7ba905ed2297ba",
-          "sha1": "29e085e0d229b45221bdd52f6ff65c0f7e70f375",
-          "md5": "49cacc6287387cecc2ad22092edd26a8"
+          "size": 10876380,
+          "sha512": "9d6eef4bfe262ed99a79dcc838bce1a921b69cbe66c7a0a2f17879305b22bbb4c15e4b653205275bce90663b56f05d0b0ea0f5f78b6e7a684834b440ac82a741",
+          "sha256": "1277ee23445cec0fa459061bf3c1f9005e054709bc4cfd624491027a5601d7c8",
+          "sha1": "1303fd46bf5f0791d18caa26e647018f166c1533",
+          "md5": "cca3c1864912e500c4271b591af9d21a"
         }
       ]
     },
@@ -55,11 +55,11 @@
         {
           "name": "wvr_client-6.2.0.aar",
           "url": "wvr_client-6.2.0.aar",
-          "size": 10745866,
-          "sha512": "080c81f1c5753abbf7087dc3614d04e13ac6dacc43f7dfc80dbd94503810ceecdeca0add0efb47bc7538eaaf9ed4768e1e32eb95fde5191e65e772fc7c2e6394",
-          "sha256": "81b73a4031cc243b6748aeb14f64567150ffc79e04ca44ef0c7ba905ed2297ba",
-          "sha1": "29e085e0d229b45221bdd52f6ff65c0f7e70f375",
-          "md5": "49cacc6287387cecc2ad22092edd26a8"
+          "size": 10876380,
+          "sha512": "9d6eef4bfe262ed99a79dcc838bce1a921b69cbe66c7a0a2f17879305b22bbb4c15e4b653205275bce90663b56f05d0b0ea0f5f78b6e7a684834b440ac82a741",
+          "sha256": "1277ee23445cec0fa459061bf3c1f9005e054709bc4cfd624491027a5601d7c8",
+          "sha1": "1303fd46bf5f0791d18caa26e647018f166c1533",
+          "md5": "cca3c1864912e500c4271b591af9d21a"
         }
       ]
     }

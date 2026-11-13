@@ -24,7 +24,8 @@ STACK = 0x10000000
 ENVIRONMENT = 0x30000000
 GPRS = [getattr(reg, f'UC_ARM64_REG_X{i}') for i in range(31)]
 SIMD = [getattr(reg, f'UC_ARM64_REG_Q{i}') for i in range(32)]
-RETURNS = {'constructor_hook': 0x5BDB54, 'unsupported_hook': 0x5C2698, 'draw_hook': 0x5C6FF4}
+RETURNS = {'constructor_hook': 0x5BDB54, 'unsupported_hook': 0x5C2698, 'draw_hook': 0x5C6FF4, 'tws_hook': 0x5E8E7C}
+VRS_HOOKS = ('constructor_hook', 'unsupported_hook', 'draw_hook')
 
 
 class Machine:
@@ -40,6 +41,7 @@ class Machine:
             self.uc.mem_map(address, size)
         self.environment = environment
         self.getenv_calls = 0
+        self.counter_ticks = 123456789
         self.on_getenv = None
         self.on_instruction = None
         self.manifest = manifest
@@ -51,6 +53,12 @@ class Machine:
             self.on_instruction(self, address)
         if address == self.stop:
             uc.emu_stop()
+            return
+        # Model the architecture counter as an external clock. All observation
+        # and publication instructions still execute from the assembled hook.
+        if bytes(uc.mem_read(address, 4)) == bytes.fromhex('4ae03bd5'):
+            uc.reg_write(GPRS[10], self.counter_ticks)
+            uc.reg_write(reg.UC_ARM64_REG_PC, address + 4)
             return
         if address != 0x9CFCA0:
             return
@@ -91,6 +99,10 @@ class Machine:
                 value = renderer
             if i == 8:
                 value = input_valid
+            if name == 'tws_hook' and i == 8:
+                value = renderer
+            if name == 'tws_hook' and i == 9:
+                value = 8628
             self.uc.reg_write(register, value)
             expected[register] = value
         for i, register in enumerate(SIMD):
@@ -101,11 +113,15 @@ class Machine:
         self.uc.reg_write(reg.UC_ARM64_REG_NZCV, 0xA0000000)
         expected[reg.UC_ARM64_REG_SP] = STACK + 0xFFF0
         expected[reg.UC_ARM64_REG_NZCV] = 0xA0000000
+        if name == 'tws_hook':
+            self.uc.mem_write(renderer + 8628, bytes([input_valid]))
         self.stop = RETURNS[name]
         start = int(self.manifest['hooks'][name]['patch_va'], 16)
         self.uc.emu_start(start, 0, count=10000)
         if self.uc.reg_read(reg.UC_ARM64_REG_PC) != self.stop:
             raise AssertionError('Trampoline did not reach the original continuation')
+        if name == 'tws_hook':
+            expected[GPRS[8]] = input_valid
         if name in ('constructor_hook', 'draw_hook'):
             expected[GPRS[8]] = self.uc.mem_read(renderer + 3104, 1)[0]
         for register, value in expected.items():
@@ -245,7 +261,7 @@ class NativeHookTests(unittest.TestCase):
         self.assertEqual(m.state64(48), m.state64(56))
 
     def test_every_diagnostic_change_is_inside_shared_odd_sequence(self):
-        for name in RETURNS:
+        for name in VRS_HOOKS:
             with self.subTest(hook=name):
                 m = self.machine('DeviceDefault')
                 if name != 'constructor_hook':
@@ -304,7 +320,7 @@ class NativeHookTests(unittest.TestCase):
         self.assertNotEqual(m.state64(48), m.state64(56))
 
     def test_all_publishers_wait_for_the_same_writer_lock(self):
-        for name in RETURNS:
+        for name in VRS_HOOKS:
             with self.subTest(hook=name):
                 m = self.machine('DeviceDefault')
                 m.run_hook('constructor_hook')
@@ -335,7 +351,7 @@ class NativeHookTests(unittest.TestCase):
                 self.assertEqual(m.state32(72), 0)
 
     def test_publication_sequence_wraps_from_odd_max_to_even_zero(self):
-        for name in RETURNS:
+        for name in VRS_HOOKS:
             with self.subTest(hook=name):
                 m = self.machine('DeviceDefault')
                 m.run_hook('constructor_hook')
@@ -380,11 +396,52 @@ class NativeHookTests(unittest.TestCase):
         self.assertEqual(m.state32(24), 0)
         self.assertEqual(m.state32(76), 4)
 
+    def test_tws_reads_active_byte_and_preserves_all_other_state(self):
+        m = self.machine()
+        for active, requested in ((1, 0), (0, 1), (1, 2), (0, 2), (2, 0), (255, 1)):
+            with self.subTest(active=active, requested=requested):
+                m.counter_ticks += 1
+                m.uc.mem_write(RENDERER + 8632, struct.pack('<I', requested))
+                before = bytes(m.uc.mem_read(patch.STATE_VA, 80))
+                m.run_hook('tws_hook', active)
+                state = active + 1 if active in (0, 1) else 0
+                self.assertEqual(m.state64(80), (m.counter_ticks << 2) | state)
+                self.assertEqual(bytes(m.uc.mem_read(patch.STATE_VA, 80)), before)
+                self.assertEqual(struct.unpack('<I', m.uc.mem_read(RENDERER + 8632, 4))[0], requested)
+                self.assertEqual(m.getenv_calls, 0)
+
+    def test_tws_preempted_sample_keeps_its_original_timestamp(self):
+        m = self.machine()
+        m.counter_ticks = 100
+        paused = []
+        def delay_before_read(machine, address):
+            if bytes(machine.uc.mem_read(address, 4)) == bytes.fromhex('08696938'):
+                # The native active-byte read is delayed after timestamp capture.
+                # It must not publish a timestamp from after the delay.
+                machine.counter_ticks = 100000
+                paused.append(address)
+        m.on_instruction = delay_before_read
+        m.run_hook('tws_hook', 1)
+        self.assertEqual(len(paused), 1)
+        self.assertEqual(m.state64(80), (100 << 2) | 2)
+
+    def test_tws_delayed_writer_cannot_replace_a_newer_sample(self):
+        m = self.machine()
+        m.counter_ticks = 200
+        m.run_hook('tws_hook', 1)
+        newest = m.state64(80)
+        m.counter_ticks = 199
+        m.run_hook('tws_hook', 0)
+        self.assertEqual(m.state64(80), newest)
+        m.counter_ticks = 201
+        m.run_hook('tws_hook', 0)
+        self.assertEqual(m.state64(80), (201 << 2) | 1)
+
     def test_byte_preservation_layout_and_reproducible_output(self):
         rx = int(self.manifest['rx_file_offset'], 16)
         self.assertEqual(self.runtime[rx:rx + 8], b'SSVRVRS1')
         self.assertEqual(struct.unpack_from('<IIQ', self.runtime, rx + 8),
-                         (2, 256, 0xA4FA00))
+                         (3, 256, 0xA4FA00))
         inverse = bytearray(self.runtime[:len(self.baseline)])
         for change in self.manifest['changes']:
             offset = int(change['file_offset'], 16)

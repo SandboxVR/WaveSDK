@@ -3,14 +3,16 @@ The ARM64 runtime patch applies only to cap60 SHA-256
 All addresses below are ELF virtual addresses; add the runtime's load bias.
 
 The new RX mapping begins at `0xa51000`. Its immutable header contains eight
-ASCII bytes `SSVRVRS1`, uint32 ABI version `2` at `+8`, uint32 state size `256`
+ASCII bytes `SSVRVRS1`, uint32 ABI version `3` at `+8`, uint32 state size `256`
 at `+12`, and uint64 state virtual address `0xa4fa00` at `+16`. Header uint64
 values at `+24`, `+32`, `+40`, and `+48` contain constructor, unsupported-extension,
 draw, and end virtual addresses for offline validation. They are virtual
 addresses, not relocated process pointers. Validate the magic, version, size
 and address before reading or writing state.
-ABI 2 adds the shared publication sequence. Reject earlier development ABI 1
+ABI 3 adds a timestamped TWS observation at state +0x50 and a fourth hook address
+at header +56. ABI 2 added the shared publication sequence. Reject earlier development ABI 1
 modules, whose permanently zero reserved sequence would not protect snapshots.
+The current companion rejects ABI 2 too, because it has no TWS publication hook.
 
 The state occupies extended zero-initialized BSS in the final RW mapping.
 Naturally aligned fields are accessed atomically by the private JNI companion.
@@ -34,6 +36,7 @@ acquire/release compare-and-swap and reject a word with bit 31 set.
 | `0x40` | atomic uint64 | Last unsupported-extension renderer identity, opaque; cleared on each constructor publication. |
 | `0x48` | atomic uint32 | Internal shared diagnostic writer lock. Companion must not modify it. |
 | `0x4c` | atomic uint32 | Publication sequence: odd while a diagnostic writer is active, even after publication; wraps modulo 2^32. |
+| `0x50` | atomic uint64 | TWS sample: bits 63:2 CNTVCT ticks, bits 1:0 Unknown=0, Off=1, On=2. |
 | remainder | reserved | Leave zero. |
 
 Only when policy is unset does the first renderer constructor read
@@ -86,7 +89,7 @@ The constructor preserves every GPR, NZCV and all 128 bits of q0-q31 across the
 libc getenv call, except x8 intentionally returns the filtered original byte.
 The other two hooks make no calls, preserve their scratch registers and NZCV,
 and replay the replaced instruction. No RWX mapping, runtime relocation or
-additional library dependency is introduced. Three original instructions,
+additional library dependency is introduced. Four original instructions,
 one RW BSS-size header field and one repurposed PT_NOTE program-header entry
 are the only original file ranges changed. The original note contents and
 section table remain byte-identical. The builder records exact reversible
@@ -103,3 +106,42 @@ odd/even sequence wrap and first-policy metadata publication. Emulation checks
 CPU effects and instruction ordering; it does not simulate ARM weak memory
 visibility, Android loader acceptance or GPU execution;
 those require device validation of the packaged runtime.
+
+## TWS readback
+
+`0x5e8e78` originally contains `08696938` (`ldrb w8, [x8, x9]`).
+The immediately preceding code loads the TWS object from predictor `this+0xa18`,
+checks it for null, and sets `x9=0x21b4`. A nonzero byte adds one display period
+to prediction. The requested mode is a distinct integer at TWS object `+0x21b8`:
+setter code `0x5e08c8..0x5e08ec` writes that integer and directly writes the active
+byte for forced Off/On. Auto leaves the active byte to the runtime's state machine.
+These observations were checked with ordinary LLVM disassembly, not REA Evidence.
+No device execution is implied.
+
+The hook takes an ordered `CNTVCT_EL0` timestamp immediately before replaying
+that exact native byte load and publishes status/time in one release atomic word.
+Timestamping before the read makes a preempted producer conservatively stale; it
+cannot label an old read with a new timestamp after it resumes. Concurrent publishers use LDAXR/STLXR and never replace a later timestamp
+with an earlier one. No heap or renderer pointer is published. The hook makes no
+external call and preserves every GPR (except the original w8 result), SIMD
+register, stack pointer and NZCV. It leaves the requested mode and all VRS state
+untouched. The counter's upper two bits must remain clear; the getter fails closed
+outside this range, far beyond practical device uptimes at normal counter rates.
+
+After `CompositorSettings.validateTwsRuntime()` verifies the mapped file SHA-256
+and native ABI, exported `int SSVR_GetTwsState()` returns `0` Off, `1` On or `-1`
+Unknown. Validation revokes prior state and records a new resume cutoff; samples
+must be strictly newer. The getter checks library uniqueness, path, segment
+permissions and ABI while holding the linker iteration lock, then acquire-loads
+only the owned BSS word. It uses the same architectural virtual counter and
+`CNTFRQ_EL0` to reject samples older than 250ms, future samples, unavailable/invalid
+state, and invalid frequency. It does not hash files or allocate on the sample
+path. Use a `dlopen(..., RTLD_NOW | RTLD_NOLOAD)` handle to resolve the export after
+Java loads the companion, because Android can load that library locally.
+
+Call validation on every resume after Wave initialization. Invoke a predictor API
+such as `WVR_GetPredictedDisplayTime` regularly, including while rendering a lobby;
+without native prediction samples the result becomes Unknown. Nothing writes the
+requested mode or forces a prediction result. The architectural clock is modeled
+by the Unicorn tests; Android counter access, loaded-module selection and actual
+headset display behavior still require on-device validation.

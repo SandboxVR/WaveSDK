@@ -1,7 +1,7 @@
 """Build a version-locked startup VRS policy for the bundled ARM64 runtime.
 
 Only the exact cap60 baseline is accepted.  The original file remains intact
-except for three branch instructions, the last RW segment's BSS size, and the
+except for four branch instructions, the last RW segment's BSS size, and the
 unused PT_NOTE program-header entry reused for an appended RX mapping.
 """
 from __future__ import annotations
@@ -20,13 +20,14 @@ STATE_VA = 0xA4FA00
 STATE_SIZE = 256
 RX_VA = 0xA51000
 HEADER_MAGIC = b'SSVRVRS1'
-ABI_VERSION = 2
+ABI_VERSION = 3
 ORIGINAL_RW = (1, 6, 0xA32908, 0xA34908, 0xA34908, 0x7A10, 0x1B010, 0x1000)
 ORIGINAL_NOTE = (4, 4, 0x238, 0x238, 0x238, 0xBC, 0xBC, 4)
 HOOKS = {
     'constructor_hook': (0x5BDB50, bytes.fromhex('68823039')),
     'unsupported_hook': (0x5C2694, bytes.fromhex('7f823039')),
     'draw_hook': (0x5C6FF0, bytes.fromhex('68827039')),
+    'tws_hook': (0x5E8E78, bytes.fromhex('08696938')),
 }
 
 
@@ -110,7 +111,7 @@ def patch_runtime(data: bytes, ndk: Path, build_dir: Path) -> tuple[bytes, dict]
     script = build_dir / 'native_hook.ld'
     script.write_text(
         f'STATE = {STATE_VA:#x}; GETENV_PLT = 0x9cfca0; '
-        'CONSTRUCTOR_RETURN = 0x5bdb54; UNSUPPORTED_RETURN = 0x5c2698; DRAW_RETURN = 0x5c6ff4;\n'
+        'CONSTRUCTOR_RETURN = 0x5bdb54; UNSUPPORTED_RETURN = 0x5c2698; DRAW_RETURN = 0x5c6ff4; TWS_RETURN = 0x5e8e7c;\n'
         f'SECTIONS {{ . = {RX_VA:#x}; .text : {{ *(.text.vrs) }} '
         '/DISCARD/ : { *(.comment) *(.note*) *(.ARM.attributes) } }\n', encoding='ascii')
     run([executable(toolchain, 'clang'), '--target=aarch64-linux-android29', '-c',

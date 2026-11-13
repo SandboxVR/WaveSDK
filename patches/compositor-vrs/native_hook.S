@@ -7,20 +7,21 @@
 .extern CONSTRUCTOR_RETURN
 .extern UNSUPPORTED_RETURN
 .extern DRAW_RETURN
+.extern TWS_RETURN
 
 .section .text.vrs,"ax",%progbits
 .balign 16
 .global vrs_header
 vrs_header:
     .ascii "SSVRVRS1"
-    .word 2
+    .word 3
     .word 256
     .quad STATE
     .quad constructor_hook
     .quad unsupported_hook
     .quad draw_hook
     .quad hooks_end
-    .quad 0
+    .quad tws_hook
 
 /* x18 is Android's platform register: save/restore it, never use it as scratch.
  * Preserve every caller-saved GPR and NZCV. The constructor calls libc, so it
@@ -310,6 +311,44 @@ draw_hook:
     PUBLISH_END
     RESTORE
     b DRAW_RETURN
+
+
+/* Observe the exact byte the predictor uses to add the TWS display period.
+ * Preserve the native read result and every other register/flag. The JNI helper
+ * only reads this owned BSS word, never the runtime's renderer/TWS objects.
+ * Bits 63:2 are CNTVCT ticks; bits 1:0 encode Unknown=0, Off=1, On=2.
+ * A single atomic word prevents mismatched status/time under concurrent readers.
+ */
+.balign 16
+.global tws_hook
+tws_hook:
+    SAVE
+    ldp x8, x9, [sp, #64]
+    /* Timestamp before reading: a delayed publisher can only look older. */
+    isb
+    mrs x10, cntvct_el0
+    isb
+    ldrb w8, [x8, x9] /* Replaced original instruction. */
+    str x8, [sp, #64]
+    cmp w8, #1
+    add w9, w8, #1
+    csel w9, w9, wzr, ls
+    lsl x10, x10, #2
+    orr x10, x10, x9
+    STATE_ADDRESS x12
+    add x12, x12, #80
+.Ltws_publish:
+    ldaxr x11, [x12]
+    cmp x11, x10
+    b.hs .Ltws_older
+    stlxr w13, x10, [x12]
+    cbnz w13, .Ltws_publish
+    b .Ltws_done
+.Ltws_older:
+    clrex
+.Ltws_done:
+    RESTORE
+    b TWS_RETURN
 
 .balign 8
 environment_key:

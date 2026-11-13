@@ -5,6 +5,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <string>
+#include <mutex>
+#include "tws_observation.h"
 
 namespace {
 constexpr uintptr_t kHeaderVA = 0xa51000;
@@ -51,7 +53,7 @@ bool validRuntime(const dl_phdr_info* info, const char* path) {
     memcpy(&abi, header + 8, sizeof abi);
     memcpy(&size, header + 12, sizeof size);
     memcpy(&stateVA, header + 16, sizeof stateVA);
-    return memcmp(header, "SSVRVRS1", 8) == 0 && abi == 2 && size == kStateSize && stateVA == kStateVA;
+    return memcmp(header, "SSVRVRS1", 8) == 0 && abi == 3 && size == kStateSize && stateVA == kStateVA;
 }
 uint32_t* word(const dl_phdr_info* info, size_t offset) {
     return reinterpret_cast<uint32_t*>(static_cast<uintptr_t>(info->dlpi_addr) + kStateVA + offset);
@@ -154,4 +156,55 @@ Java_com_sandboxvr_wave_CompositorSettings_nativeSnapshot(JNIEnv* env, jclass, j
     jlongArray out = env->NewLongArray(sizeof(access.values) / sizeof(access.values[0]));
     if (out) env->SetLongArrayRegion(out, 0, sizeof(access.values) / sizeof(access.values[0]), access.values);
     return out;
+}
+
+namespace {
+std::mutex twsMutex;
+std::string twsValidatedPath;
+uint64_t twsResumeTicks = 0;
+uint64_t counterTicks() {
+    uint64_t ticks;
+    asm volatile("isb; mrs %0, cntvct_el0" : "=r"(ticks) :: "memory");
+    return ticks;
+}
+int countRuntime(dl_phdr_info* info, size_t, void* data) {
+    if (isRuntime(info)) ++*static_cast<unsigned*>(data);
+    return 0;
+}
+struct TwsAccess { const char* path; bool valid = false; uint64_t packed = 0; };
+int accessTws(dl_phdr_info* info, size_t, void* data) {
+    auto& access = *static_cast<TwsAccess*>(data);
+    if (!isRuntime(info) || !access.path || strcmp(info->dlpi_name, access.path) != 0) return 0;
+    unsigned matches = 0;
+    dl_iterate_phdr(countRuntime, &matches);
+    if (matches != 1 || !validRuntime(info, access.path)) return 1;
+    access.packed = load64(info, 0x50);
+    access.valid = true;
+    return 1;
+}
+}
+extern "C" JNIEXPORT jboolean JNICALL
+Java_com_sandboxvr_wave_CompositorSettings_nativeValidateTwsRuntime(JNIEnv* env, jclass, jstring validatedPath) {
+    std::lock_guard<std::mutex> lock(twsMutex);
+    twsValidatedPath.clear();
+    twsResumeTicks = counterTicks();
+    UtfChars path(env, validatedPath);
+    if (!path.chars) return JNI_FALSE;
+    TwsAccess access{path.chars};
+    dl_iterate_phdr(accessTws, &access);
+    if (!access.valid) return JNI_FALSE;
+    twsValidatedPath = path.chars;
+    return JNI_TRUE;
+}
+// Private SandboxVR native API. Call after validateTwsRuntime() on each resume.
+// No Java calls, hashing, allocation, or runtime-object dereferences per sample.
+extern "C" __attribute__((visibility("default"))) int SSVR_GetTwsState() {
+    std::lock_guard<std::mutex> lock(twsMutex);
+    if (twsValidatedPath.empty()) return -1;
+    TwsAccess access{twsValidatedPath.c_str()};
+    dl_iterate_phdr(accessTws, &access);
+    if (!access.valid) return -1;
+    uint64_t frequency;
+    asm volatile("mrs %0, cntfrq_el0" : "=r"(frequency));
+    return decodeTwsObservation(access.packed, twsResumeTicks, counterTicks(), frequency);
 }
