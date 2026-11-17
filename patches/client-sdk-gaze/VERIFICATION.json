@@ -1,0 +1,39 @@
+{
+  "base_commit": "3d654a98a3855666a58068895d6bb7a02a41f562",
+  "applied": true,
+  "source_sha256": {
+    "patches/client-sdk-gaze/build.py": "aafb3460de6d0d3b54ce9cc6eac1c899eee2fbb6d2a7d15aca7543f7ec7b59af",
+    "patches/client-sdk-gaze/compile-stubs/com/htc/vr/R.java": "fbe6c9923656f3ce9a42e4b8c356470505f9c8a31e9f66bd89830ef6b06ae018",
+    "patches/client-sdk-gaze/compile-stubs/com/htc/vr/sdk/overlay/OverlaySurfaces.java": "5c59d2645921bc860dbf3acb9f5f797e29605e3a5020ac228c9abdc827ac981f",
+    "patches/client-sdk-gaze/compile-stubs/com/htc/vr/sdk/overlay/VROverlayError.java": "ebbcfb1def595e282f18378cee1821ef26c4f20ef895143588bde0aeaf8962c9",
+    "patches/client-sdk-gaze/graft-manifest.json": "147828daff634cb236097fe68abdbf96a2ec105424282747329513f5569aea63",
+    "patches/client-sdk-gaze/src/com/htc/vr/sdk/VROverlayServiceManagerDecorator.java": "3af1d2d1f7f9825163d016904d168e32af2d805f574baa6067f3a0ce71327e8c",
+    "patches/client-sdk-p1/build.py": "bb2d3f82b6d5a0e7f223a5d77155248c9240cb2aecaa519a81ed27f51d8783b4",
+    "patches/client-sdk-p1/tools/Graft.java": "e1246d421e387b05a358ed1d1d58fd14a862e04d554c699a49ee3505c2ff0c17"
+  },
+  "before_sha256": "1277ee23445cec0fa459061bf3c1f9005e054709bc4cfd624491027a5601d7c8",
+  "after_sha256": "db34714e95637c585c1a8fc69a32bfc93dd6a78bfd57f2e7aedfc8a60c260ad2",
+  "patched_dex_sha256": "1d7c26bdbbed5286cbbff5bb8a30f79bf90ef0f91ca6e42280bf7a72d5364284",
+  "donor_jar_sha256": "2e46e45ddce202d3c67d94f1264a7bd5ef32a63a5d53427bc60e1702415741a3",
+  "published_file_sha256": {
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar": "db34714e95637c585c1a8fc69a32bfc93dd6a78bfd57f2e7aedfc8a60c260ad2",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.module": "d062a47d9083bc85009ddfc9a5f3c642d83a5663257276945acc191a307d11fa",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar.md5": "4cfe853612d9c17804ff2e20b53a3f3aa0066664c0125049eebdeb62cd5734c6",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar.sha1": "48dd2f991cd87b09799d190d7df2cd643de4920e0443369e49dccf2a28260bf5",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar.sha256": "c74aa661fb6cd0f4289362143dcbe698895c6b540f9de4424da8fab6c56a1c6b",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.aar.sha512": "313a693a44b63c78f9d99dd1bc5f99ca617eac7f48f08e9c794ada155cf8a413",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.module.md5": "cc7ff4d869f869c1df179b48d607af14d2b59270da87ce2b2fbd38b923a097d1",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.module.sha1": "ecfee10d131b4231000d96451fa75b01d7b4724873cce1a4a6854f8de3d68b0f",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.module.sha256": "caa7ffdf84eaf2fd5ee459077bea70261c8bce6c3e3110d20b9d7fac91dccbdc",
+    "repo/com/htc/vr/wvr_client/6.2.0/wvr_client-6.2.0.module.sha512": "bdb0224b8153db240a371379ecec3a57fb25e138167b6b528a39a34f2f8d0973"
+  },
+  "toolchain": {
+    "java": "/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/java",
+    "javac": "/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/javac",
+    "android_jar": "/Users/kevin/Library/Android/sdk/platforms/android-36/android.jar",
+    "d8_jar": "/Users/kevin/Library/Android/sdk/build-tools/36.1.0/lib/d8.jar",
+    "tool_cp": "/Users/kevin/Documents/GitHub/WaveSDK/patches/client-sdk-gaze/.build/tools:/Users/kevin/Documents/GitHub/WaveSDK/patches/client-sdk-gaze/.build/deps/dexlib2-2.5.2.jar:/Users/kevin/Documents/GitHub/WaveSDK/patches/client-sdk-gaze/.build/deps/guava-27.1-android.jar:/Users/kevin/Documents/GitHub/WaveSDK/patches/client-sdk-gaze/.build/deps/gson-2.10.1.jar:/Users/kevin/Documents/GitHub/WaveSDK/patches/client-sdk-gaze/.build/deps/asm-9.2.jar:/Users/kevin/Documents/GitHub/WaveSDK/patches/client-sdk-gaze/.build/deps/asm-tree-9.2.jar"
+  },
+  "preserved": "All native libraries, VRS/prediction patches, constructors, fields and all methods except three allowlisted gaze methods",
+  "structural_check": "Every DEX class canonically round-tripped; exactly one allowlisted class, three methods replaced"
+}

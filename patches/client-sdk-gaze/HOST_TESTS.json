@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "assertions": 177,
+  "source_sha256": {
+    "patches/client-sdk-gaze/build.py": "aafb3460de6d0d3b54ce9cc6eac1c899eee2fbb6d2a7d15aca7543f7ec7b59af",
+    "patches/client-sdk-gaze/compile-stubs/com/htc/vr/R.java": "fbe6c9923656f3ce9a42e4b8c356470505f9c8a31e9f66bd89830ef6b06ae018",
+    "patches/client-sdk-gaze/compile-stubs/com/htc/vr/sdk/overlay/OverlaySurfaces.java": "5c59d2645921bc860dbf3acb9f5f797e29605e3a5020ac228c9abdc827ac981f",
+    "patches/client-sdk-gaze/compile-stubs/com/htc/vr/sdk/overlay/VROverlayError.java": "ebbcfb1def595e282f18378cee1821ef26c4f20ef895143588bde0aeaf8962c9",
+    "patches/client-sdk-gaze/graft-manifest.json": "147828daff634cb236097fe68abdbf96a2ec105424282747329513f5569aea63",
+    "patches/client-sdk-gaze/src/com/htc/vr/sdk/VROverlayServiceManagerDecorator.java": "3af1d2d1f7f9825163d016904d168e32af2d805f574baa6067f3a0ce71327e8c",
+    "patches/client-sdk-p1/build.py": "bb2d3f82b6d5a0e7f223a5d77155248c9240cb2aecaa519a81ed27f51d8783b4",
+    "patches/client-sdk-p1/tools/Graft.java": "e1246d421e387b05a358ed1d1d58fd14a862e04d554c699a49ee3505c2ff0c17"
+  },
+  "test_source_sha256": {
+    "patches/client-sdk-gaze/run_tests.py": "9c98443effd483cfee9cdbd2a1c52da68960fad954efab2d9fafc49eae7101de",
+    "patches/client-sdk-gaze/verify.py": "052b669f610e69fc738be2474a8cf40d4d09f8821346b06f7ffdf75fb9c278db",
+    "patches/client-sdk-gaze/tests/GazeRegression.java": "2c51ad1c9f22359bc11954980b2885d21d44b82cef98c0e0fe3e385d446439ee",
+    "patches/client-sdk-gaze/tests/android/view/LayoutInflater.java": "039d5ec0e2c02f703fafff43979016b065fdd7967eddf098c78a062c0f583c90",
+    "patches/client-sdk-gaze/tests/android/view/Surface.java": "9037539e7f3c51025617a4b730d1bbc8f533e197c81e2abf12dcf81f20573c84",
+    "patches/client-sdk-gaze/tests/android/view/View.java": "6d488ca0d0269c1884f52c4dd29d4fc8b18f658758423b7a0add5ec70f22e6f6",
+    "patches/client-sdk-gaze/tests/android/view/ViewGroup.java": "db1f8af9cfb124f197132ccd5f2e4512e13ca11964313ae9ee743eead3777147",
+    "patches/client-sdk-gaze/tests/android/widget/ProgressBar.java": "fbd7a71f1324fdf9b0501534775ff58390febf5e9c6a2453f89af59725172abd",
+    "patches/client-sdk-gaze/tests/com/htc/vr/sdk/VROverlayServiceManagerDecorator.java": "c2e05c48696b67bb528d203faeada0befb1bba3f62579218b29778dc15ed8b04",
+    "patches/client-sdk-gaze/tests/com/htc/vr/sdk/overlay/OverlaySurfaces.java": "cd7ecdb2a2bef2e4de48fb823c6514ea875474adaa5f7b7c8a2ab01859d02e38",
+    "patches/client-sdk-gaze/compile-stubs/com/htc/vr/R.java": "fbe6c9923656f3ce9a42e4b8c356470505f9c8a31e9f66bd89830ef6b06ae018",
+    "patches/client-sdk-gaze/compile-stubs/com/htc/vr/sdk/overlay/VROverlayError.java": "ebbcfb1def595e282f18378cee1821ef26c4f20ef895143588bde0aeaf8962c9"
+  },
+  "candidate_sha256": "db34714e95637c585c1a8fc69a32bfc93dd6a78bfd57f2e7aedfc8a60c260ad2",
+  "donor_jar_sha256": "2e46e45ddce202d3c67d94f1264a7bd5ef32a63a5d53427bc60e1702415741a3",
+  "scope": "Exact donor JAR methods used for DEX, selectively grafted into host Android/render stand-ins; no headset runtime validation",
+  "output": "Gaze regression passed: 177 assertions\n"
+}

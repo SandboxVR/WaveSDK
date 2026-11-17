@@ -1,0 +1,14 @@
+{
+  "classes": [
+    {
+      "type": "Lcom/htc/vr/sdk/VROverlayServiceManagerDecorator;",
+      "mode": "merge",
+      "jar": true,
+      "methods": [
+        {"name": "initGaze", "descriptor": "()V", "action": "replace"},
+        {"name": "drawGaze", "descriptor": "(I)V", "action": "replace"},
+        {"name": "releaseOverlaySurfaces", "descriptor": "()V", "action": "replace"}
+      ]
+    }
+  ]
+}
